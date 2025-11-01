@@ -2,7 +2,6 @@ import {avisoFalas, limparAviso, etapa} from "/public/src/validations/utilits.js
 
 export const validarEmail = () => {
     const inputEmail = document.getElementById("email");
-    const entradaEmail = document.getElementById("emailEntrar");
     const email = inputEmail.value;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     // CORRIGIDO: Adicionado 'const'

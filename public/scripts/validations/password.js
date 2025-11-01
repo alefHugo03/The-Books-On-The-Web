@@ -3,7 +3,6 @@ import {avisoFalas, limparAviso, etapa} from "/public/src/validations/utilits.js
 
 export const validarSenha = () => {
     const inputSenha = document.getElementById("senha");
-    const entradaSenha = document.getElementById("senhaEntrar");
     const senha = inputSenha.value;
     const nomeFalas = ["O campo senha não pode estar vazio.", "A senha deve ter pelo menos 6 caracteres."];
     const ID_AVISO = etapa[3];
