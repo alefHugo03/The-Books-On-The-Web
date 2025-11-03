@@ -2,7 +2,7 @@
 $server = "localhost";
 $user = "root";
 $password = "";
-$bd = "proyecto_final";
+$bd = "biblioteca_BD";
 
 $conexion = mysqli_connect($server, $user, $password, $bd);
 
