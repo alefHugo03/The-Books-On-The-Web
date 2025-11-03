@@ -13,8 +13,6 @@ export const validarSenha = () => {
     limparAviso(ID_AVISO);
     return senha;
 };
-
-
 export const validarConfirmarSenha = (senha) => {
     const inputConfirmarSenha = document.getElementById("senhaDois");
     const confirmarSenha = inputConfirmarSenha.value;

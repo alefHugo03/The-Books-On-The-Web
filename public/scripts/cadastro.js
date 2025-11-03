@@ -24,8 +24,34 @@ function processarDadosCadastro() {
 
     if (!nome || !email || !nascimento || !senha || !confirmarSenha || confirmarCpf) return; 
 
+    // 4. Envia para o servidor
+    const dadosParaEnviar = {
+        nome: nome, 
+        email: email,
+        nascimento: nascimento,
+        senha: senha
+    };
 
-    alert("Enviado!")
+    console.log("Dados validados, enviando:", dadosParaEnviar);
+
+    fetch('/cadastro', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dadosParaEnviar),
+    })
+    .then(response => {
+        if (response.ok) {
+            alert("Cadastro realizado com sucesso!");
+        } else {
+            alert("Ocorreu um erro no cadastro. Tente novamente.");
+        }
+    })
+    .catch(error => {
+        console.error("Erro na requisição:", error);
+        alert("Não foi possível conectar ao servidor.");
+    });
 };
 
 

@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 
-    const basePath = "/public/templates/corpos/";
+    const basePath = "/ProjetoM2/The-Books-On-The-Web/public/templates/corpos/";
 
     loadComponent("#header-placeholder", basePath + "header.html")
         .then(() => {
