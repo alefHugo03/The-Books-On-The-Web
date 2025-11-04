@@ -6,7 +6,7 @@ if (!isset($_GET['pesquisa'])) {
     die("Nenhum termo de pesquisa fornecido.");
 };
 
-$pesquisa = $-$_GET['pesquisa'];
+$pesquisa = $_GET['pesquisa'];
 
 $sql = "SELECT * FROM livros WHERE titulo LIKE $pesquisa OR autor LIKE $pesquisa OR genero LIKE $pesquisa OR livro LIKE $pesquisa";
 $result = mysqli_query($conexion, $sql);

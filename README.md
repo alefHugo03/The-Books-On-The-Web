@@ -7,5 +7,6 @@ Integrantes do projeto:
     Arthurs
     Vitor 
 
-Objetivo: 
+Objetivo:
+
     Criação de um site de contratação de livros voltados para a área de TI
