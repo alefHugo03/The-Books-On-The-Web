@@ -30,23 +30,21 @@ main{
 header{
     background-color: var(--cor-header);
     color: var(--cor-branco-letra);
-    height: 115px;
     width: 100%;
-    justify-content: center;
-    height: 100px;
 }
 
 .header-cima{
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
     align-items: center;
+    flex-direction: row;
+    justify-content: space-between; 
+    padding: 20px; 
 }
 .empresa{
     display: flex;
     flex-direction: row;
-    margin-left: 5%;
-    margin-top: 20px;
+    align-items: center;
     gap: 10px;
 }
 .nome-empresa{
@@ -60,22 +58,15 @@ header{
 }
 
 .pesquisa {
-    margin-right: 5%;
+    flex-grow: 1; 
+    margin-left: 20px;
+    margin-right: 20px;
+    max-width: 600px; 
 }
 
 .pesquisar {
     display: flex;
     align-items: center;
-    gap: 5px;
-}
-
-.input-pesquisa {
-    padding: 5px 10px;  
-    border-radius: 5px;
-    border: 1px solid var(--cor-fundo); 
-    outline: none;
-    width: 200px;
-    font-size: 14px; 
 }
 
 .btn-pesquisa {
@@ -84,11 +75,7 @@ header{
     opacity: 0.8;
     border-radius: 5px;
     background-color: var(--cor-cinza-letra);
-    
-
     padding: 6px; 
-
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -103,22 +90,29 @@ header{
 }
 
 .input-pesquisa{
-    padding: 5px;
     border-radius: 5px;
     border: none;
     outline: none;
-    width: 200px;
+    justify-content: center;
+    width: 100%; 
+    padding: 5px 10px; 
 }
+.area-cadastro{
+    display: flex;
+    gap: 10px;
+}
+
 .header-baixo{
     padding-top: 10px;
     padding-bottom: 40px;
     background-color: var(--cor-header);
-    height: 50%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     flex-wrap: wrap;
+    align-items: center;
 }
+
 
 .item-menu {
     display: inline-block;
@@ -141,16 +135,10 @@ header{
     transform: scale(0.95);
 }
 
-
-body {
-    justify-content: center;
-}
-
 .caixa-menu {
     margin: 40px auto;
     margin-top: 6%;
     padding: 50px;
-    padding: auto;
     width: 350px;
     border: 1px solid #ddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -169,6 +157,7 @@ body {
 }
 
 .btn-menu {
+    color: var(--cor-preto);
     background-color: var(--cor-cinza);
     width: 100%;
     cursor: pointer;
@@ -232,7 +221,6 @@ body {
     margin: 40px auto;
     margin-top: 6%;
     padding: 50px;
-    padding: auto;
     width: 450px;
     border: 1px solid #ddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -266,15 +254,10 @@ body {
 #footer-placeholder.loaded {
     opacity: 1;
 }
-.juncao{
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
+
 .btn-cadastro {
     display: inline-block;
-    padding: 5px 20px;
+    padding: 10px 30px;
     background-color: var(--cor-cinza-letra);
     color: var(--cor-branco-letra);
     font-weight: bold;
@@ -291,4 +274,13 @@ body {
     opacity: 1;
     background: var(--cor-cinza-claro); 
     transform: scale(0.95);
+}
+.botaoComVoltar{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+a{
+    text-decoration: none;
+    color: inherit;
 }
