@@ -47,6 +47,7 @@ $resultado = mysqli_stmt_get_result($stmt);
                     echo '<p class="nao-encontrado" style="color: red; font-weight: bold;">';
                     echo 'Nenhum livro encontrado com esse termo. Tente novamente.';
                     echo '</p>';
+                    echo '<button type="button" id="btnVoltar" class="btn-menu"><a href="index.php">Voltar</a></button>';
                 }
                     
                 while ($livro = mysqli_fetch_assoc($resultado)) {
@@ -56,6 +57,7 @@ $resultado = mysqli_stmt_get_result($stmt);
                         echo '<p><strong>Preço: R$ ' . number_format($livro['preco'], 2, ',', '.') . '</strong></p>';
                         
                         echo '</div>';
+                        echo '<button type="button" id="btnVoltar" class="btn-menu"><a href="index.php">Voltar</a></button>';
                     }                    
             ?>
         </div>
