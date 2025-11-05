@@ -1,16 +1,24 @@
 <?php
-/* Começando a pesquisa */
-require_once 'conection/conectionBD.php';
+require_once './conection/conectionBD.php';
 
-if (!isset($_GET['pesquisa'])) {
-    die("Nenhum termo de pesquisa fornecido.");
-};
+if (!$con) {
+    die("Falha na conexão: " . mysqli_connect_error());
+}
 
-$pesquisa = $_GET['pesquisa'];
+$termo_pesquisa = $_GET['pesquisa'];
+$sql = "SELECT * FROM livro WHERE titulo LIKE ?";
 
-$sql = "SELECT * FROM livros WHERE titulo LIKE $pesquisa OR autor LIKE $pesquisa OR genero LIKE $pesquisa OR livro LIKE $pesquisa";
-$result = mysqli_query($conexion, $sql);
+$stmt = mysqli_prepare($con, $sql);
 
+if ($stmt === false) {
+    die("ERRO NO PREPARE: " . mysqli_error($con));
+}
+
+$termo_like = "%" . $termo_pesquisa . "%";
+mysqli_stmt_bind_param($stmt, "s", $termo_like);
+
+mysqli_stmt_execute($stmt);
+$resultado = mysqli_stmt_get_result($stmt);
 
 ?>
 <!DOCTYPE html>
@@ -27,6 +35,30 @@ $result = mysqli_query($conexion, $sql);
     <header id="header-placeholder"></header>
             
     <main>
+        
+        <div class="container-pesquisa" style="padding: 20px; max-width: 800px; margin: auto;">
+
+            <h4>Você pesquisou por: "<?php echo htmlspecialchars($termo_pesquisa);?>"</h4>
+            <hr>
+
+            <?php
+
+                if (!mysqli_num_rows($resultado) > 0) {
+                    echo '<p class="nao-encontrado" style="color: red; font-weight: bold;">';
+                    echo 'Nenhum livro encontrado com esse termo. Tente novamente.';
+                    echo '</p>';
+                }
+                    
+                while ($livro = mysqli_fetch_assoc($resultado)) {
+                        echo '<div class="livro-resultado" style="margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px;">';
+                        echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
+                        echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
+                        echo '<p><strong>Preço: R$ ' . number_format($livro['preco'], 2, ',', '.') . '</strong></p>';
+                        
+                        echo '</div>';
+                    }                    
+            ?>
+        </div>
 
     </main>
 
