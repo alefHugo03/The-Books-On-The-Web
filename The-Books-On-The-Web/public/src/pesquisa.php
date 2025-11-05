@@ -40,26 +40,26 @@ $resultado = mysqli_stmt_get_result($stmt);
 
             <h4>Você pesquisou por: "<?php echo htmlspecialchars($termo_pesquisa);?>"</h4>
             <hr>
+            <div class="resposta-pesquisa">
+                <?php
 
-            <?php
-
-                if (!mysqli_num_rows($resultado) > 0) {
-                    echo '<p class="nao-encontrado" style="color: red; font-weight: bold;">';
-                    echo 'Nenhum livro encontrado com esse termo. Tente novamente.';
-                    echo '</p>';
-                    echo '<button type="button" id="btnVoltar" class="btn-menu"><a href="index.php">Voltar</a></button>';
-                }
-                    
-                while ($livro = mysqli_fetch_assoc($resultado)) {
-                        echo '<div class="livro-resultado" style="margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px;">';
-                        echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
-                        echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
-                        echo '<p><strong>Preço: R$ ' . number_format($livro['preco'], 2, ',', '.') . '</strong></p>';
+                    if (!mysqli_num_rows($resultado) > 0) {
+                        echo '<p class="nao-encontrado" style="color: red; font-weight: bold;">';
+                        echo 'Nenhum livro encontrado com esse termo. Tente novamente.';
+                        echo '</p>';
+                    }
                         
-                        echo '</div>';
-                        echo '<button type="button" id="btnVoltar" class="btn-menu"><a href="index.php">Voltar</a></button>';
-                    }                    
-            ?>
+                    while ($livro = mysqli_fetch_assoc($resultado)) {
+                            echo '<div class="livro-resultado" style="margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px;">';
+                            echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
+                            echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
+                            echo '<p><strong>Preço: R$ ' . number_format($livro['preco'], 2, ',', '.') . '</strong></p>';
+                            
+                            echo '</div>';
+                        }                    
+                ?>
+                <button type="button" id="btnVoltar" class="btn-menu"><a href="index.php">Voltar</a></button>
+            </div>
         </div>
 
     </main>

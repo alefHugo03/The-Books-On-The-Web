@@ -14,21 +14,22 @@
     <main>
         <div class="caixa-menu">
             <h2>Bem Vindo!</h2>
-            <form class="menu">
+
+            <form id="form-login" method="post" class="menu">
                 <div class="valor caixa-texto">
                     <label for="email">Email: </label>
-                    <input type="email" name="email" class="valor-texto" id="emailEntrar" placeholder="Digite seu email" required>
+                    <input type="email" name="email" class="valor-texto" id="emailEntrar" placeholder="Digite seu email">
                     <p id="avisoEmail" class="aviso-email aviso-campo"></p>
                 </div>
 
                 <div class="valor caixa-texto">
                     <label for="senha">Senha: </label>
-                    <input type="password" name="senha" id="senhaEntrar" class="valor-texto" placeholder="Digite sua senha" required>
+                    <input type="password" name="senha" id="senhaEntrar" class="valor-texto" placeholder="Digite sua senha">
                     <p id="avisoSenha" class="aviso-senha aviso-campo"></p>
                 </div>
 
                 <div class="valor">
-                    <button type="button" id="btnEntrar" class="btn-menu">Entrar</button>
+                    <button type="submit" id="btnEntrar" class="btn-menu">Entrar</button>
                 </div>
                 <div class="valor links-menu">
                     <a href="templates/login/seguranca.html" class="link-menu">Esqueci minha senha</a>
@@ -41,5 +42,5 @@
     <footer id="footer-placeholder" class="caixa-footer"></footer>
 </body>
 <script src="scripts/script.js"></script>
-<script src="scripts/login.js"></script>
+<script src="scripts/login/login.js"></script>
 </html>

@@ -1,4 +1,4 @@
-import {avisoFalas, limparAviso, etapa} from "/public/src/validations/utilits.js"
+import {avisoFalas, limparAviso, etapa} from "/ProjetoM2/The-Books-On-The-Web/public/scripts/validations/utilits.js"
 
 export const validarData = () => {
     const inputNascimento = document.getElementById("data");

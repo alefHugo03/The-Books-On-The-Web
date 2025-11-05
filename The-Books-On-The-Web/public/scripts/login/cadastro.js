@@ -1,9 +1,9 @@
-import {validarData} from "./validations/data.js";
-import {validarEmail} from "./validations/email.js";
-import {validarNome} from "./validations/name.js";
-import {validarSenha, validarConfirmarSenha} from "./validations/password.js";
-import {validarCpf} from "./validations/cpf.js"
-import {etapa, limparAviso} from "./validations/utilits.js";
+import {validarData} from "../validations/data.js";
+import {validarEmail} from "../validations/email.js";
+import {validarNome} from "../validations/name.js";
+import {validarSenha, validarConfirmarSenha} from "../validations/password.js";
+import {validarCpf} from "../validations/cpf.js"
+import {etapa, limparAviso} from "/ProjetoM2/The-Books-On-The-Web/public/scripts/validations/utilits.js";
 
 /* Pagina de cadastro  */
 const btmCriar = document.getElementById("btn-menu-criar");
