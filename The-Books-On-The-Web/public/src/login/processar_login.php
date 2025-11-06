@@ -26,7 +26,7 @@ $email = $_POST['email'];
 $senha_digitada = $_POST['senha'];
 
 
-$sql = "SELECT id_user, senha, tipo FROM usuarios WHERE email = ? LIMIT 1";
+$sql = "SELECT id_user, senha, tipo FROM usuarios WHERE email = ? AND is_active = 1 LIMIT 1";
 $stmt = mysqli_prepare($con, $sql);
 
 if ($stmt === false) {

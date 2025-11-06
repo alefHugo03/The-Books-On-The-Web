@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     const basePath = "/ProjetoM2/The-Books-On-The-Web/public/templates/corpos/";
-    loadComponent("#header-placeholder", basePath + "header.html");
+    loadComponent("#header-placeholder", basePath + "header.php");
     loadComponent("#footer-placeholder", basePath + "footer.html");
 
 });

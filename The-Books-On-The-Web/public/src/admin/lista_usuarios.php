@@ -1,7 +1,8 @@
 <?php
-// 1. INICIE A SESSÃO E CONECTE (Sempre a primeira coisa)
+// 1. INICIE A SESSÃO E CONECTE
 session_start();
-require_once '../conection/conectionBD.php'; // (Confira o caminho!)
+// (Ajuste o caminho se o seu 'lista_usuarios.php' não estiver em 'src/admin/')
+require_once '../conection/conectionBD.php';
 
 // 2. O PORTEIRO (VERIFICAÇÃO DUPLA)
 if (!isset($_SESSION['logado']) || $_SESSION['logado'] !== true) {
@@ -9,16 +10,16 @@ if (!isset($_SESSION['logado']) || $_SESSION['logado'] !== true) {
     exit;
 }
 if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'admin') {
-    header("Location: painel_logado.php"); 
+    header("Location: painel_logado.php"); // Manda para o painel de cliente
     exit;
 }
 
-// Pega o ID do admin logado (para checagens de segurança)
+// 3. SE CHEGOU AQUI, É ADMIN.
 $id_admin_logado = $_SESSION['id_user'];
 $mensagem_feedback = ""; // Para mostrar sucesso/erro
 
-// 3. SE CHEGOU AQUI, É ADMIN.
-//    AGORA, VERIFIQUE SE O ADMIN ESTÁ *FAZENDO* ALGUMA COISA (POST)
+// 4. PROCESSADOR DE AÇÕES (POST)
+// Verifique se o admin está *fazendo* alguma coisa (Criar ou Deletar)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // AÇÃO 1: CRIAR UM NOVO USUÁRIO
@@ -30,19 +31,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $senha_digitada = $_POST['senha'];
         $tipo = $_POST['tipo']; // O novo campo (admin/cliente)
 
-        // Segurança: Faça o hash da senha
+        // Segurança: Hash da senha
         $hash = password_hash($senha_digitada, PASSWORD_DEFAULT);
 
-        // Insira no banco
         $sql_create = 'INSERT INTO usuarios (data_nascimento, nome, email, senha, cpf, tipo) VALUES (?, ?, ?, ?, ?, ?)';
         $stmt_create = mysqli_prepare($con, $sql_create);
-        // "ssssss" = 6 strings (incluindo o 'tipo')
         mysqli_stmt_bind_param($stmt_create, 'ssssss', $data_nascimento, $nome, $email, $hash, $cpf, $tipo);
-        
+
         if (mysqli_stmt_execute($stmt_create)) {
             $mensagem_feedback = "Usuário '$nome' criado com sucesso!";
         } else {
-             if (mysqli_errno($con) == 1062) {
+            if (mysqli_errno($con) == 1062) {
                 $mensagem_feedback = "Erro: Este e-mail ou CPF já está em uso.";
             } else {
                 $mensagem_feedback = "Erro ao criar usuário: " . mysqli_error($con);
@@ -50,32 +49,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // AÇÃO 2: DELETAR UM USUÁRIO
+    // AÇÃO 2: "DELETAR" (DESATIVAR) UM USUÁRIO - (SOFT DELETE)
     if (isset($_POST['action']) && $_POST['action'] === 'delete') {
-        $id_para_deletar = $_POST['id_user_to_delete'];
+        $id_para_desativar = $_POST['id_user_to_delete'];
 
-        // Segurança: Impede o admin de se auto-deletar
-        if ($id_para_deletar == $id_admin_logado) {
-            $mensagem_feedback = "Erro: Você não pode deletar a si mesmo!";
+        // Segurança: Impede o admin de se auto-desativar
+        if ($id_para_desativar == $id_admin_logado) {
+            $mensagem_feedback = "Erro: Você não pode desativar a si mesmo!";
         } else {
-            // Delete do banco
-            $sql_delete = "DELETE FROM usuarios WHERE id_user = ?";
+
+            // É UM UPDATE, NÃO UM DELETE.
+            // Nós "desligamos" o usuário. Isso não quebra NENHUMA chave estrangeira.
+            $sql_delete = "UPDATE usuarios SET is_active = 0 WHERE id_user = ?";
             $stmt_delete = mysqli_prepare($con, $sql_delete);
-            mysqli_stmt_bind_param($stmt_delete, 'i', $id_para_deletar);
-            
+            mysqli_stmt_bind_param($stmt_delete, 'i', $id_para_desativar);
+
             if (mysqli_stmt_execute($stmt_delete)) {
-                $mensagem_feedback = "Usuário deletado com sucesso!";
+                $mensagem_feedback = "Usuário desativado com sucesso!";
             } else {
-                $mensagem_feedback = "Erro ao deletar usuário: " . mysqli_error($con);
+                $mensagem_feedback = "Erro ao desativar usuário: " . mysqli_error($con);
             }
         }
     }
-    
-    // (Poderíamos redirecionar, mas mostrar a $mensagem_feedback é mais amigável)
 }
 
-// 4. BUSCAR A LISTA DE USUÁRIOS (Sempre roda, depois das ações)
-$sql_select = "SELECT id_user, nome, email, tipo FROM usuarios WHERE id_user != ?";
+// 5. LER OS USUÁRIOS (Sempre roda, depois das ações)
+//    (Agora só mostra usuários ativos [is_active = 1])
+$sql_select = "SELECT id_user, nome, email, tipo FROM usuarios WHERE id_user != ? AND is_active = 1";
 $stmt_select = mysqli_prepare($con, $sql_select);
 mysqli_stmt_bind_param($stmt_select, "i", $id_admin_logado);
 mysqli_stmt_execute($stmt_select);
@@ -84,44 +84,69 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <base href="http://localhost/ProjetoM2/The-Books-On-The-Web/public/">
     <meta charset="UTF-8">
-    <title>Painel Admin - Gerenciar Usuários</title>
-    <style>
-        table { width: 100%; border-collapse: collapse; margin-top: 15px;}
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #f4f4f4; }
-        .form-delete { display: inline; }
-        .form-delete button { color: red; background: none; border: none; cursor: pointer; }
-        .form-create { background-color: #f9f9f9; padding: 15px; border: 1px solid #ddd; margin-top: 20px; }
-        .form-create div { margin-bottom: 10px; }
-        .form-create label { display: inline-block; width: 130px; }
-        .feedback { padding: 10px; background-color: #e6f7ff; border: 1px solid #b3e0ff; margin-bottom: 15px; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon" class="favicon">
+    <title>The Books On The Web</title>
 </head>
+
 <body>
     <header>
-        <h1>Painel de Controle do Administrador</h1>
-        <p>Logado como: <?php echo htmlspecialchars($_SESSION['email_user']); ?> (Admin)</p>
-        <nav>
-            <a href="src/login/painel_logado.php">Ver Painel (Visão Cliente)</a> |
-            <a href="src/login/logout.php">Sair</a>
-        </nav>
+
+        <div class="cabecalho header-cima">
+            <div class="empresa">
+                <a href="index.php" class="nome-empresa">
+                    <h1>The Books<br> On The Web</h1>
+                </a>
+                <a href="index.php" class="nome-empresa"><img src="styles/img/favicon.svg" alt="imagem logo" class="imagem-empresa"></a>
+            </div>
+
+            <div>
+                <h3>Painel de Controle do Administrador</h3>
+                <p>Logado como: <?php echo htmlspecialchars($_SESSION['email_user']); ?> (Admin)</p>
+                <nav>
+                    <a href="src/login/painel_logado.php">Ver Painel</a> |
+                    <a href="src/login/logout.php">Sair</a>
+                </nav>
+            </div>
+        </div>
+        
+
+        <div class="cabecalho header-baixo"> 
+            <nav class="opcoes"> 
+                <a href="index.php" class="item-menu">Home</a>
+                <a href="templates/biblioteca/resumo.html" class="item-menu">Sobre</a>
+                <a href="templates/biblioteca/livros.php" class="item-menu">Serviços</a>
+                
+                <?php
+                if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
+                    echo '<a href="templates/biblioteca/mybooks.php" class="item-menu">Meus Livros</a>';
+                }
+                ?>
+                <?php
+                if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin') {
+                    echo '<a href="src/admin/lista_usuarios.php" class="item-menu">Painel Admin</a>';
+                }
+                ?>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        
+    <main style="padding: 20px;">
+
         <?php if (!empty($mensagem_feedback)): ?>
             <div class="feedback"><?php echo $mensagem_feedback; ?></div>
         <?php endif; ?>
 
         <div class="form-create">
             <h2>Cadastrar Novo Usuário</h2>
-            <form action="src/login/lista_usuarios.php" method="POST">
+            <form action="src/admin/lista_usuarios.php" method="POST">
                 <input type="hidden" name="action" value="create">
-                
+
                 <div>
                     <label for="nome">Nome:</label>
                     <input type="text" id="nome" name="nome" required>
@@ -156,7 +181,7 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
         </div>
 
 
-        <h2>Lista de Usuários do Sistema</h2>
+        <h2>Lista de Usuários Ativos</h2>
         <table>
             <thead>
                 <tr>
@@ -164,7 +189,8 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
                     <th>Nome</th>
                     <th>Email</th>
                     <th>Tipo</th>
-                    <th>Ações</th> </tr>
+                    <th>Ações</th>
+                </tr>
             </thead>
             <tbody>
                 <?php
@@ -175,28 +201,28 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
                         echo '<td>' . htmlspecialchars($usuario['nome']) . '</td>';
                         echo '<td>' . htmlspecialchars($usuario['email']) . '</td>';
                         echo '<td>' . htmlspecialchars($usuario['tipo']) . '</td>';
-                        
-                        // NOVO: BOTÃO DELETAR
+
+                        // BOTÃO "DELETAR" (Desativar)
                         echo '<td>';
-                        echo '<form action="src/login/lista_usuarios.php" method="POST" class="form-delete" onsubmit="return confirm(\'Tem certeza que deseja deletar este usuário? Esta ação não pode ser desfeita.\');">';
+                        // Este formulário posta para a própria página
+                        echo '<form action="src/admin/lista_usuarios.php" method="POST" class="form-delete" onsubmit="return confirm(\'Tem certeza que deseja DESATIVAR este usuário? Ele não poderá mais logar.\');">';
                         echo '<input type="hidden" name="action" value="delete">';
                         echo '<input type="hidden" name="id_user_to_delete" value="' . $usuario['id_user'] . '">';
-                        echo '<button type="submit">Deletar</button>';
+                        echo '<button type="submit">Desativar</button>';
                         echo '</form>';
                         echo '</td>';
 
                         echo '</tr>';
                     }
                 } else {
-                    echo '<tr><td colspan="5">Nenhum outro usuário encontrado.</td></tr>';
+                    echo '<tr><td colspan="5">Nenhum outro usuário ativo encontrado.</td></tr>';
                 }
-                // O botão "Voltar" que você tinha estava mal posicionado.
-                // A navegação já está no header.
                 ?>
             </tbody>
         </table>
-
     </main>
+    <footer id="footer-placeholder" class="caixa-footer"></footer>
 </body>
 <script src="scripts/script.js"></script>
+
 </html>
