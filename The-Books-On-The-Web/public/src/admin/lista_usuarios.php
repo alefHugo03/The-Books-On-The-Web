@@ -1,37 +1,29 @@
 <?php
-// 1. INICIE A SESSÃO E CONECTE
 session_start();
-// (Ajuste o caminho se o seu 'lista_usuarios.php' não estiver em 'src/admin/')
 require_once '../conection/conectionBD.php';
 
-// 2. O PORTEIRO (VERIFICAÇÃO DUPLA)
 if (!isset($_SESSION['logado']) || $_SESSION['logado'] !== true) {
     header("Location: /ProjetoM2/The-Books-On-The-Web/public/templates/login/entrada.html");
     exit;
 }
 if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'admin') {
-    header("Location: painel_logado.php"); // Manda para o painel de cliente
+    header("Location: painel_logado.php");
     exit;
 }
 
-// 3. SE CHEGOU AQUI, É ADMIN.
 $id_admin_logado = $_SESSION['id_user'];
-$mensagem_feedback = ""; // Para mostrar sucesso/erro
+$mensagem_feedback = "";
 
-// 4. PROCESSADOR DE AÇÕES (POST)
-// Verifique se o admin está *fazendo* alguma coisa (Criar ou Deletar)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // AÇÃO 1: CRIAR UM NOVO USUÁRIO
     if (isset($_POST['action']) && $_POST['action'] === 'create') {
         $nome = $_POST['nome'];
         $email = $_POST['email'];
         $cpf = $_POST['cpf'];
         $data_nascimento = $_POST['data_nascimento'];
         $senha_digitada = $_POST['senha'];
-        $tipo = $_POST['tipo']; // O novo campo (admin/cliente)
+        $tipo = $_POST['tipo'];
 
-        // Segurança: Hash da senha
         $hash = password_hash($senha_digitada, PASSWORD_DEFAULT);
 
         $sql_create = 'INSERT INTO usuarios (data_nascimento, nome, email, senha, cpf, tipo) VALUES (?, ?, ?, ?, ?, ?)';
@@ -49,17 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // AÇÃO 2: "DELETAR" (DESATIVAR) UM USUÁRIO - (SOFT DELETE)
     if (isset($_POST['action']) && $_POST['action'] === 'delete') {
         $id_para_desativar = $_POST['id_user_to_delete'];
 
-        // Segurança: Impede o admin de se auto-desativar
         if ($id_para_desativar == $id_admin_logado) {
             $mensagem_feedback = "Erro: Você não pode desativar a si mesmo!";
         } else {
 
-            // É UM UPDATE, NÃO UM DELETE.
-            // Nós "desligamos" o usuário. Isso não quebra NENHUMA chave estrangeira.
             $sql_delete = "UPDATE usuarios SET is_active = 0 WHERE id_user = ?";
             $stmt_delete = mysqli_prepare($con, $sql_delete);
             mysqli_stmt_bind_param($stmt_delete, 'i', $id_para_desativar);
@@ -73,8 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// 5. LER OS USUÁRIOS (Sempre roda, depois das ações)
-//    (Agora só mostra usuários ativos [is_active = 1])
 $sql_select = "SELECT id_user, nome, email, tipo FROM usuarios WHERE id_user != ? AND is_active = 1";
 $stmt_select = mysqli_prepare($con, $sql_select);
 mysqli_stmt_bind_param($stmt_select, "i", $id_admin_logado);
@@ -96,7 +82,6 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
 
 <body>
     <header>
-
         <div class="cabecalho header-cima">
             <div class="empresa">
                 <a href="index.php" class="nome-empresa">
@@ -114,14 +99,12 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
                 </nav>
             </div>
         </div>
-        
-
-        <div class="cabecalho header-baixo"> 
-            <nav class="opcoes"> 
+        <div class="cabecalho header-baixo">
+            <nav class="opcoes">
                 <a href="index.php" class="item-menu">Home</a>
                 <a href="templates/biblioteca/resumo.html" class="item-menu">Sobre</a>
                 <a href="templates/biblioteca/livros.php" class="item-menu">Serviços</a>
-                
+
                 <?php
                 if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
                     echo '<a href="templates/biblioteca/mybooks.php" class="item-menu">Meus Livros</a>';
@@ -136,14 +119,14 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
         </div>
     </header>
 
-    <main style="padding: 20px;">
+    <main class="painel-admin">
 
         <?php if (!empty($mensagem_feedback)): ?>
             <div class="feedback"><?php echo $mensagem_feedback; ?></div>
         <?php endif; ?>
 
-        <div class="form-create">
-            <h2>Cadastrar Novo Usuário</h2>
+        <div class="form-create conteudo-oculto" id="minhaDiv">
+            <h2>Cadastrar Novo Usuário butt <button onclick="alternarDiv()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10l5 5 5-5" /></svg></button></h2>
             <form action="src/admin/lista_usuarios.php" method="POST">
                 <input type="hidden" name="action" value="create">
 
@@ -224,5 +207,6 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
     <footer id="footer-placeholder" class="caixa-footer"></footer>
 </body>
 <script src="scripts/script.js"></script>
+<script src="scripts/animations/ocultar.js"></script>
 
 </html>

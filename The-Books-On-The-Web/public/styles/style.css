@@ -249,6 +249,20 @@ a {
     gap: 10px;
 }
 
+.painel-admin{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 500px;
+    margin: 40px auto;
+    margin-top: 6%;
+    padding: 50px;
+    gap: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 .btn-menu {
     width: 100%;
     padding: 1%;
