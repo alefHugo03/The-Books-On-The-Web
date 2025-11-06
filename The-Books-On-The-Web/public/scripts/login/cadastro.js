@@ -4,14 +4,15 @@ import {validarNome} from "../validations/name.js";
 import {validarSenha, validarConfirmarSenha} from "../validations/password.js";
 import {validarCpf} from "../validations/cpf.js"
 import {etapa, limparAviso} from "/ProjetoM2/The-Books-On-The-Web/public/scripts/validations/utilits.js";
+const formCadastro = document.getElementById("form-cadastro");
 
 /* Pagina de cadastro  */
-const btmCriar = document.getElementById("btn-menu-criar");
+formCadastro.addEventListener('submit', processarDadosCadastro);
 
-btmCriar.addEventListener("click", processarDadosCadastro)
+function processarDadosCadastro(event) {
+    event.preventDefault(); 
+    console.log("Formulário interceptado pelo JS.");
 
-function processarDadosCadastro() {
-    
     etapa.forEach(limparAviso);
 
     const nome = validarNome();
@@ -22,35 +23,27 @@ function processarDadosCadastro() {
     const confirmarCpf = validarCpf();
 
 
-    if (!nome || !email || !nascimento || !senha || !confirmarSenha || confirmarCpf) return; 
+    if (!nome || !email || !nascimento || !senha || !confirmarSenha || !confirmarCpf) return;
 
-    // 4. Envia para o servidor
-    const dadosParaEnviar = {
-        nome: nome, 
-        email: email,
-        nascimento: nascimento,
-        senha: senha
-    };
+    const dados = new FormData(formCadastro);
 
-    console.log("Dados validados, enviando:", dadosParaEnviar);
-
-    fetch('/cadastro', {
+    fetch('/ProjetoM2/The-Books-On-The-Web/public/src/login/cadastro.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dadosParaEnviar),
+        body: dados 
     })
-    .then(response => {
-        if (response.ok) {
-            alert("Cadastro realizado com sucesso!");
+    .then(response => response.json()) 
+    .then(data => {
+        console.log("Resposta do servidor:", data);
+        
+        if (data.sucesso) {
+            window.location.href = data.redirect_url;
         } else {
-            alert("Ocorreu um erro no cadastro. Tente novamente.");
+            avisoFalas(data.mensagem, etapa[0]); 
         }
     })
     .catch(error => {
-        console.error("Erro na requisição:", error);
-        alert("Não foi possível conectar ao servidor.");
+        console.error("Erro no fetch:", error);
+        avisoFalas("Erro de conexão. Tente mais tarde.", etapa[0]);
     });
 };
 

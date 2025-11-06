@@ -26,7 +26,7 @@ $email = $_POST['email'];
 $senha_digitada = $_POST['senha'];
 
 
-$sql = "SELECT id_user, senha FROM usuarios WHERE email = ? LIMIT 1";
+$sql = "SELECT id_user, senha, tipo FROM usuarios WHERE email = ? LIMIT 1";
 $stmt = mysqli_prepare($con, $sql);
 
 if ($stmt === false) {
@@ -48,9 +48,11 @@ if ($usuario && password_verify($senha_digitada, $usuario['senha'])) {
     $_SESSION['id_user'] = $usuario['id_user'];
     $_SESSION['email_user'] = $email;
 
+    $_SESSION['tipo'] = $usuario['tipo'];
+
     $resposta['sucesso'] = true;
     $resposta['mensagem'] = "Login bem-sucedido!";
-    $resposta['redirect_url'] = "painel_logado.php";
+    $resposta['redirect_url'] = "src/login/painel_logado.php";
 
 } else {
     $resposta['sucesso'] = false;

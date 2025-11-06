@@ -1,6 +1,6 @@
 -- Cria o banco de dados
-CREATE DATABASE IF NOT EXISTS thebookisontheweb;
-USE thebookisontheweb;
+CREATE DATABASE IF NOT EXISTS biblioteca_bd;
+USE biblioteca_bd;
 
 -- -----------------------------------------------------
 -- Tabelas CREATE
@@ -119,8 +119,8 @@ VALUES
 -- 2. Tabelas Dependentes (Nível 1)
 INSERT INTO usuarios (endereco, data_nascimento, nome, email, senha, cpf, tipo)
 VALUES
-(1, '1990-05-15', 'João Silva', 'joao@email.com', 'hash_seguro_da_senha123', '111.222.333-44', 'cliente'),
-(2, '1985-10-20', 'Maria Souza', 'maria@email.com', 'hash_seguro_da_senha456', '555.666.777-88', 'admin');
+(1, '1990-05-15', 'João Silva', 'maria@gmail.com', '73656e6861313233', '111.222.333-44', 'cliente'),
+(2, '1985-10-20', 'Maria Souza', 'alef@gmail.com', 'd25230d6d94cf861be33a5e922fca98a', '555.666.777-88', 'admin');
 
 INSERT INTO livro (titulo, descricao, preco, data_publi, categoria)
 VALUES
@@ -131,9 +131,9 @@ VALUES
 -- 3. Tabelas de Ligação (Muitos-para-Muitos)
 INSERT INTO escritor (autor, livro)
 VALUES
-(1; 1), 
-(2; 2), 
-(3; 3); 
+(1, 1), 
+(2, 2), 
+(3, 3); 
 
 -- 4. Pedidos e Pagamentos
 INSERT INTO pedido (data_pedido, valor_total, usuario)
@@ -149,9 +149,9 @@ VALUES
 -- 5. Outras Tabelas de Ligação e Avaliação
 INSERT INTO contem (livro, pedido)
 VALUES
-(1; 1),
-(2; 2),
-(3; 2);
+(1, 1),
+(2, 2),
+(3, 2);
 
 INSERT INTO avaliacao (nota, comentario, dt_avaliacao, usuario, livro)
 VALUES

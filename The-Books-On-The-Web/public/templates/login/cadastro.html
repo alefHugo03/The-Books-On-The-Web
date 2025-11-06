@@ -14,7 +14,7 @@
     <main>
         <div class="caixa-menu cadastro-menu">
             <h2>Cadastre-se aqui</h2>
-            <form method="post" class="menu">
+            <form method="post" class="menu" id="form-cadastro">
                 <div class="valor caixa-texto">
                     <label for="nome">Nome: </label>
                     <input type="text" name="nome" id="nome" class="valor-texto" placeholder="Digite seu nome" required>
@@ -28,7 +28,7 @@
 
                 <div class="valor caixa-texto">
                     <label for="cpf">CPF: </label>
-                    <input type="number" name="cpf" id="cpf" class="valor-texto" placeholder="Digite seu CPF" required>
+                    <input type="text" name="cpf" id="cpf" class="valor-texto" placeholder="Digite seu CPF" required>
                     <p id="avisoCpf" class="aviso"></p>
                 </div>
 
@@ -60,7 +60,7 @@
                 <div class="valor">
                     <div class="interativo">
                         <button type="button" id="btnVoltar" class="btn-menu"><a href="templates/login/entrada.html">Voltar</a></button>
-                        <button type="button" id="btn-menu-criar" class="btn-menu">Criar</button>
+                        <button type="submit" id="btn-menu-criar" class="btn-menu">Criar</button>
                     </div>
                     <p id="aviso"></p>
                 </div>
