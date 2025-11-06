@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nome = $_POST['nome'];
         $email = $_POST['email'];
         $cpf = $_POST['cpf'];
-        $data_nascimento = $_POST['data_nascimento'];
+        $data_nascimento = $_POST['data'];
         $senha_digitada = $_POST['senha'];
         $tipo = $_POST['tipo'];
 
@@ -124,42 +124,62 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
         <?php if (!empty($mensagem_feedback)): ?>
             <div class="feedback"><?php echo $mensagem_feedback; ?></div>
         <?php endif; ?>
-
+        
+        <h2>Cadastrar Novo Usuário butt <button onclick="alternarDiv()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10l5 5 5-5" /></svg></button></h2>
         <div class="form-create conteudo-oculto" id="minhaDiv">
-            <h2>Cadastrar Novo Usuário butt <button onclick="alternarDiv()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10l5 5 5-5" /></svg></button></h2>
-            <form action="src/admin/lista_usuarios.php" method="POST">
+            <form action="src/admin/lista_usuarios.php" method="POST" class="menu">
                 <input type="hidden" name="action" value="create">
 
-                <div>
-                    <label for="nome">Nome:</label>
-                    <input type="text" id="nome" name="nome" required>
+                <div class="valor caixa-texto">
+                    <label for="nome">Nome: </label>
+                    <input type="text" name="nome" id="nome" class="valor-texto" placeholder="Digite seu nome" required>
+                    <p id="avisoNome" class="aviso"></p>
                 </div>
-                <div>
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
+
+                <div class="valor caixa-texto">
+                    <label for="email">Email: </label>
+                    <input type="email" name="email" class="valor-texto" id="email" placeholder="Digite seu email" required>
+                    <p id="avisoEmail" class="aviso"></p>
                 </div>
-                <div>
-                    <label for="cpf">CPF:</label>
-                    <input type="text" id="cpf" name="cpf" required>
+
+                <div class="valor caixa-texto">
+                    <label for="cpf">CPF: </label>
+                    <input type="text" name="cpf" id="cpf" class="valor-texto" placeholder="Digite seu CPF" required>
+                    <p id="avisoCpf" class="aviso"></p>
                 </div>
-                <div>
-                    <label for="data_nascimento">Data Nasc.:</label>
-                    <input type="date" id="data_nascimento" name="data_nascimento">
+
+
+
+
+                <div class="valor caixa-texto">
+                    <label for="data">Data de Nascimento: </label>
+                    <input type="date" name="data" id="data" class="valor-texto" placeholder="Digite sua data de nascimento" required>
+                    <p id="avisoData" class="aviso"></p>
                 </div>
-                <div>
-                    <label for="senha">Senha:</label>
-                    <input type="password" id="senha" name="senha" required>
+
+                <div class="valor caixa-texto">
+                    <label for="senha">Senha: </label>
+                    <input type="password" name="senha" id="senha" class="valor-texto" placeholder="Digite sua senha" required>
+                    <p id="avisoSenha" class="aviso"></p>
                 </div>
+
+                <div class="valor caixa-texto">
+                    <label for="senhaDois">Repita a senha: </label>
+                    <input type="password" name="senhaDois" id="senhaDois" class="valor-texto" placeholder="Digite novamente sua senha" required>
+                    <p id="avisoSenhaDois" class="aviso"></p>
+                </div>
+
+
                 <div>
                     <label for="tipo">Tipo de Conta:</label>
-                    <select id="tipo" name="tipo" required>
+                    <select id="tipo" name="tipo" class="valor-texto" required>
                         <option value="cliente">Cliente</option>
                         <option value="admin">Admin</option>
                     </select>
                 </div>
-                <div>
-                    <button type="submit">Criar Usuário</button>
-                </div>
+                <div class="interativo">
+                        <button type="submit" id="btn-menu-criar" class="btn-menu">Criar</button>
+                    </div>
             </form>
         </div>
 

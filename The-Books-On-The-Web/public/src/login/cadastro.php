@@ -23,7 +23,7 @@ $senha_digitada = $_POST['senha'];
 
 $hash = password_hash($senha_digitada, PASSWORD_DEFAULT);
 
-$sql = 'INSERT INTO usuarios (data_nascimento, nome, email, senha, cpf, tipo) VALUES (?, ?, ?, ?, ?, "cliente")';
+$sql = 'INSERT INTO usuarios (data_nascimento, nome, email, senha, cpf, tipo) VALUES (?, ?, ?, ?, ?, "admin")';
 $stmt = mysqli_prepare($con, $sql);
 
 mysqli_stmt_bind_param($stmt, 'sssss', $data_nascimento, $nome, $email, $hash, $cpf);

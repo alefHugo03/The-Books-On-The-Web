@@ -253,7 +253,7 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 500px;
+    width: 600px;
     margin: 40px auto;
     margin-top: 6%;
     padding: 50px;
@@ -371,4 +371,48 @@ a {
 #header-placeholder.loaded,
 #footer-placeholder.loaded {
     opacity: 1;
+}
+.conteudo-oculto {
+    display: none;
+    background-color: lightblue;
+    padding: 20px;
+    margin-top: 10px;
+    width: 300px;
+  }
+
+  .form-create{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+
+  
+
+
+  /* Borda padrão para a tabela e células */
+table, th, td {
+  border: 1px solid black;
+}
+
+/* Consolida as bordas em uma única linha */
+table {
+  border-collapse: collapse;
+  margin: auto; /* Centraliza a tabela */
+}
+
+/* Espaçamento interno e largura das células */
+th, td {
+  padding: 10px;
+  width: 120px;
+}
+
+/* Estilo para o cabeçalho da tabela */
+th {
+  font-weight: bold;
+}
+
+/* Efeito de listras para linhas pares */
+tr:nth-child(even) {
+  background-color: #DCEBE6;
 }

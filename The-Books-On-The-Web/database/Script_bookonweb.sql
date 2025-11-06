@@ -1,7 +1,7 @@
 -- Cria o banco de dados (se ele não existir)
-CREATE DATABASE IF NOT EXISTS thebookisontheweb;
+CREATE DATABASE IF NOT EXISTS biblioteca_bd;
 -- Seleciona o banco para usar
-USE thebookisontheweb;
+USE biblioteca_bd;
 
 -- -----------------------------------------------------
 -- Tabela 'endereco'

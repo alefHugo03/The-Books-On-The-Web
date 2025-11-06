@@ -11,7 +11,6 @@ export const validarCpf = () => {
     if (nome.length < 14) return avisoFalas(nomeFalas[1] , ID_AVISO);
     if (!nomeRegex.test(nome)) return avisoFalas(nomeFalas[2], ID_AVISO);
 
-    // Se passou, limpa qualquer aviso antigo e retorna o valor
-    limparAviso(ID_AVISO); // CORRIGIDO
+    limparAviso(ID_AVISO); 
     return nome;
 };
