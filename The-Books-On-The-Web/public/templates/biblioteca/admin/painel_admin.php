@@ -1,23 +1,12 @@
 <?php
-// 1. INICIE A SESSÃO E CONECTE
-session_start();
-require_once '../conection/conectionBD.php'; // (Confira o caminho!)
+require_once '../../../src/admin/validarAdmin.php'; 
 
-// 2. O PORTEIRO (VERIFICAÇÃO DUPLA)
-if (!isset($_SESSION['logado']) || $_SESSION['logado'] !== true) {
-    header("Location: /ProjetoM2/The-Books-On-The-Web/public/templates/login/entrada.html");
-    exit;
-}
-if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'admin') {
-    header("Location: painel_logado.php"); // Manda para o painel de cliente
-    exit;
-}
+$id_admin_logado = validarAdmin();
 
-$id_admin_logado = $_SESSION['id_user'];
-$mensagem_feedback = ""; // Para mostrar sucesso/erro
+require_once '../../../src/conection/conectionBD.php';
 
-// 3. SE CHEGOU AQUI, É ADMIN.
-//    AGORA, VERIFIQUE SE O ADMIN ESTÁ *FAZENDO* ALGUMA COISA (POST)
+$mensagem_feedback = "";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // AÇÃO 1: CRIAR UM NOVO USUÁRIO
@@ -121,6 +110,7 @@ mysqli_stmt_execute($stmt_select_of);
 $resultado_usuarios_desligados = mysqli_stmt_get_result($stmt_select_of);
 
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -155,6 +145,7 @@ $resultado_usuarios_desligados = mysqli_stmt_get_result($stmt_select_of);
                 if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
                     echo '<a href="templates/biblioteca/mybooks.php" class="item-menu">Meus Livros</a>';
                 }
+                
                 if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin') {
                     echo '<a href="src/admin/lista_usuarios.php" class="item-menu">Painel Admin</a>';
                 }
