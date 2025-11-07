@@ -155,8 +155,6 @@ $resultado_usuarios_desligados = mysqli_stmt_get_result($stmt_select_of);
                 </div>
 
 
-
-
                 <div class="valor caixa-texto">
                     <label for="data">Data de Nascimento: </label>
                     <input type="date" name="data" id="data" class="valor-texto" placeholder="Digite sua data de nascimento" required>

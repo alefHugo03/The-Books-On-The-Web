@@ -1,5 +1,5 @@
 <?php
-require_once '../conection/conectionBD.php'; // (Verifique este caminho)
+require_once '../conection/conectionBD.php';
 
 header('Content-Type: application/json');
 
@@ -35,8 +35,7 @@ if ($executou_com_sucesso) {
     $resposta['mensagem'] = "Admin cadastrado com segurança!";
     $resposta['redirect_url'] = "templates/login/entrada.html";
 } else {
-    // FALHA! (Agora sim, vamos checar o motivo)
-    if (mysqli_errno($con) == 1062) { // 1062 = Erro de duplicata
+    if (mysqli_errno($con) == 1062) {
         $resposta['mensagem'] = "Ops! Este e-mail ou CPF já está em uso.";
     } else {
         $resposta['mensagem'] = "Ops! Não foi possível cadastrar: " . mysqli_error($con);
