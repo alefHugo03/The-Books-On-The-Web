@@ -58,7 +58,7 @@ $resultado = mysqli_stmt_get_result($stmt);
                             echo '</div>';
                         }                    
                 ?>
-                <button type="button" id="btnVoltar" class="btn-menu"><a href="index.php">Voltar</a></button>
+                <a href="index.php"><button type="button" id="btnVoltar" class="btn-menu">Voltar</button></a>
             </div>
         </div>
 

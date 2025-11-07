@@ -56,7 +56,7 @@ session_start();
         ?>
         <?php
         if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin') {
-            echo '<a href="src/admin/lista_usuarios.php" class="item-menu">Painel Admin</a>';
+            echo '<a href="templates/biblioteca/admin/painel_admin.php" class="item-menu">Painel Admin</a>';
         }
         ?>
     </nav>
