@@ -253,7 +253,7 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 600px;
+    width: 800px;
     margin: 40px auto;
     margin-top: 6%;
     padding: 50px;
@@ -377,7 +377,7 @@ a {
     background-color: lightblue;
     padding: 20px;
     margin-top: 10px;
-    width: 300px;
+    width: 400px;
   }
 
   .form-create{
@@ -387,7 +387,7 @@ a {
   }
 
 
-  
+
 
 
   /* Borda padrão para a tabela e células */
@@ -415,4 +415,14 @@ th {
 /* Efeito de listras para linhas pares */
 tr:nth-child(even) {
   background-color: #DCEBE6;
+}
+
+
+.btn-remove{
+    background-color: rgb(255, 63, 63);
+    color: rgb(247, 196, 196);
+    border: var(--cor-preto);
+}
+.btn-remove:hover{
+    background-color: rgb(253, 126, 126);
 }

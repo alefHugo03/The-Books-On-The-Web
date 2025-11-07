@@ -65,7 +65,14 @@ $sql_select = "SELECT id_user, nome, email, tipo FROM usuarios WHERE id_user != 
 $stmt_select = mysqli_prepare($con, $sql_select);
 mysqli_stmt_bind_param($stmt_select, "i", $id_admin_logado);
 mysqli_stmt_execute($stmt_select);
-$resultado_usuarios = mysqli_stmt_get_result($stmt_select);
+$resultado_usuarios_ativos = mysqli_stmt_get_result($stmt_select);
+
+$sql_select_of = "SELECT id_user, nome, email, tipo FROM usuarios WHERE id_user != ? AND is_active = 0";
+$stmt_select_of = mysqli_prepare($con, $sql_select_of);
+mysqli_stmt_bind_param($stmt_select_of, "i", $id_admin_logado);
+mysqli_stmt_execute($stmt_select_of);
+$resultado_usuarios_desligados = mysqli_stmt_get_result($stmt_select_of);
+
 
 ?>
 <!DOCTYPE html>
@@ -92,8 +99,7 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
 
             <div>
                 <h3>Painel de Controle do Administrador</h3>
-                <p>Logado como: <?php echo htmlspecialchars($_SESSION['email_user']); ?> (Admin)</p>
-                <nav>
+                <nav style="margin-right: auto;">
                     <a href="src/login/painel_logado.php">Ver Painel</a> |
                     <a href="src/login/logout.php">Sair</a>
                 </nav>
@@ -173,6 +179,7 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
                 <div>
                     <label for="tipo">Tipo de Conta:</label>
                     <select id="tipo" name="tipo" class="valor-texto" required>
+                        <option value="" selected disabled>Selecione</option>
                         <option value="cliente">Cliente</option>
                         <option value="admin">Admin</option>
                     </select>
@@ -183,46 +190,60 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
             </form>
         </div>
 
+        <div>
+            <h2>Lista de Usuários Ativos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Tipo</th>
+                        <th>Deletar</th>
+                        <th>Editar</th>
+                        <th>Ativar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if (mysqli_num_rows($resultado_usuarios_ativos) > 0) {
+                        while ($usuario = mysqli_fetch_assoc($resultado_usuarios_ativos)) {
+                            echo '<tr>';
+                            echo '<td>' . $usuario['id_user'] . '</td>';
+                            echo '<td>' . htmlspecialchars($usuario['nome']) . '</td>';
+                            echo '<td>' . htmlspecialchars($usuario['email']) . '</td>';
+                            echo '<td>' . htmlspecialchars($usuario['tipo']) . '</td>';
 
-        <h2>Lista de Usuários Ativos</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Tipo</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if (mysqli_num_rows($resultado_usuarios) > 0) {
-                    while ($usuario = mysqli_fetch_assoc($resultado_usuarios)) {
-                        echo '<tr>';
-                        echo '<td>' . $usuario['id_user'] . '</td>';
-                        echo '<td>' . htmlspecialchars($usuario['nome']) . '</td>';
-                        echo '<td>' . htmlspecialchars($usuario['email']) . '</td>';
-                        echo '<td>' . htmlspecialchars($usuario['tipo']) . '</td>';
+                            echo '<td>';
+                            // Este formulário posta para a própria página
+                            echo '<form action="src/admin/lista_usuarios.php" method="POST" class="form-delete" onsubmit="return confirm(\'Tem certeza que deseja DESATIVAR este usuário? Ele não poderá mais logar.\');">';
+                            echo '<input type="hidden" name="action" value="delete">';
+                            echo '<input type="hidden" name="id_user_to_delete" value="' . $usuario['id_user'] . '">';
+                            echo '<button type="submit" class="btn-menu btn-remove">Desativar</button>';
+                            echo '</form>';
+                            echo '</td>';
 
-                        // BOTÃO "DELETAR" (Desativar)
-                        echo '<td>';
-                        // Este formulário posta para a própria página
-                        echo '<form action="src/admin/lista_usuarios.php" method="POST" class="form-delete" onsubmit="return confirm(\'Tem certeza que deseja DESATIVAR este usuário? Ele não poderá mais logar.\');">';
-                        echo '<input type="hidden" name="action" value="delete">';
-                        echo '<input type="hidden" name="id_user_to_delete" value="' . $usuario['id_user'] . '">';
-                        echo '<button type="submit">Desativar</button>';
-                        echo '</form>';
-                        echo '</td>';
+                            echo '<td>';
+                            echo '<a href="src/admin/editar_usuario.php?id=' . $usuario['id_user'] . '" class="btn-menu btn-edit">Editar</a>';
+                            echo '</td>';
 
-                        echo '</tr>';
+                            echo '<td>';
+                            echo '<form action="src/admin/lista_usuarios.php" method="POST" class="form-activate">';
+                            echo '<input type="hidden" name="action" value="activate">'; // Ação para reativar
+                            echo '<input type="hidden" name="id_user_to_activate" value="' . $usuario['id_user'] . '">';
+                            echo '<button type="submit" class="btn-menu btn-success">Ativar</Gbutton>';
+                            echo '</form>';
+                            echo '</td>';
+
+                            echo '</tr>';
+                        }
+                    } else {
+                        echo '<tr><td colspan="5">Nenhum outro usuário ativo encontrado.</td></tr>';
                     }
-                } else {
-                    echo '<tr><td colspan="5">Nenhum outro usuário ativo encontrado.</td></tr>';
-                }
-                ?>
-            </tbody>
-        </table>
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </main>
     <footer id="footer-placeholder" class="caixa-footer"></footer>
 </body>
@@ -230,3 +251,4 @@ $resultado_usuarios = mysqli_stmt_get_result($stmt_select);
 <script src="scripts/animations/ocultar.js"></script>
 
 </html>
+
