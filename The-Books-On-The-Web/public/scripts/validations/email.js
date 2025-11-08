@@ -1,7 +1,7 @@
 import {avisoFalas, limparAviso, etapa} from "/ProjetoM2/The-Books-On-The-Web/public/scripts/validations/utilits.js"
 
-export const validarEmail = () => {
-    const inputEmail = document.getElementById("email");
+export const validarEmail = (emailValue) => {
+    const inputEmail = document.getElementById(emailValue);
     const email = inputEmail.value;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     // CORRIGIDO: Adicionado 'const'

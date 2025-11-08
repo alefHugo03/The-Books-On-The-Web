@@ -1,8 +1,8 @@
 import {avisoFalas, limparAviso, etapa} from "/ProjetoM2/The-Books-On-The-Web/public/scripts/validations/utilits.js"
 
 
-export const validarSenha = () => {
-    const inputSenha = document.getElementById("senha");
+export const validarSenha = (senhaValue) => {
+    const inputSenha = document.getElementById(senhaValue);
     const senha = inputSenha.value;
     const nomeFalas = ["O campo senha não pode estar vazio.", "A senha deve ter pelo menos 6 caracteres."];
     const ID_AVISO = etapa[3];
@@ -13,8 +13,8 @@ export const validarSenha = () => {
     limparAviso(ID_AVISO);
     return senha;
 };
-export const validarConfirmarSenha = (senha) => {
-    const inputConfirmarSenha = document.getElementById("senhaDois");
+export const validarConfirmarSenha = (senha, senhaDois) => {
+    const inputConfirmarSenha = document.getElementById(senhaDois);
     const confirmarSenha = inputConfirmarSenha.value;
     const nomeFalas = ["O campo não pode estar vazio.", "As senhas não conferem!"];
     const ID_AVISO = etapa[4];

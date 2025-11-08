@@ -2,6 +2,14 @@
 
 require_once '../conection/conectionBD.php'; 
 
+header('Content-Type: application/json');
+
+$resposta = [
+    'sucesso' => false,
+    'mensagem' => '',
+    'redirect_url' => ''
+];
+
 function validarAdmin() {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();

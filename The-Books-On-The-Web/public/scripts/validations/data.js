@@ -1,7 +1,7 @@
 import {avisoFalas, limparAviso, etapa} from "/ProjetoM2/The-Books-On-The-Web/public/scripts/validations/utilits.js"
 
-export const validarData = () => {
-    const inputNascimento = document.getElementById("data");
+export const validarData = (dataValue) => {
+    const inputNascimento = document.getElementById(dataValue);
     const dataString = inputNascimento.value; 
     const nomeFalas = ["Por favor, selecione sua data de nascimento.", "A data de nascimento não pode ser uma data no futuro.", "Você deve ter pelo menos 18 anos para se cadastrar."];
     const ID_AVISO = etapa[2];

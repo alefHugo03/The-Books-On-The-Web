@@ -1,7 +1,7 @@
 import {avisoFalas, limparAviso, etapa} from "/ProjetoM2/The-Books-On-The-Web/public/scripts/validations/utilits.js"
 
-export const validarNome = () => {
-    const inputNome = document.getElementById("nome");
+export const validarNome = (nomeValue) => {
+    const inputNome = document.getElementById(nomeValue);
     const nome = inputNome.value;
     const nomeRegex = /^[a-zA-Z\s]+$/;
     const nomeFalas = ["O campo nome não pode estar vazio.", "O nome deve conter mais de 3 letras.", "O nome deve conter apenas letras e espaços."];

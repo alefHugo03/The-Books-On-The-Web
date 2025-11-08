@@ -1,9 +1,10 @@
 import {validarData} from "../validations/data.js";
 import {validarEmail} from "../validations/email.js";
 import {validarNome} from "../validations/name.js";
-import {validarSenha, validarConfirmarSenha} from "../validations/password.js";
+import {validarSenha} from "../validations/password.js";
 import {validarCpf} from "../validations/cpf.js"
 import {etapa, limparAviso} from "/ProjetoM2/The-Books-On-The-Web/public/scripts/validations/utilits.js";
+
 const formCadastro = document.getElementById("form-cadastro");
 
 /* Pagina de cadastro  */
@@ -19,7 +20,6 @@ function processarDadosCadastro(event) {
     const email = validarEmail('email');
     const nascimento = validarData('data');
     const senha = validarSenha('senha');
-    const confirmarSenha = validarConfirmarSenha(senha, 'senhaDois');
     const confirmarCpf = validarCpf('cpf');
 
 
@@ -27,7 +27,7 @@ function processarDadosCadastro(event) {
 
     const dados = new FormData(formCadastro);
 
-    fetch('/ProjetoM2/The-Books-On-The-Web/public/src/login/cadastro.php', {
+    fetch('/ProjetoM2/The-Books-On-The-Web/public/src/login/cadastroAdmin.php', {
         method: 'POST',
         body: dados 
     })

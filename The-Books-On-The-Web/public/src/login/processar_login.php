@@ -43,7 +43,6 @@ $usuario = mysqli_fetch_assoc($resultado);
 
 if ($usuario && password_verify($senha_digitada, $usuario['senha'])) {
     
-    // SUCESSO!
     $_SESSION['logado'] = true;
     $_SESSION['id_user'] = $usuario['id_user'];
     $_SESSION['email_user'] = $email;
