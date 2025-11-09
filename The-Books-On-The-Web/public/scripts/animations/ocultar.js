@@ -1,8 +1,8 @@
 function alternarDiv() {
-  var div = document.getElementById("minhaDiv");
-  if (div.style.display === "none") {
-    div.style.display = "flex"; // Ou "flex", "grid", dependendo do seu layout
-  } else {
-    div.style.display = "none";
-  }
+    const divDoFormulario = document.getElementById("minhaDiv");
+    if (divDoFormulario) {
+        divDoFormulario.classList.toggle("conteudo-oculto");
+    } else {
+        console.error("Erro: Elemento com ID 'minhaDiv' não encontrado.");
+    }
 }

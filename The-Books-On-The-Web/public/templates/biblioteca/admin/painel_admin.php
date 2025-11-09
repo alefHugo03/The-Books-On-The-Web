@@ -25,7 +25,7 @@
 //         $sql_create = 'INSERT INTO usuarios (data_nascimento, nome, email, senha, cpf, tipo) VALUES (?, ?, ?, ?, ?, ?)';
 //         $stmt_create = mysqli_prepare($con, $sql_create);
 //         mysqli_stmt_bind_param($stmt_create, 'ssssss', $data_nascimento, $nome, $email, $hash, $cpf, $tipo);
-        
+
 //         if (mysqli_stmt_execute($stmt_create)) {
 //             $mensagem_feedback = "Usuário '$nome' criado com sucesso!";
 //         } else {
@@ -48,7 +48,7 @@
 //             $sql_delete = "UPDATE usuarios SET is_active = 0 WHERE id_user = ?";
 //             $stmt_delete = mysqli_prepare($con, $sql_delete);
 //             mysqli_stmt_bind_param($stmt_delete, 'i', $id_para_desativar);
-            
+
 //             if (mysqli_stmt_execute($stmt_delete)) {
 //                 $mensagem_feedback = "Usuário desativado com sucesso!";
 //             } else {
@@ -56,34 +56,34 @@
 //             }
 //         }
 //     }
-    
+
 //     // AÇÃO 3: ATIVAR UM USUÁRIO (NOVO)
 //     if (isset($_POST['action']) && $_POST['action'] === 'activate') {
 //         $id_para_ativar = $_POST['id_user_to_activate'];
-        
+
 //         $sql_activate = "UPDATE usuarios SET is_active = 1 WHERE id_user = ?";
 //         $stmt_activate = mysqli_prepare($con, $sql_activate);
 //         mysqli_stmt_bind_param($stmt_activate, 'i', $id_para_ativar);
-        
+
 //         if (mysqli_stmt_execute($stmt_activate)) {
 //             $mensagem_feedback = "Usuário reativado com sucesso!";
 //         } else {
 //             $mensagem_feedback = "Erro ao reativar usuário: " . mysqli_error($con);
 //         }
 //     }
-    
+
 //     // AÇÃO 4: DELETAR PERMANENTEMENTE (NOVO)
 //     // (Isso só vai funcionar se você usou o SQL com ON DELETE CASCADE)
 //     if (isset($_POST['action']) && $_POST['action'] === 'delete_permanent') {
 //         $id_para_deletar = $_POST['id_user_to_delete'];
-        
+
 //         if ($id_para_deletar == $id_admin_logado) {
 //             $mensagem_feedback = "Erro: Você não pode deletar a si mesmo!";
 //         } else {
 //             $sql_perm_delete = "DELETE FROM usuarios WHERE id_user = ?";
 //             $stmt_perm_delete = mysqli_prepare($con, $sql_perm_delete);
 //             mysqli_stmt_bind_param($stmt_perm_delete, 'i', $id_para_deletar);
-            
+
 //             if (mysqli_stmt_execute($stmt_perm_delete)) {
 //                 $mensagem_feedback = "Usuário DELETADO PERMANENTEMENTE!";
 //             } else {
@@ -113,6 +113,7 @@
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <base href="http://localhost/ProjetoM2/The-Books-On-The-Web/public/">
     <meta charset="UTF-8">
@@ -121,11 +122,14 @@
     <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon" class="favicon">
     <title>The Books On The Web - Admin</title>
 </head>
+
 <body>
     <header>
         <div class="cabecalho header-cima">
             <div class="empresa">
-                <a href="index.php" class="nome-empresa"><h1>The Books<br> On The Web</h1></a>
+                <a href="index.php" class="nome-empresa">
+                    <h1>The Books<br> On The Web</h1>
+                </a>
                 <a href="index.php" class="nome-empresa"><img src="styles/img/favicon.svg" alt="imagem logo" class="imagem-empresa"></a>
             </div>
             <div>
@@ -145,7 +149,7 @@
                 if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
                     echo '<a href="templates/biblioteca/mybooks.php" class="item-menu">Meus Livros</a>';
                 }
-                
+
                 if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin') {
                     echo '<a href="src/admin/lista_usuarios.php" class="item-menu">Painel Admin</a>';
                 }
@@ -159,12 +163,14 @@
         <?php if (!empty($mensagem_feedback)): ?>
             <div class="feedback"><?php echo $mensagem_feedback; ?></div>
         <?php endif; ?>
-        
-        <h2>Cadastrar Novo Usuário <button onclick="alternarDiv()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10l5 5 5-5" /></svg></button></h2>
+
+        <h2>Cadastrar Novo Usuário <button onclick="alternarDiv()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 10l5 5 5-5" />
+                </svg></button></h2>
         <div class="form-create conteudo-oculto" id="minhaDiv">
             <form action="src/admin/lista_usuarios.php" method="POST" class="menu">
                 <input type="hidden" name="action" value="create">
-                
+
                 <div class="valor caixa-texto">
                     <label for="nome">Nome: </label>
                     <input type="text" name="nome" id="nome" class="valor-texto" placeholder="Digite seu nome" required>
@@ -248,7 +254,7 @@
                 </tbody>
             </table>
         </div>
-        
+
         <div style="margin-top: 40px;">
             <h2>Lista de Usuários Inativos</h2>
             <table>
@@ -305,4 +311,5 @@
 </body>
 <script src="scripts/script.js"></script>
 <script src="scripts/animations/ocultar.js"></script>
+
 </html>

@@ -105,7 +105,7 @@ class classAdmin
             }
         }
     }
-}
+
 
 // 4. LER OS USUÁRIOS (SEPARADAMENTE)
 // Lista de ATIVOS

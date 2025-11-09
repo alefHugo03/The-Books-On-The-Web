@@ -30,6 +30,9 @@ body {
 }
 
 main {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     flex-grow: 1;
     margin-top: 20px;
 }
@@ -425,4 +428,31 @@ tr:nth-child(even) {
 }
 .btn-remove:hover{
     background-color: rgb(253, 126, 126);
+}
+
+.grupo{
+    display: flex;
+    flex-direction: row;
+    margin: 40px auto;
+    margin-top: 3%;
+    width: 800px;
+    gap: 50px;
+}
+.grupo-um{
+    text-align: left;
+}
+.grupo-dois{
+    text-align: right;
+}
+
+.logo-umc{
+    width: 400px;
+}
+
+.projeto2{
+    margin-top: 25px;
+}
+
+.links-menu {
+    text-align: left;
 }

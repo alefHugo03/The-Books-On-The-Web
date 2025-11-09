@@ -4,7 +4,7 @@ import {validarSenha} from "../validations/password.js";
 // Pega o formulário pelo ID
 const formLogin = document.getElementById("form-login");
 
-formLogin.addEventListener('click', processarDadosLogin);
+formLogin.addEventListener('submit', processarDadosLogin);
 
 function processarDadosLogin(event) {
     event.preventDefault(); 
