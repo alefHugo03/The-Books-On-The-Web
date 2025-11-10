@@ -72,14 +72,12 @@ data_pedido DATETIME NOT NULL,
 valor_total DECIMAL (10, 2) NOT NULL,
 usuario INT NOT NULL,
 FOREIGN KEY (usuario) REFERENCES usuarios (id_user)
--- IMPORTANTE: Se você deletar o usuário com "soft delete",
--- o pedido é mantido. Se você usar 'ON DELETE CASCADE' aqui,
--- o pedido será apagado junto com o usuário.
 );
 
 -- -----------------------------------------------------
 -- Tabela 'pagamento'
 -- -----------------------------------------------------
+
 CREATE TABLE pagamento (
 id_pagamento INT PRIMARY KEY AUTO_INCREMENT,
 metodo VARCHAR (20) NOT NULL,
@@ -88,9 +86,7 @@ dt_pagamento DATETIME NOT NULL,
 valor_total DECIMAL (10, 2) NOT NULL,
 pedido INT NOT NULL,
 FOREIGN KEY (pedido) REFERENCES pedido (id_pedido)
--- Se o 'pedido' for deletado, o pagamento (filho) também deve ser.
--- Recomendo adicionar: ON DELETE CASCADE
-); 
+);
 
 -- -----------------------------------------------------
 -- Tabela 'avaliacao'

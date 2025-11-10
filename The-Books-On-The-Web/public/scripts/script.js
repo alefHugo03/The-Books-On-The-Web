@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         }
     }
+    
     function loadComponent(selector, url) {
          return fetch(url) 
            .then(response => {
