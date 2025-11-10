@@ -9,7 +9,7 @@ if ( !isset($_SESSION['logado']) || $_SESSION['logado'] !== true ) {
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <base href="http://localhost/ProjetoM2/The-Books-On-The-Web/public/">
+    <base href="http://localhost/The-Books-On-The-Web/public/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/style.css">

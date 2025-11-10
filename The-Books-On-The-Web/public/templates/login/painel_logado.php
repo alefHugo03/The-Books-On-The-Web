@@ -26,7 +26,7 @@ if (!$usuario) {
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <base href="http://localhost/ProjetoM2/The-Books-On-The-Web/public/">
+        <base href="http://localhost/The-Books-On-The-Web/public/">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles/style.css">
@@ -49,7 +49,7 @@ if (!$usuario) {
                 <p><strong>Tipo de Conta:</strong> <?php echo htmlspecialchars($_SESSION['tipo']); ?></p>
             </div>
 
-            <a href="src/login/logout.php">Sair</a>
+            <a href="api/login/logout.php">Sair</a>
 
         </main>
 

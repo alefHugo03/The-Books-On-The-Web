@@ -11,7 +11,7 @@ session_start();
     </div>
 
     <div class="pesquisa">
-        <form action="src/pesquisa.php" id="pesquisar" class="pesquisar" method="get">
+        <form action="templates/biblioteca/pesquisa.php" id="pesquisar" class="pesquisar" method="get">
             <input type="text" class="input-pesquisa" id="campoPesquisa" placeholder="Pesquisar..." name="pesquisa">
             <button type="submit" class="btn-pesquisa">
                 <svg width="24" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -25,15 +25,14 @@ session_start();
         <?php
         if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
             echo "<div class = 'perfil-header'>";
-            echo '<a href="src/login/painel_logado.php" class="btn-cadastro">Perfil</a>';
-            echo '<a href="src/login/logout.php" class="btn-cadastro">Sair</a>';
+            echo '<a href="templates/login/painel_logado.php" class="btn-cadastro">Perfil</a>';
+            echo '<a href="api/login/logout.php" class="btn-cadastro">Sair</a>';
             echo "</div>";
 
             echo "<div class = 'span-header'>";
             echo '<span class="saudacao">Olá, ' . htmlspecialchars($_SESSION['email_user']) . '!</span>';
             echo "</div>";
         } else {
-      
             echo "<div class = 'perfil-header'>";
             echo '<a href="templates/login/entrada.html" class="btn-cadastro">Entrar</a>';
             echo '<a href="templates/login/cadastro.html" class="btn-cadastro">Cadastrar-se</a>';

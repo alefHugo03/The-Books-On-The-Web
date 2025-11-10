@@ -1,33 +1,24 @@
 <?php
 session_start();
 
-require_once './src/conection/conectionBD.php';
+require_once './api/conection/conectionBD.php';
 
 if (!$con) {
     die("Falha na conexão: " . mysqli_connect_error());
 }
 
-// 2. A MÁGICA ESTÁ AQUI:
-// Seleciona tudo da tabela 'livro',
-// ordena de forma aleatória (RAND())
-// e pega só os 6 primeiros (LIMIT 6) -> Mude o 6 se quiser mais ou menos.
 $sql = "SELECT * FROM livro ORDER BY RAND() LIMIT 6";
-
-// 3. Executa a query DIRETAMENTE
-// (Não precisa de prepare/bind_param/execute)
 $resultado = mysqli_query($con, $sql);
 
-// Se a query falhar, mostre o erro
 if ($resultado === false) {
     die("ERRO NO SQL: " . mysqli_error($con));
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
-    <base href="http://localhost/ProjetoM2/The-Books-On-The-Web/public/">
+    <base href="http://localhost/The-Books-On-The-Web/public/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/style.css">
@@ -46,7 +37,7 @@ if ($resultado === false) {
             </div>
 
             <div class="pesquisa">
-                <form action="src/pesquisa.php" id="pesquisar" class="pesquisar" method="get">
+                <form action="templates/biblioteca/pesquisa.php" id="pesquisar" class="pesquisar" method="get">
                     <input type="text" class="input-pesquisa" id="campoPesquisa" placeholder="Pesquisar..." name="pesquisa">
                     <button type="submit" class="btn-pesquisa">
                         <svg width="24" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,8 +51,8 @@ if ($resultado === false) {
                 <?php
                 if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
                     echo "<div class = 'perfil-header'>";
-                    echo '<a href="src/login/painel_logado.php" class="btn-cadastro">Perfil</a>';
-                    echo '<a href="src/login/logout.php" class="btn-cadastro">Sair</a>';
+                    echo '<a href="templates/login/painel_logado.php" class="btn-cadastro">Perfil</a>';
+                    echo '<a href="api/login/logout.php" class="btn-cadastro">Sair</a>';
                     echo "</div>";
 
                     echo "<div class = 'span-header'>";
@@ -90,7 +81,7 @@ if ($resultado === false) {
                 ?>
                 <?php
                 if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin') {
-                    echo '<a href="src/admin/lista_usuarios.php" class="item-menu">Painel Admin</a>';
+                    echo '<a href="templates/biblioteca/admin/painel_admin.php" class="item-menu">Painel Admin</a>';
                 }
                 ?>
             </nav>
