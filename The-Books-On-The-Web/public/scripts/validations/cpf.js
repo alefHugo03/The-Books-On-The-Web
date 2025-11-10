@@ -1,18 +1,18 @@
 import {avisoFalas, limparAviso, etapa} from "../validations/utilits.js"
 
-console.log(etapa);
+
+
+
 const REGEX_LIMPEZA = /[^\d]/g;
 const REGEX_FORMATO_COMPLETO = /^(\d{3})(\d{3})(\d{3})(\d{2})$/;
 
 export const validarCpf = (cpfValue) => {
-    console.log(etapa);
+   
     const inputNome = document.getElementById(cpfValue);
     let nome = inputNome.value;
     const nomeFalas = ["O campo cpf não pode estar vazio.", "O CPF deve conter 11 numeros e - e .", "Escrita do CPF não confere"];
     const ID_AVISO = etapa[5];
-    console.log(nome);
-    console.log (etapa);
-
+    
     //formatação de CPF
     nome = nome.replace(REGEX_LIMPEZA, ''); 
     nome = nome.substring(0, 11); 
@@ -38,15 +38,14 @@ export const validarCpf = (cpfValue) => {
     
    
     inputNome.value = nome; 
-    console.log(nome);
+    
 
     //avisos retirados devido a formatação resolver parcialmente eles
     if (nome === "") return avisoFalas(nomeFalas[0], ID_AVISO); 
     // if (nome.length < 14) return avisoFalas(nomeFalas[1] , ID_AVISO); 
     // if (!nomeRegex.test(nome)) return avisoFalas(nomeFalas[2], ID_AVISO);
     
-    console.log(etapa);
-    console.log (nomeFormatado);
+    
     limparAviso(ID_AVISO); 
     return nome;
 };
