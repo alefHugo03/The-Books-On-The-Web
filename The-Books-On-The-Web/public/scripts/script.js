@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         }
     }
-    
+
     function loadComponent(selector, url) {
          return fetch(url) 
            .then(response => {
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
     ativarFormularioBusca();
 
 
-    const basePath = "/ProjetoM2/The-Books-On-The-Web/public/templates/corpos/";
+    const basePath = "/The-Books-On-The-Web/public/templates/corpos/";
     loadComponent("#header-placeholder", basePath + "header.php");
     loadComponent("#footer-placeholder", basePath + "footer.html");
 

@@ -17,7 +17,7 @@ function processarDadosLogin(event) {
 
     const dados = new FormData(formLogin); 
 
-    fetch('/ProjetoM2/The-Books-On-The-Web/public/src/login/processar_login.php', {
+    fetch('/The-Books-On-The-Web/public/src/login/processar_login.php', {
         method: 'POST',
         body: dados 
     })

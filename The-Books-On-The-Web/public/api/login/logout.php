@@ -5,6 +5,6 @@ session_unset();
 
 session_destroy();
 
-header("Location: /ProjetoM2/The-Books-On-The-Web/public/templates/login/entrada.html");
+header("Location: /The-Books-On-The-Web/public/templates/login/entrada.html");
 exit;
 ?>

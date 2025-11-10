@@ -16,7 +16,7 @@ function validarAdmin() {
     }
 
     if (!isset($_SESSION['logado']) || $_SESSION['logado'] !== true) {
-        header("Location: /ProjetoM2/The-Books-On-The-Web/public/templates/login/entrada.html");
+        header("Location: /The-Books-On-The-Web/public/templates/login/entrada.html");
         exit;
     }
 

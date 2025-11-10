@@ -3,7 +3,7 @@ import {validarEmail} from "../validations/email.js";
 import {validarNome} from "../validations/name.js";
 import {validarSenha} from "../validations/password.js";
 import {validarCpf} from "../validations/cpf.js"
-import {etapa, limparAviso} from "/ProjetoM2/The-Books-On-The-Web/public/scripts/validations/utilits.js";
+import {etapa, limparAviso} from "/The-Books-On-The-Web/public/scripts/validations/utilits.js";
 
 const formCadastro = document.getElementById("form-cadastro");
 
@@ -27,7 +27,7 @@ function processarDadosCadastro(event) {
 
     const dados = new FormData(formCadastro);
 
-    fetch('/ProjetoM2/The-Books-On-The-Web/public/src/login/cadastroAdmin.php', {
+    fetch('/The-Books-On-The-Web/public/src/login/cadastroAdmin.php', {
         method: 'POST',
         body: dados 
     })

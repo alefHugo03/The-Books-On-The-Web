@@ -1,4 +1,4 @@
-import {avisoFalas, limparAviso, etapa} from "/ProjetoM2/The-Books-On-The-Web/public/scripts/validations/utilits.js"
+import {avisoFalas, limparAviso, etapa} from "/The-Books-On-The-Web/public/scripts/validations/utilits.js"
 
 
 export const validarSenha = (senhaValue) => {
