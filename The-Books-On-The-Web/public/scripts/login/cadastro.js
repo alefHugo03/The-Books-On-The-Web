@@ -9,6 +9,18 @@ const formCadastro = document.getElementById("form-cadastro");
 /* Pagina de cadastro  */
 formCadastro.addEventListener('submit', processarDadosCadastro);
 
+//fix provisório pra formatação de CPF
+
+document.addEventListener('DOMContentLoaded', () => {
+    const cpfInput = document.getElementById('cpf');
+    if (cpfInput) {
+        cpfInput.addEventListener('input', () => {
+            validarCpf('cpf');
+        });
+    }
+});
+
+
 function processarDadosCadastro(event) {
     event.preventDefault(); 
     console.log("Formulário interceptado pelo JS.");
