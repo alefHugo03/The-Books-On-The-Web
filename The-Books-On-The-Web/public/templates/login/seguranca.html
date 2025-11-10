@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <base href="http://localhost/The-Books-On-The-Web/public/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="shortcut icon" href="styles/img/favicon.svg"  type="image/x-icon" class="favicon">
+    <title>The Books On The Web</title>
+</head>
+<body>
+    <header id="header-placeholder"></header>
+
+    <main>
+        <div class="caixa-menu">
+            <h2>Trocar de Senha</h2>
+            <form action="templates/trocarsenha.php" method="get" class="menu">
+                <div class="valor caixa-texto">
+                    <label for="email">Email: </label>
+                    <input type="email" name="email" class="valor-texto" id="emailEntrar" placeholder="Digite seu email" required>
+                    <p id="avisoEmail" class="aviso-email aviso-campo"></p>
+                </div>
+
+                
+
+                <div class="valor botaoComVoltar">
+                    <button type="button" id="btnVoltar" class="btn-menu"><a href="templates/login/entrada.html">Voltar</a></button>
+                    <button type="submit" id="btnEntrar" class="btn-menu">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer id="footer-placeholder" class="caixa-footer"></footer>
+</body>
+<script src="scripts/script.js"></script>
+</html>
