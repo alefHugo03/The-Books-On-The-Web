@@ -1,18 +1,8 @@
 <?php
 session_start();
-
 require_once './api/conection/conectionBD.php';
-
-if (!$con) {
-    die("Falha na conexão: " . mysqli_connect_error());
-}
-
-$sql = "SELECT * FROM livro ORDER BY RAND() LIMIT 6";
-$resultado = mysqli_query($con, $sql);
-
-if ($resultado === false) {
-    die("ERRO NO SQL: " . mysqli_error($con));
-}
+require_once './api/conection/functionsBD.php';
+$resultado = procurarLivros();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -23,7 +13,7 @@ if ($resultado === false) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/style.css">
     <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon" class="favicon">
-    <title>The Books On The Web</title>
+    <title>Home | TBOTW </title>
 </head>
 
 <body>
@@ -49,21 +39,7 @@ if ($resultado === false) {
 
             <div class="area-cadastro">
                 <?php
-                if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
-                    echo "<div class = 'perfil-header'>";
-                    echo '<a href="templates/login/painel_logado.php" class="btn-cadastro">Perfil</a>';
-                    echo '<a href="api/login/logout.php" class="btn-cadastro">Sair</a>';
-                    echo "</div>";
-
-                    echo "<div class = 'span-header'>";
-                    echo '<span class="saudacao">Olá, ' . htmlspecialchars($_SESSION['email_user']) . '!</span>';
-                    echo "</div>";
-                } else {
-                    echo "<div class = 'perfil-header'>";
-                    echo '<a href="templates/login/entrada.html" class="btn-cadastro">Entrar</a>';
-                    echo '<a href="templates/login/cadastro.html" class="btn-cadastro">Cadastrar-se</a>';
-                    echo "</div>";
-                }
+                    exibirMenuAutenticacao();
                 ?>
             </div>
         </div>
@@ -75,14 +51,10 @@ if ($resultado === false) {
                 <a href="templates/biblioteca/livros.php" class="item-menu">Serviços</a>
                 
                 <?php
-                if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
-                    echo '<a href="templates/biblioteca/mybooks.php" class="item-menu">Meus Livros</a>';
-                }
+                    exibirBotoesCliente();
                 ?>
                 <?php
-                if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin') {
-                    echo '<a href="templates/biblioteca/admin/painel_admin.php" class="item-menu">Painel Admin</a>';
-                }
+                    exibirBotoesAdimin();
                 ?>
             </nav>
         </div>
@@ -98,24 +70,15 @@ if ($resultado === false) {
             <hr>
 
             <?php
-            // 4. Verifica se a busca retornou alguma linha
             if (mysqli_num_rows($resultado) > 0) {
-
-                // 5. Faz o loop (igual ao da pesquisa)
                 while ($livro = mysqli_fetch_assoc($resultado)) {
-
-                    // Imprime o HTML para cada livro
                     echo '<div class="livro-resultado" style="margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px;">';
-
                     echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
                     echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
                     echo '<p><strong>Preço: R$ ' . number_format($livro['preco'], 2, ',', '.') . '</strong></p>';
-
                     echo '</div>';
                 }
             } else {
-
-                // 6. Mensagem de fallback (caso o banco esteja vazio)
                 echo '<p>Nenhum livro encontrado no banco de dados.</p>';
             }
             ?>

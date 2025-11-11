@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../../api/conection/functionsBD.php';
 ?>
 
 <div class="cabecalho header-cima">
@@ -23,21 +24,7 @@ session_start();
 
     <div class="area-cadastro">
         <?php
-        if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
-            echo "<div class = 'perfil-header'>";
-            echo '<a href="templates/login/painel_logado.php" class="btn-cadastro">Perfil</a>';
-            echo '<a href="api/login/logout.php" class="btn-cadastro">Sair</a>';
-            echo "</div>";
-
-            echo "<div class = 'span-header'>";
-            echo '<span class="saudacao">Olá, ' . htmlspecialchars($_SESSION['email_user']) . '!</span>';
-            echo "</div>";
-        } else {
-            echo "<div class = 'perfil-header'>";
-            echo '<a href="templates/login/entrada.html" class="btn-cadastro">Entrar</a>';
-            echo '<a href="templates/login/cadastro.html" class="btn-cadastro">Cadastrar-se</a>';
-            echo "</div>";
-        }
+            exibirMenuAutenticacao();
         ?>
     </div>
 </div>
@@ -49,14 +36,11 @@ session_start();
         <a href="templates/biblioteca/livros.php" class="item-menu">Serviços</a>
         
         <?php
-        if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
-            echo '<a href="templates/biblioteca/mybooks.php" class="item-menu">Meus Livros</a>';
-        }
+            exibirBotoesCliente();
         ?>
         <?php
-        if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin') {
-            echo '<a href="templates/biblioteca/admin/painel_admin.php" class="item-menu">Painel Admin</a>';
-        }
+            exibirBotoesAdimin();
         ?>
+
     </nav>
 </div>

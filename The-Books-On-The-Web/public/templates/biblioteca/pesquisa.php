@@ -29,7 +29,7 @@ $resultado = mysqli_stmt_get_result($stmt);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/style.css">
     <link rel="shortcut icon" href="styles/img/favicon.svg"  type="image/x-icon" class="favicon">
-    <title>The Books On The Web</title>
+    <title>Pesquisa | TBOTW</title>
 </head>
 <body>
     <header id="header-placeholder"></header>
