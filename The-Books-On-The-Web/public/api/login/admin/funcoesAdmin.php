@@ -10,24 +10,9 @@ $resposta = [
     'redirect_url' => ''
 ];
 
-function validarAdmin() {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-
-    if (!isset($_SESSION['logado']) || $_SESSION['logado'] !== true) {
-        header("Location: /The-Books-On-The-Web/public/templates/login/entrada.html");
-        exit;
-    }
-
-    if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'admin') {
-        header("Location: painel_logado.php");
-        exit;
-    }
-    return $_SESSION['id_user'];
-}
-
 function criarUsuario(){
+    global $con;
+    global $mensagem_feedback;
     if (isset($_POST['action']) && $_POST['action'] === 'create') {
         $nome = $_POST['nome'];
         $email = $_POST['email'];
