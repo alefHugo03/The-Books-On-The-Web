@@ -34,6 +34,7 @@ function exibirBotoesCliente(){
         echo '<a href="templates/biblioteca/mybooks.php" class="item-menu">Meus Livros</a>';
     }
 }
+
 function exibirBotoesAdimin(){
     if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin') {
         echo '<a href="templates/biblioteca/admin/painel_admin.php" class="item-menu">Painel Admin</a>';
