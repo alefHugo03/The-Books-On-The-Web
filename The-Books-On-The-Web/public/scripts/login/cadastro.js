@@ -3,8 +3,9 @@ import {validarEmail} from "../validations/email.js";
 import {validarNome} from "../validations/name.js";
 import {validarSenha, validarConfirmarSenha} from "../validations/password.js";
 import {validarCpf} from "../validations/cpf.js"
-import {etapa, limparAviso} from "/The-Books-On-The-Web/public/scripts/validations/utilits.js";
+import {etapa, limparAviso, avisoFalas} from "/The-Books-On-The-Web/public/scripts/validations/utilits.js";
 const formCadastro = document.getElementById("form-cadastro");
+
 
 /* Pagina de cadastro  */
 formCadastro.addEventListener('submit', processarDadosCadastro);
@@ -27,7 +28,7 @@ function processarDadosCadastro(event) {
 
     const dados = new FormData(formCadastro);
 
-    fetch('/The-Books-On-The-Web/public/src/login/cadastro.php', {
+    fetch('/The-Books-On-The-Web/public/api/login/cadastro.php', {
         method: 'POST',
         body: dados 
     })

@@ -4,7 +4,7 @@ import {validarNome} from "../validations/name.js";
 import {validarSenha, validarConfirmarSenha} from "../validations/password.js";
 import {validarCpf} from "../validations/cpf.js"
 import {validarTipo} from "../validations/tipo.js"
-import {etapa, limparAviso} from "/The-Books-On-The-Web/public/scripts/validations/utilits.js";
+import {etapa, limparAviso, avisoFalas} from "/The-Books-On-The-Web/public/scripts/validations/utilits.js";
 
 const formCadastro = document.getElementById("form-cadastro");
 
