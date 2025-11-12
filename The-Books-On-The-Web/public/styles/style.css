@@ -1,13 +1,6 @@
-/* =========================================
-   Configurações Globais e Variáveis
-   ========================================= */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
+/* ==========================================================================
+   1. CONFIGURAÇÕES GLOBAIS E VARIÁVEIS (Base)
+   ========================================================================== */
 :root {
     --cor-header: rgb(41, 40, 40);
     --cor-fundo: rgb(174, 173, 173);
@@ -18,11 +11,22 @@
     --cor-borda: rgb(204, 204, 204);
     --cor-hover-claro: rgb(163, 161, 161);
     --cor-cinza-claro: rgb(220, 220, 220);
+    
+    /* Cores de Status (Adicionadas para padronização) */
+    --cor-sucesso: #28a745;
+    --cor-aviso: #ffc107;
+    --cor-perigo: #dc3545;
+    --cor-azul-destaque: #007bff;
+    --cor-tabela-header: #2c3e50;
 }
 
-/* =========================================
-   Estilos Base (Tags HTML)
-   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -37,20 +41,22 @@ main {
     margin-top: 20px;
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ==========================================================================
+   2. LAYOUT ESTRUTURAL (Header e Footer)
+   ========================================================================== */
+
+/* --- Header Principal --- */
 header {
     width: 100%;
     background-color: var(--cor-header);
     color: var(--cor-branco-letra);
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-/* =========================================
-   Layout do Header (Topo e Baixo)
-   ========================================= */
 .header-cima {
     display: flex;
     flex-direction: row;
@@ -69,12 +75,10 @@ a {
     padding-top: 10px;
     padding-bottom: 40px;
     background-color: var(--cor-header);
-    gap: 10px; /* <-- CORREÇÃO: Adicionado gap para o menu */
+    gap: 10px;
 }
 
-/* =========================================
-   Componentes do Header
-   ========================================= */
+/* Elementos do Header */
 .empresa {
     display: flex;
     flex-direction: row;
@@ -93,6 +97,21 @@ a {
     background-color: var(--cor-branco-letra);
 }
 
+.perfil-header {
+    display: flex;
+    gap: 10px;
+}
+
+.span-header {
+    text-align: right; 
+}
+
+.saudacao {
+    color: var(--cor-branco-letra);
+    font-size: 14px;
+    opacity: 0.9;
+}
+
 .pesquisa {
     flex-grow: 1;
     max-width: 600px;
@@ -105,6 +124,29 @@ a {
     align-items: center;
 }
 
+.area-cadastro {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* --- Footer --- */
+.caixa-footer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: auto;
+    padding: 2%;
+    font-size: small;
+    background-color: var(--cor-cinza);
+    border-top: 1px solid var(--cor-borda);
+}
+
+/* ==========================================================================
+   3. COMPONENTES DE UI (Botões, Inputs, Menus)
+   ========================================================================== */
+
+/* --- Inputs e Textos --- */
 .input-pesquisa {
     width: 100%;
     padding: 5px 10px;
@@ -113,6 +155,25 @@ a {
     outline: none;
 }
 
+.caixa-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.valor-texto {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.valor-texto:active {
+    transform: scale(0.99);
+}
+
+/* --- Botões Gerais --- */
 .btn-pesquisa {
     display: flex;
     align-items: center;
@@ -133,30 +194,6 @@ a {
 .btn-pesquisa:active {
     transform: scale(0.90);
 }
-
-.area-cadastro {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.perfil-header {
-    display: flex; /* <-- CORREÇÃO: Adicionado display flex */
-    gap: 10px;
-}
-
-/* CORREÇÃO: Adicionadas classes para a saudação */
-.span-header {
-    text-align: right; 
-}
-
-.saudacao {
-    color: var(--cor-branco-letra);
-    font-size: 14px;
-    opacity: 0.9;
-}
-/* Fim da correção */
-
 
 .item-menu {
     display: inline-block;
@@ -200,72 +237,6 @@ a {
     transform: scale(0.95);
 }
 
-/* =========================================
-   Componentes de Caixa/Menu Genéricos
-   ========================================= */
-.caixa-menu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 350px;
-    margin: 40px auto;
-    margin-top: 6%;
-    padding: 50px;
-    gap: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.cadastro-menu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 450px;
-    margin: 40px auto;
-    margin-top: 6%;
-    padding: 50px;
-    gap: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.caixa-menu-login {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 500px;
-    margin: 40px auto;
-    margin-top: 6%;
-    padding: 50px;
-    gap: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.menu {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 10px;
-}
-
-.painel-admin{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 800px;
-    margin: 40px auto;
-    margin-top: 6%;
-    padding: 50px;
-    gap: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
 .btn-menu {
     width: 100%;
     padding: 1%;
@@ -285,24 +256,6 @@ a {
     transform: scale(0.95);
 }
 
-.caixa-texto {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.valor-texto {
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid var(--cor-borda);
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.valor-texto:active {
-    transform: scale(0.99);
-}
-
 .link-menu {
     display: flex;
     flex-direction: column;
@@ -317,14 +270,223 @@ a {
     color: var(--cor-hover-claro);
 }
 
-/* =========================================
-   Classes Utilitárias e Específicas
-   ========================================= */
-.interativo {
-    display: flex;
-    gap: 5px;
+/* --- Botões Específicos e de Ação --- */
+.btn-remove {
+    background-color: rgb(255, 63, 63);
+    color: rgb(247, 196, 196);
+    border: var(--cor-preto);
+}
+.btn-remove:hover {
+    background-color: rgb(253, 126, 126);
 }
 
+.btn-edit {
+    background-color: var(--cor-azul-destaque);
+    color: white;
+}
+
+.btn-success {
+    background-color: var(--cor-sucesso);
+    color: white;
+}
+
+.btn-desativar {
+    background-color: var(--cor-aviso);
+    color: #333 !important;
+}
+
+.btn-delete-perm {
+    background-color: var(--cor-perigo);
+    color: white;
+}
+
+/* Toggle Button (Botão +) */
+#btn-toggle-cadastro {
+    background: none;
+    border: 2px solid var(--cor-azul-destaque);
+    color: var(--cor-azul-destaque);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+#btn-toggle-cadastro:hover {
+    background-color: var(--cor-azul-destaque);
+    color: white;
+}
+
+/* ==========================================================================
+   4. CONTAINER E CARDS (Estilos de Caixas)
+   ========================================================================== */
+.caixa-menu,
+.cadastro-menu,
+.caixa-menu-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px auto;
+    margin-top: 6%;
+    padding: 50px;
+    gap: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.caixa-menu { width: 350px; }
+.cadastro-menu { width: 450px; }
+.caixa-menu-login { width: 500px; }
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+}
+
+/* ==========================================================================
+   5. TABELAS (Genérico e Específico)
+   ========================================================================== */
+
+/* Estilos Base de Tabela */
+table, th, td {
+    border: 1px solid black;
+}
+
+table {
+    border-collapse: collapse;
+    margin: auto;
+}
+
+th, td {
+    padding: 10px;
+    width: 120px;
+}
+
+th {
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #DCEBE6;
+}
+
+/* ==========================================================================
+   6. PÁGINA: PAINEL ADMIN (Módulo Específico)
+   ========================================================================== */
+
+/* Container Principal do Admin */
+.painel-admin {
+    max-width: 1200px;
+    width: 100%; /* Garante responsividade */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: 80vh;
+    /* Removemos os estilos de 'card' antigo (box-shadow simples) para focar no layout de página */
+}
+
+.painel-admin h2 {
+    color: #333;
+    border-bottom: 2px solid var(--cor-azul-destaque);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Tabelas Específicas do Admin (Sobrescreve o genérico onde necessário) */
+.painel-admin table {
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: none; /* Remove borda externa padrão */
+}
+
+.painel-admin th, 
+.painel-admin td {
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    width: auto; /* Permite largura automática */
+}
+
+.painel-admin th {
+    background-color: var(--cor-tabela-header);
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.painel-admin tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Botões dentro da tabela Admin */
+.painel-admin table .btn-menu {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    margin-right: 5px;
+    width: auto;
+    display: inline-block;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    text-decoration: none;
+}
+
+/* Formulário de Criação no Admin */
+.form-create {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* ==========================================================================
+   7. UTILITÁRIOS E CLASSES JS
+   ========================================================================== */
+
+/* Animações de Carregamento */
+#header-placeholder,
+#footer-placeholder {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#header-placeholder.loaded,
+#footer-placeholder.loaded {
+    opacity: 1;
+}
+
+/* Estados de Exibição */
+.conteudo-oculto {
+    display: none;
+    /* background-color: lightblue; <--- Removido estilo de debug, descomente se precisar */
+    padding: 20px;
+    margin-top: 10px;
+    width: 100%; /* Ajustado para caber no container pai */
+}
+
+/* Avisos e Feedbacks */
 .aviso-ativo {
     width: 100%;
     margin-top: 2px;
@@ -333,6 +495,21 @@ a {
     color: red;
     background-color: var(--cor-cinza);
     border-radius: 4px;
+}
+
+#feedback-msg {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Helpers de Layout */
+.interativo {
+    display: flex;
+    gap: 5px;
 }
 
 .botaoComVoltar {
@@ -348,89 +525,7 @@ a {
     margin-top: 20px;
 }
 
-/* =========================================
-   Footer
-   ========================================= */
-.caixa-footer {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-top: auto; /* Empurra para o final */
-    padding: 2%;
-    font-size: small;
-    background-color: var(--cor-cinza);
-    border-top: 1px solid var(--cor-borda);
-}
-
-/* =========================================
-   Classes Dinâmicas (JS)
-   ========================================= */
-#header-placeholder,
-#footer-placeholder {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-#header-placeholder.loaded,
-#footer-placeholder.loaded {
-    opacity: 1;
-}
-.conteudo-oculto {
-    display: none;
-    background-color: lightblue;
-    padding: 20px;
-    margin-top: 10px;
-    width: 400px;
-  }
-
-  .form-create{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-
-
-
-
-  /* Borda padrão para a tabela e células */
-table, th, td {
-  border: 1px solid black;
-}
-
-/* Consolida as bordas em uma única linha */
-table {
-  border-collapse: collapse;
-  margin: auto; /* Centraliza a tabela */
-}
-
-/* Espaçamento interno e largura das células */
-th, td {
-  padding: 10px;
-  width: 120px;
-}
-
-/* Estilo para o cabeçalho da tabela */
-th {
-  font-weight: bold;
-}
-
-/* Efeito de listras para linhas pares */
-tr:nth-child(even) {
-  background-color: #DCEBE6;
-}
-
-
-.btn-remove{
-    background-color: rgb(255, 63, 63);
-    color: rgb(247, 196, 196);
-    border: var(--cor-preto);
-}
-.btn-remove:hover{
-    background-color: rgb(253, 126, 126);
-}
-
-.grupo{
+.grupo {
     display: flex;
     flex-direction: row;
     margin: 40px auto;
@@ -438,160 +533,10 @@ tr:nth-child(even) {
     width: 800px;
     gap: 50px;
 }
-.grupo-um{
-    text-align: left;
-}
-.grupo-dois{
-    text-align: right;
-}
 
-.logo-umc{
-    width: 400px;
-}
+.grupo-um { text-align: left; }
+.grupo-dois { text-align: right; }
 
-.projeto2{
-    margin-top: 25px;
-}
-
-.links-menu {
-    text-align: left;
-}
-
-/* --- ESTILOS DO PAINEL ADMIN (ADICIONAR AO FINAL DO ARQUIVO) --- */
-
-/* Container principal do painel */
-.painel-admin {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9; /* Fundo leve para destacar do resto */
-    min-height: 80vh;
-}
-
-/* Títulos das seções */
-.painel-admin h2 {
-    color: #333;
-    border-bottom: 2px solid #007bff; /* Azul destaque */
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    margin-top: 40px; /* Substitui o style="margin-top: 40px" */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-/* --- TABELAS DE USUÁRIOS --- */
-.painel-admin table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    overflow: hidden; /* Para arredondar cantos da tabela */
-    margin-bottom: 20px;
-}
-
-.painel-admin th, 
-.painel-admin td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-}
-
-.painel-admin th {
-    background-color: #2c3e50; /* Cor escura para o cabeçalho */
-    color: #fff;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-}
-
-.painel-admin tr:hover {
-    background-color: #f1f1f1; /* Efeito hover nas linhas */
-}
-
-.painel-admin tr:last-child td {
-    border-bottom: none;
-}
-
-/* --- BOTÕES DENTRO DA TABELA --- */
-/* Ajusta os botões para ficarem menores dentro da tabela */
-.painel-admin table .btn-menu {
-    padding: 6px 12px;
-    font-size: 0.85rem;
-    margin-right: 5px;
-    width: auto;
-    display: inline-block;
-    cursor: pointer;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    text-decoration: none;
-    transition: opacity 0.3s;
-}
-
-.painel-admin table .btn-menu:hover {
-    opacity: 0.8;
-    transform: none; /* Remove animações exageradas se houver no global */
-}
-
-/* Cores específicas para ações */
-.btn-edit {
-    background-color: #007bff; /* Azul */
-}
-
-.btn-success {
-    background-color: #28a745; /* Verde */
-}
-
-/* O JS define style="background:orange/red", mas é bom ter classes CSS */
-.btn-desativar {
-    background-color: #ffc107; /* Amarelo/Laranja */
-    color: #333 !important;
-}
-
-.btn-delete-perm {
-    background-color: #dc3545; /* Vermelho */
-}
-
-/* --- MENSAGENS DE FEEDBACK (JS) --- */
-#feedback-msg {
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    font-weight: bold;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    /* As cores (verde/vermelho) são controladas pelo JS, mas a estrutura está aqui */
-}
-
-/* --- BOTÃO DE TOGGLE (Sinal de +) --- */
-#btn-toggle-cadastro {
-    background: none;
-    border: 2px solid #007bff;
-    color: #007bff;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-}
-
-#btn-toggle-cadastro:hover {
-    background-color: #007bff;
-    color: white;
-}
-
-/* --- FORMULÁRIO DE CADASTRO --- */
-.form-create {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    margin-bottom: 30px;
-}
-
+.logo-umc { width: 400px; }
+.projeto2 { margin-top: 25px; }
+.links-menu { text-align: left; }

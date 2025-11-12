@@ -107,7 +107,6 @@ bloqueioAdimin();
 
     <script type="module" src="scripts/login/tabela_user.js"></script>
     <script type="module" src="scripts/animations/ocultar.js"></script>
-    <script src="scripts/login/cadastroAdimin.js"></script>
     <script src="scripts/script.js"></script>
 </body>
 </html>
