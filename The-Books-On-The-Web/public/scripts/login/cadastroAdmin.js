@@ -29,7 +29,7 @@ function processarDadosCadastro(event) {
 if (!nome || !email || !nascimento || !senha || !confirmarSenha || !confirmarCpf || !confirmarTipo) return;
     const dados = new FormData(formCadastro);
 
-    fetch('/The-Books-On-The-Web/public/src/login/cadastroAdmin.php', {
+    fetch('/The-Books-On-The-Web/public/api/login/admin/cadastroAdmin.php', {
         method: 'POST',
         body: dados 
     })
