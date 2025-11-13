@@ -1,5 +1,6 @@
 import {validarEmail} from "../validations/email.js";
 import {validarSenha} from "../validations/password.js";
+import {etapa, avisoFalas} from "/The-Books-On-The-Web/public/scripts/validations/utilits.js";
 
 // Pega o formulário pelo ID
 const formLogin = document.getElementById("form-login");

@@ -10,6 +10,14 @@ function procurarLivros() {
 
     return $resultado;
 }
+// ifIsAdmin() {
+//     if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin') {
+//     }
+// }
+// ifIsClient() {
+//         if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'cliente') {
+//         }
+// } 
 
 function exibirMenuAutenticacao() {
     if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
@@ -19,7 +27,7 @@ function exibirMenuAutenticacao() {
         echo "</div>";
 
         echo "<div class='span-header'>";
-        echo '<span class="saudacao">Olá, ' . htmlspecialchars($_SESSION['email_user']) . '!</span>';
+        echo '<span class="saudacao">Olá, ' . htmlspecialchars($_SESSION['nome_user']) . '!</span>';
         echo "</div>";
     } else {
         echo "<div class='perfil-header'>";

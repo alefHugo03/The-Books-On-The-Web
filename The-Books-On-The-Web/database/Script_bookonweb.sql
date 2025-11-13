@@ -4,20 +4,6 @@ CREATE DATABASE IF NOT EXISTS biblioteca_bd;
 USE biblioteca_bd;
 
 -- -----------------------------------------------------
--- Tabela 'endereco'
--- -----------------------------------------------------
-CREATE TABLE endereco (
-id_endereco INT PRIMARY KEY AUTO_INCREMENT,
-cep VARCHAR (9) NOT NULL,
-rua VARCHAR (50) NOT NULL,
-numero INT NOT NULL,
-complemento VARCHAR (100),
-bairro VARCHAR (50) NOT NULL,
-cidade VARCHAR (50) NOT NULL,
-estado VARCHAR (50) NOT NULL
-);
-
--- -----------------------------------------------------
 -- Tabela 'usuarios'
 -- (Com 'is_active' para o soft delete)
 -- -----------------------------------------------------
@@ -30,8 +16,7 @@ email VARCHAR (50) UNIQUE NOT NULL,
 senha VARCHAR (255) NOT NULL, 
 cpf VARCHAR (14) NOT NULL,
 tipo VARCHAR (15),
-is_active TINYINT(1) NOT NULL DEFAULT 1, -- Para desativar (1 = ativo, 0 = inativo)
-FOREIGN KEY (endereco) REFERENCES endereco (id_endereco)
+is_active TINYINT(1) NOT NULL DEFAULT 1 -- Para desativar (1 = ativo, 0 = inativo)
 ); 
 
 -- -----------------------------------------------------
@@ -69,24 +54,10 @@ nome_autor VARCHAR (50) NOT NULL
 CREATE TABLE pedido (
 id_pedido INT PRIMARY KEY AUTO_INCREMENT,
 data_pedido DATETIME NOT NULL,
-valor_total DECIMAL (10, 2) NOT NULL,
 usuario INT NOT NULL,
 FOREIGN KEY (usuario) REFERENCES usuarios (id_user)
 );
 
--- -----------------------------------------------------
--- Tabela 'pagamento'
--- -----------------------------------------------------
-
-CREATE TABLE pagamento (
-id_pagamento INT PRIMARY KEY AUTO_INCREMENT,
-metodo VARCHAR (20) NOT NULL,
-status_ VARCHAR (20) NOT NULL,
-dt_pagamento DATETIME NOT NULL,
-valor_total DECIMAL (10, 2) NOT NULL,
-pedido INT NOT NULL,
-FOREIGN KEY (pedido) REFERENCES pedido (id_pedido)
-);
 
 -- -----------------------------------------------------
 -- Tabela 'avaliacao'

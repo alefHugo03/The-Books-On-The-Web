@@ -4,7 +4,7 @@ import { validarData } from "../validations/data.js";
 import { validarEmail } from "../validations/email.js";
 import { validarNome } from "../validations/name.js";
 import { validarSenha, validarConfirmarSenha } from "../validations/password.js";
-import { validarCpf } from "../validations/cpf.js";
+import { validarCpf, barraCpf} from "../validations/cpf.js";
 import { validarTipo } from "../validations/tipo.js";
 import { etapa, limparAviso, avisoFalas } from "../validations/utilits.js";
 
@@ -94,6 +94,9 @@ function configurarFormulario() {
         const confSenhaValida = validarConfirmarSenha(senhaValue, 'senhaAdminDois'); 
         
         const tipoValido = validarTipo('tipo');
+
+        barraCpf('cpfAdmin');
+
 
         // 3. Se algum falhar, para o envio aqui
         if (!nomeValido || !emailValido || !cpfValido || !dataValida || !senhaValida || !confSenhaValida || !tipoValido) {

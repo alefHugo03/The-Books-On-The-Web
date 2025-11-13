@@ -19,3 +19,4 @@ export const limparAviso = (etapa) => {
         avisoElement.classList.remove('aviso-ativo');
     }
 };
+
