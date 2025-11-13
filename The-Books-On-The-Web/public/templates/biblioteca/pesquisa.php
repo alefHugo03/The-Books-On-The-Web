@@ -6,7 +6,12 @@ if (!$con) {
 }
 
 $termo_pesquisa = $_GET['pesquisa'];
-$sql = "SELECT * FROM livro WHERE titulo LIKE ?";
+$sql = "SELECT livro.*, categoria.nome_categoria 
+        FROM livro 
+        INNER JOIN categoria ON livro.categoria = categoria.id_categoria
+        WHERE livro.titulo LIKE ? 
+           OR livro.descricao LIKE ? 
+           OR categoria.nome_categoria LIKE ?";
 
 $stmt = mysqli_prepare($con, $sql);
 
@@ -15,7 +20,7 @@ if ($stmt === false) {
 }
 
 $termo_like = "%" . $termo_pesquisa . "%";
-mysqli_stmt_bind_param($stmt, "s", $termo_like);
+mysqli_stmt_bind_param($stmt, "sss", $termo_like, $termo_like, $termo_like);
 
 mysqli_stmt_execute($stmt);
 $resultado = mysqli_stmt_get_result($stmt);

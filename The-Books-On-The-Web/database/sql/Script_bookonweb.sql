@@ -34,7 +34,6 @@ CREATE TABLE livro (
 id_livro INT PRIMARY KEY AUTO_INCREMENT,
 titulo VARCHAR (50) NOT NULL,
 descricao VARCHAR (200) NOT NULL,
-preco DECIMAL (10, 2) NOT NULL,
 data_publi DATE NOT NULL,
 categoria INT NOT NULL,
 FOREIGN KEY (categoria) REFERENCES categoria (id_categoria)

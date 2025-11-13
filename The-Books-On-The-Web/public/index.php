@@ -75,7 +75,6 @@ $resultado = procurarLivros();
                     echo '<div class="livro-resultado" style="margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px;">';
                     echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
                     echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
-                    echo '<p><strong>Preço: R$ ' . number_format($livro['preco'], 2, ',', '.') . '</strong></p>';
                     echo '</div>';
                 }
             } else {
