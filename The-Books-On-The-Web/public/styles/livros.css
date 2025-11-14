@@ -1,0 +1,233 @@
+/* ==========================================================================
+   ARQUIVO: public/styles/livros.css
+   Estilos específicos para a página de gerenciamento de livros.
+   Requer que style.css já esteja carregado na página.
+   ========================================================================== */
+
+/* --- Ajustes de Layout do Painel --- */
+.painel-admin h2 {
+    /* Alinha o título com o botão de adicionar (+) */
+    display: flex;
+    align-items: center;
+    gap: 15px; 
+}
+
+/* --- Botão Redondo de Alternar (+) --- */
+#btn-toggle-cadastro {
+    background-color: var(--cor-sucesso); /* Verde (definido no style.css ou fallback abaixo) */
+    color: var(--cor-branco-letra);
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    line-height: 1; /* Centraliza o + verticalmente */
+}
+
+#btn-toggle-cadastro:hover {
+    transform: scale(1.1);
+    background-color: #218838; /* Verde um pouco mais escuro */
+}
+
+/* --- Ajustes de Campos do Formulário --- */
+
+/* Garante que a área de texto tenha altura mínima e fonte correta */
+textarea.valor-texto {
+    resize: vertical; /* Usuário pode redimensionar apenas a altura */
+    min-height: 80px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Estilo especial para o input de arquivo PDF */
+input[type="file"].valor-texto {
+    padding: 6px;
+    background-color: white;
+    line-height: normal;
+}
+
+/* Grupo para alinhar Select de Categoria com botão de Nova */
+.grupo-categoria {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.grupo-categoria select {
+    flex-grow: 1; /* O select ocupa todo o espaço disponível */
+}
+
+/* --- Botões Pequenos da Tabela --- */
+.btn-small {
+    padding: 6px 12px;
+    font-size: 13px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    transition: opacity 0.2s;
+    color: var(--cor-branco-letra);
+    margin-right: 5px;
+}
+
+.btn-small:hover {
+    opacity: 0.9;
+}
+
+/* Cores específicas dos botões */
+.btn-edit-livro {
+    background-color: var(--cor-aviso); /* Amarelo */
+    color: var(--cor-preto); /* Texto preto para contraste */
+}
+
+.btn-delete-livro {
+    background-color: var(--cor-perigo); /* Vermelho */
+}
+
+/* Botão pequeno azul (usado para "+ Nova" categoria) */
+.btn-nova-cat {
+    background-color: var(--cor-azul-destaque);
+    height: 38px; /* Mesma altura do input padrão */
+    white-space: nowrap;
+}
+
+/* --- Links e Textos na Tabela --- */
+.link-pdf {
+    color: var(--cor-azul-destaque);
+    font-weight: bold;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.link-pdf:hover {
+    text-decoration: underline;
+}
+
+/* --- Feedback (Mensagens de Sucesso/Erro) --- */
+.feedback {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid transparent;
+    animation: fadeIn 0.5s;
+}
+
+.feedback.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.feedback.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+/* ==========================================================================
+   MODAL (Pop-up de Nova Categoria)
+   ========================================================================== */
+.modal {
+    display: none; /* Começa oculto */
+    position: fixed; 
+    z-index: 1000; /* Fica na frente de tudo */
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.5); /* Fundo preto transparente */
+    backdrop-filter: blur(2px); /* Efeito de desfoque no fundo */
+}
+
+.modal-content {
+    background-color: var(--cor-branco-letra);
+    margin: 10% auto; /* 10% do topo e centralizado horizontalmente */
+    padding: 30px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    animation: modalSlideDown 0.3s ease-out;
+}
+
+/* Cabeçalho do Modal */
+.modal-content h3 {
+    margin-bottom: 20px;
+    color: var(--cor-header);
+    border-bottom: 1px solid var(--cor-borda);
+    padding-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+/* Botão fechar (X) */
+.close {
+    color: var(--cor-cinza-letra);
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close:hover,
+.close:focus {
+    color: var(--cor-perigo); /* Fica vermelho ao passar o mouse */
+    text-decoration: none;
+}
+
+/* Animações Simples */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalSlideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Empilha o select e o botão de nova categoria em telas pequenas */
+    .grupo-categoria {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    /* Esconde colunas menos importantes da tabela no celular */
+    .painel-admin table th:nth-child(2), /* Categoria */
+    .painel-admin table td:nth-child(2),
+    .painel-admin table th:nth-child(3), /* Data */
+    .painel-admin table td:nth-child(3) {
+        display: none; 
+    }
+    
+    /* Ajusta tamanho dos botões para toque */
+    .btn-small {
+        padding: 8px 12px;
+        font-size: 14px;
+        margin-bottom: 5px;
+        display: block; /* Botões um em cima do outro */
+        width: 100%;
+        text-align: center;
+    }
+}

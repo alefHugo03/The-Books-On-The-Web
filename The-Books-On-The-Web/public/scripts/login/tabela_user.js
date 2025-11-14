@@ -79,6 +79,7 @@ function configurarFormulario() {
         // 1. Limpa avisos anteriores
         etapa.forEach(limparAviso);
 
+        barraCpf('cpfAdmin');
         // 2. Executa suas Validações
         // Certifique-se que os IDs no HTML (ex: 'nomeAdmin') batem com o que as funções esperam
         const nomeValido = validarNome('nomeAdmin');
@@ -95,7 +96,7 @@ function configurarFormulario() {
         
         const tipoValido = validarTipo('tipo');
 
-        barraCpf('cpfAdmin');
+        
 
 
         // 3. Se algum falhar, para o envio aqui
