@@ -36,6 +36,7 @@ titulo VARCHAR (50) NOT NULL,
 descricao VARCHAR (200) NOT NULL,
 data_publi DATE NOT NULL,
 categoria INT NOT NULL,
+pdf VARCHAR(255) NOT NULL,
 FOREIGN KEY (categoria) REFERENCES categoria (id_categoria)
 );
 

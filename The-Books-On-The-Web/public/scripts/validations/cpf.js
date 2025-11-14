@@ -52,7 +52,7 @@ export const barraCpf = (id) => {
         if (cpfInput) {
             // Anexa a função importada diretamente ao evento 'input'
             cpfInput.addEventListener('input', () => {
-                validarCpf('cpf');
+                validarCpf(id);
             });
         };
 };
