@@ -10,10 +10,9 @@ $resultado = procurarLivros();
 <head>
     <base href="http://localhost/The-Books-On-The-Web/public/">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon" class="favicon">
     <title>Home | TBOTW </title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
 </head>
 
 <body>
@@ -23,9 +22,8 @@ $resultado = procurarLivros();
                 <a href="index.php" class="nome-empresa">
                     <h1>The Books<br> On The Web</h1>
                 </a>
-                <a href="index.php" class="nome-empresa"><img src="styles/img/favicon.svg" alt="imagem logo" class="imagem-empresa"></a>
+                <a href="index.php" class="nome-empresa"><img src="styles/img/favicon.svg" class="imagem-empresa"></a>
             </div>
-
             <div class="pesquisa">
                 <form action="templates/biblioteca/pesquisa.php" id="pesquisar" class="pesquisar" method="get">
                     <input type="text" class="input-pesquisa" id="campoPesquisa" placeholder="Pesquisar..." name="pesquisa">
@@ -36,60 +34,71 @@ $resultado = procurarLivros();
                     </button>
                 </form>
             </div>
-
-            <div class="area-cadastro">
-                <?php
-                    exibirMenuAutenticacao();
-                ?>
-            </div>
+            <div class="area-cadastro"><?php exibirMenuAutenticacao(); ?></div>
         </div>
-
-        <div class="cabecalho header-baixo"> 
-            <nav class="opcoes"> 
+        <div class="cabecalho header-baixo">
+            <nav class="opcoes">
                 <a href="index.php" class="item-menu">Home</a>
                 <a href="templates/biblioteca/resumo.html" class="item-menu">Sobre</a>
                 <a href="templates/biblioteca/livros.php" class="item-menu">Serviços</a>
-                
-                <?php
-                    exibirBotoesCliente();
-                ?>
-                <?php
-                    exibirBotoesAdimin();
-                ?>
+                <?php exibirBotoesCliente(); ?>
+                <?php exibirBotoesAdimin(); ?>
             </nav>
         </div>
     </header>
 
-
+    <head>
+        <base href="http://localhost/The-Books-On-The-Web/public/">
+        <link rel="stylesheet" href="styles/style.css">
+        <link rel="stylesheet" href="styles/cards.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+    </head>
 
     <main>
-
         <div class="container-vitrine" style="padding: 20px; max-width: 800px; margin: auto;">
-
             <h2>Destaques Aleatórios</h2>
-            <hr>
+            <hr style="margin-bottom: 20px;">
 
-            <?php
-            if (mysqli_num_rows($resultado) > 0) {
-                while ($livro = mysqli_fetch_assoc($resultado)) {
-                    echo '<div class="livro-resultado" style="margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px;">';
-                    echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
-                    echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
-                    echo '<p><strong>Preço: R$ ' . number_format($livro['preco'], 2, ',', '.') . '</strong></p>';
-                    echo '</div>';
-                }
-            } else {
-                echo '<p>Nenhum livro encontrado no banco de dados.</p>';
-            }
-            ?>
+            <div class="lista-livros"> <?php
+                                        if (mysqli_num_rows($resultado) > 0) {
+                                            while ($livro = mysqli_fetch_assoc($resultado)) {
+                                                $caminhoPdf = '../database/pdfs/' . $livro['pdf'];
+
+                                                echo '<div class="livro-card">';
+
+                                                // CAPA
+                                                echo '<div class="capa-wrapper">';
+                                                if (!empty($livro['pdf'])) {
+                                                    echo '<canvas class="pdf-thumb" data-url="' . $caminhoPdf . '"></canvas>';
+                                                } else {
+                                                    echo '<div class="sem-capa">Sem Capa</div>';
+                                                }
+                                                echo '</div>';
+
+                                                // TEXTO
+                                                echo '<div class="info-livro">';
+                                                echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
+                                                echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
+                                                // Se tiver categoria no SELECT do index.php, adicione aqui. Se não, remova o span abaixo.
+                                                // echo '<span class="categoria-tag">Categoria</span>';
+                                                
+                                                echo '</div>';
+
+                                                echo '</div>'; // Fim card
+                                            }
+                                        } else {
+                                            echo '<p>Nenhum livro encontrado.</p>';
+                                        }
+                                        ?>
+            </div>
         </div>
-
     </main>
 
     <footer class="caixa-footer">
-        <p>© 2024 The Books On The Web. Todos os direitos reservados.</p>
+        <p>© 2024 The Books On The Web.</p>
     </footer>
+    <script src="scripts/script.js"></script>
+    <script src="scripts/pdfRender.js"></script>
 </body>
-<script src="scripts/script.js"></script>
 
 </html>

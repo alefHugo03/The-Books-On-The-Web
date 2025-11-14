@@ -2,13 +2,15 @@ import {validarData} from "../validations/data.js";
 import {validarEmail} from "../validations/email.js";
 import {validarNome} from "../validations/name.js";
 import {validarSenha, validarConfirmarSenha} from "../validations/password.js";
-import {validarCpf} from "../validations/cpf.js"
+import {validarCpf, barraCpf} from "../validations/cpf.js"
 import {etapa, limparAviso, avisoFalas} from "/The-Books-On-The-Web/public/scripts/validations/utilits.js";
 const formCadastro = document.getElementById("form-cadastro");
 
 
 /* Pagina de cadastro  */
 formCadastro.addEventListener('submit', processarDadosCadastro);
+
+barraCpf('cpf')
 
 function processarDadosCadastro(event) {
     event.preventDefault(); 

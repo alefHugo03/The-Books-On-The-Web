@@ -540,3 +540,13 @@ tr:nth-child(even) {
 .logo-umc { width: 400px; }
 .projeto2 { margin-top: 25px; }
 .links-menu { text-align: left; }
+
+.logo-umc:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 6px 5px rgba(0, 0, 0, 0.15);
+}
+.logo-github:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 6px 5px rgba(0, 0, 0, 0.15);
+    border-radius: 80px;
+}

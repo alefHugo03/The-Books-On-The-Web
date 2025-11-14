@@ -26,7 +26,7 @@ $email = $_POST['email'];
 $senha_digitada = $_POST['senha'];
 
 
-$sql = "SELECT id_user, senha, tipo FROM usuarios WHERE email = ? AND is_active = 1 LIMIT 1";
+$sql = "SELECT id_user, nome, senha, tipo FROM usuarios WHERE email = ? AND is_active = 1 LIMIT 1";
 $stmt = mysqli_prepare($con, $sql);
 
 if ($stmt === false) {
@@ -45,6 +45,7 @@ if ($usuario && password_verify($senha_digitada, $usuario['senha'])) {
     
     $_SESSION['logado'] = true;
     $_SESSION['id_user'] = $usuario['id_user'];
+    $_SESSION['nome_user'] = $usuario ['nome'];
     $_SESSION['email_user'] = $email;
 
     $_SESSION['tipo'] = $usuario['tipo'];

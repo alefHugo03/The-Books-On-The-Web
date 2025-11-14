@@ -1,14 +1,27 @@
 <?php
+// 1. Define que a resposta é JSON (Isso previne que o navegador tente interpretar HTML)
 header('Content-Type: application/json');
 
-// CAMINHOS CORRIGIDOS BASEADOS NA PASTA api/login/admin/
-require_once '../../conection/bloqueioLogin.php'; 
-bloqueioAdimin(); 
-
-require_once '../../conection/conectionBD.php';
-
+// 2. Inicia a sessão PRIMEIRO
+// A função bloqueioAdimin precisa ler $_SESSION, então a sessão tem que existir antes
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
+}
+
+// 3. Caminhos Ajustados (Apenas 2 níveis para voltar)
+// admin (start) -> ../ (login) -> ../ (api) -> entra em conection
+require_once '../../conection/bloqueioLogin.php'; 
+
+// Verifica segurança
+bloqueioAdimin(); 
+
+// Conexão com Banco
+require_once '../../conection/conectionBD.php';
+
+// Verifica se a conexão funcionou
+if (!isset($con)) {
+    echo json_encode(['success' => false, 'message' => 'Erro fatal: Conexão com banco não estabelecida.']);
+    exit;
 }
 
 $id_admin_logado = $_SESSION['id_user'] ?? 0;
@@ -45,6 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
     if ($action === 'create') {
+        // Verifica se os dados chegaram
+        if(!isset($_POST['nomeAdmin']) || !isset($_POST['emailAdmin'])) {
+            echo json_encode(['success' => false, 'message' => 'Dados incompletos.']);
+            exit;
+        }
+
         $nome = $_POST['nomeAdmin'];
         $email = $_POST['emailAdmin'];
         $cpf = $_POST['cpfAdmin'];
@@ -61,7 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response['success'] = true;
             $response['message'] = "Usuário criado com sucesso!";
         } else {
-            $response['message'] = (mysqli_errno($con) == 1062) ? "E-mail ou CPF já em uso." : "Erro SQL: " . mysqli_error($con);
+            // Tratamento de erro específico para duplicação
+            if (mysqli_errno($con) == 1062) {
+                $response['message'] = "Já existe um usuário com este E-mail ou CPF.";
+            } else {
+                $response['message'] = "Erro no Banco: " . mysqli_error($con);
+            }
         }
     }
     elseif ($action === 'delete') {
@@ -88,13 +112,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     elseif ($action === 'delete_permanent') {
         $id = $_POST['id_user'];
+        // Cuidado: Isso pode dar erro se o usuário tiver livros emprestados (Foreign Key)
+        // O ideal é usar try/catch ou verificar erros
         $stmt = mysqli_prepare($con, "DELETE FROM usuarios WHERE id_user = ?");
         mysqli_stmt_bind_param($stmt, 'i', $id);
+        
         if (mysqli_stmt_execute($stmt)) {
             $response['success'] = true;
             $response['message'] = "Usuário excluído permanentemente.";
         } else {
-            $response['message'] = "Erro ao excluir (verifique dependências).";
+            // Erro 1451 é constraint (chave estrangeira)
+            if (mysqli_errno($con) == 1451) {
+                $response['message'] = "Não é possível excluir: Este usuário possui registros vinculados.";
+            } else {
+                $response['message'] = "Erro ao excluir: " . mysqli_error($con);
+            }
         }
     }
 

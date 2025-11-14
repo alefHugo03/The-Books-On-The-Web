@@ -1,5 +1,17 @@
-export const etapa = ["avisoNome", "avisoEmail", "avisoData", "avisoSenha", "avisoSenhaDois", "avisoCpf", "avisoTipo"];
-
+export const etapa = [
+    "avisoNome",       
+    "avisoEmail",      
+    "avisoData",       
+    "avisoSenha",      
+    "avisoSenhaDois", 
+    "avisoCpf",        
+    "avisoTipo",      
+    "avisoTitulo",     
+    "avisoDescricao",  
+    "avisoDataPubli", 
+    "avisoCategoria",  
+    "avisoPdf"        
+];
 export const avisoFalas = (fala , etapa) => {
     const avisoElement = document.getElementById(etapa);
 
@@ -19,3 +31,4 @@ export const limparAviso = (etapa) => {
         avisoElement.classList.remove('aviso-ativo');
     }
 };
+
