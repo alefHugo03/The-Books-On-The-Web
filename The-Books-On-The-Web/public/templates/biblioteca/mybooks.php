@@ -6,7 +6,7 @@ require_once '../../api/conection/conectionBD.php';
 
 // 1. Segurança: Verificar Login Admin
 if (!isset($_SESSION['id_user']) || $_SESSION['tipo'] !== 'admin') {
-    header("Location: ../login/entrada.html");
+    header("Location: ../login/painel_logado.php");
     exit();
 }
 

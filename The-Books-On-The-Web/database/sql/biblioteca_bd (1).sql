@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 14/11/2025 às 01:40
+-- Tempo de geração: 14/11/2025 às 23:17
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -58,6 +58,15 @@ CREATE TABLE `categoria` (
   `nome_categoria` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `categoria`
+--
+
+INSERT INTO `categoria` (`id_categoria`, `nome_categoria`) VALUES
+(2, 'Arquitetura de Software'),
+(3, 'Data Science'),
+(4, 'DevOps');
+
 -- --------------------------------------------------------
 
 --
@@ -90,10 +99,20 @@ CREATE TABLE `livro` (
   `id_livro` int(11) NOT NULL,
   `titulo` varchar(50) NOT NULL,
   `descricao` varchar(200) NOT NULL,
-  `preco` decimal(10,2) NOT NULL,
   `data_publi` date NOT NULL,
-  `categoria` int(11) NOT NULL
+  `categoria` int(11) NOT NULL,
+  `pdf` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `livro`
+--
+
+INSERT INTO `livro` (`id_livro`, `titulo`, `descricao`, `data_publi`, `categoria`, `pdf`) VALUES
+(12, 'Arquitetura Limpa - O Guia do Artesão para Estrutu', 'As regras universais de arquitetura de software aumentam dramaticamente a produtividade dos desenvolvedores ao longo da vida dos sistemas de software. Agora, aproveitando o sucesso dos seus best-selle', '2019-01-01', 2, '6917a15a099f6.pdf'),
+(13, 'Big Data - Técnicas e tecnologias para extração de', 'Estamos na era dos dados. Não importa qual seja a sua área de atuação, uma palavra atualmente em evidência é: Big Data. Podemos encontrar casos de uso em que esse conceito permitiu a redução do número', '2016-12-02', 2, '6917a289229c4.pdf'),
+(14, 'Amazon AWS - Descomplicando a computação na nuvem', 'Quando se trata de grandes aplicações, infraestrutura é um ponto muito importante, pois é preciso pensar em escalabilidade, gerenciamento e, principalmente, os serviços necessários para seu bom funcio', '2016-12-16', 4, '6917a77549fab.pdf'),
+(15, 'Estatistica - O que e, para que serve, como funcio', 'Um livro que nos faz entender os números por trás dos fatos e apreciar a força extraordinária dos dados em diversos aspectos do cotidiano\r\n\r\nA estatística é uma ciência que está em toda parte, muito e', '2016-03-10', 3, '6917a81131c3e.pdf');
 
 -- --------------------------------------------------------
 
@@ -115,6 +134,7 @@ CREATE TABLE `pedido` (
 
 CREATE TABLE `usuarios` (
   `id_user` int(11) NOT NULL,
+  `endereco` int(11) DEFAULT NULL,
   `data_nascimento` date DEFAULT NULL,
   `nome` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
@@ -128,10 +148,10 @@ CREATE TABLE `usuarios` (
 -- Despejando dados para a tabela `usuarios`
 --
 
-INSERT INTO `usuarios` (`id_user`, `data_nascimento`, `nome`, `email`, `senha`, `cpf`, `tipo`, `is_active`) VALUES
-(1, '2000-12-12', 'alef', 'alef@gmail.com', '$2y$10$uAQLwb264wR6VoPDO2jZCOu22cDLBgrfKkC.i9M.0YzA60APYqx/m', '123.123.123-12', 'cliente', 1),
-(2, '2000-12-12', 'vitor', 'vitor@gmail.com', '$2y$10$No1amdXWgHRjaaxjNXD/9eYcC3cLMN1d7AdrEBkNoVXkXCDOuygqm', '123.123.321-32', 'admin', 1),
-(3, '2000-12-12', 'gustavo', 'gustavo@gmail.com', '$2y$10$NjSjRA9lVQmWMj4oYBlt6.b4Ph1F/crTGpn1f17zUnmRszqgLOU3O', '456.456.456-45', 'admin', 1);
+INSERT INTO `usuarios` (`id_user`, `endereco`, `data_nascimento`, `nome`, `email`, `senha`, `cpf`, `tipo`, `is_active`) VALUES
+(1, NULL, '2000-12-12', 'alef', 'alef@gmail.com', '$2y$10$zMM9BR/eLytmKtEE4Dq2MeTY7a8wxNvt9GoHqAMJLUPG5FZRHtJbC', '123.123.123-12', 'admin', 1),
+(2, NULL, '2000-12-12', 'ana', 'ana@gmail.com', '$2y$10$HzrgcWhPdRV0lMRqYavemuPHc8BbRkIjWVl.cWhx.dLnxIWPDWfPG', '123.321.123-32', 'cliente', 0),
+(3, NULL, '2000-12-12', 'vitor', 'vitor@gmail.com', '$2y$10$yZXYKwAUp9uXqSfrqo.jVumsrXR3zHzS7m5wmrRVDte7cjBXVNFte', '123.456.789-10', 'cliente', 1);
 
 --
 -- Índices para tabelas despejadas
@@ -212,13 +232,13 @@ ALTER TABLE `avaliacao`
 -- AUTO_INCREMENT de tabela `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `livro`
 --
 ALTER TABLE `livro`
-  MODIFY `id_livro` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_livro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de tabela `pedido`
@@ -230,7 +250,7 @@ ALTER TABLE `pedido`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restrições para tabelas despejadas

@@ -93,3 +93,6 @@ PRIMARY KEY (livro, pedido),
 FOREIGN KEY (livro) REFERENCES livro (id_livro),
 FOREIGN KEY (pedido) REFERENCES pedido (id_pedido)
 );
+
+
+select * from livro
