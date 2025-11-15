@@ -1,233 +1,95 @@
 /* ==========================================================================
    ARQUIVO: public/styles/livros.css
-   Estilos específicos para a página de gerenciamento de livros.
-   Requer que style.css já esteja carregado na página.
+   Painel Administrativo
    ========================================================================== */
 
-/* --- Ajustes de Layout do Painel --- */
+.painel-admin { width: 100%; max-width: 1200px; margin: 0 auto; }
+
+/* Cabeçalho */
 .painel-admin h2 {
-    /* Alinha o título com o botão de adicionar (+) */
-    display: flex;
-    align-items: center;
-    gap: 15px; 
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 2px solid var(--cor-destaque); 
+    padding-bottom: 10px; margin-bottom: 20px;
 }
 
-/* --- Botão Redondo de Alternar (+) --- */
 #btn-toggle-cadastro {
-    background-color: var(--cor-sucesso); /* Verde (definido no style.css ou fallback abaixo) */
-    color: var(--cor-branco-letra);
-    border: none;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    line-height: 1; /* Centraliza o + verticalmente */
+    background: var(--cor-sucesso); color: white;
+    width: 40px; height: 40px; border-radius: 50%; border: none;
+    font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s;
 }
+#btn-toggle-cadastro:hover { transform: scale(1.1); }
 
-#btn-toggle-cadastro:hover {
-    transform: scale(1.1);
-    background-color: #218838; /* Verde um pouco mais escuro */
+/* Formulário */
+.form-create textarea.valor-texto { min-height: 120px; resize: vertical; }
+input[type="file"].valor-texto { background: #f8f9fa; padding: 10px; }
+
+.grupo-categoria { display: flex; gap: 10px; }
+.grupo-categoria select { flex-grow: 1; }
+.btn-nova-cat { background: var(--cor-sucesso); color: white; border: none; padding: 0 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+/* --- TABELA --- */
+table { 
+    width: 100%; border-collapse: collapse; background: white; 
+    border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-top: 20px; 
 }
+th { background: #343a40; color: white; padding: 15px; text-transform: uppercase; font-size: 0.85rem; }
+td { padding: 15px; border-bottom: 1px solid #eee; color: #555; text-align: center; vertical-align: middle; }
+tr:hover { background-color: #f8f9fa; }
 
-/* --- Ajustes de Campos do Formulário --- */
+/* ==========================================================================
+   CORREÇÃO DOS BOTÕES DA TABELA (AQUI ESTÁ A MÁGICA)
+   ========================================================================== */
 
-/* Garante que a área de texto tenha altura mínima e fonte correta */
-textarea.valor-texto {
-    resize: vertical; /* Usuário pode redimensionar apenas a altura */
-    min-height: 80px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Estilo especial para o input de arquivo PDF */
-input[type="file"].valor-texto {
-    padding: 6px;
-    background-color: white;
-    line-height: normal;
-}
-
-/* Grupo para alinhar Select de Categoria com botão de Nova */
-.grupo-categoria {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.grupo-categoria select {
-    flex-grow: 1; /* O select ocupa todo o espaço disponível */
-}
-
-/* --- Botões Pequenos da Tabela --- */
+/* 1. Estilo Base para QUALQUER botão dentro da tabela */
+.painel-admin table td button,
+.painel-admin table td input[type="submit"],
+.painel-admin table td input[type="button"],
 .btn-small {
-    padding: 6px 12px;
-    font-size: 13px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
     display: inline-block;
+    padding: 6px 12px;
+    font-size: 0.75rem;
     font-weight: bold;
-    transition: opacity 0.2s;
-    color: var(--cor-branco-letra);
-    margin-right: 5px;
-}
-
-.btn-small:hover {
-    opacity: 0.9;
-}
-
-/* Cores específicas dos botões */
-.btn-edit-livro {
-    background-color: var(--cor-aviso); /* Amarelo */
-    color: var(--cor-preto); /* Texto preto para contraste */
-}
-
-.btn-delete-livro {
-    background-color: var(--cor-perigo); /* Vermelho */
-}
-
-/* Botão pequeno azul (usado para "+ Nova" categoria) */
-.btn-nova-cat {
-    background-color: var(--cor-azul-destaque);
-    height: 38px; /* Mesma altura do input padrão */
-    white-space: nowrap;
-}
-
-/* --- Links e Textos na Tabela --- */
-.link-pdf {
-    color: var(--cor-azul-destaque);
-    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 20px; /* Borda arredondada estilo badge */
     text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.link-pdf:hover {
-    text-decoration: underline;
-}
-
-/* --- Feedback (Mensagens de Sucesso/Erro) --- */
-.feedback {
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    text-align: center;
-    font-weight: bold;
-    border: 1px solid transparent;
-    animation: fadeIn 0.5s;
-}
-
-.feedback.success {
-    background-color: #d4edda;
-    color: #155724;
-    border-color: #c3e6cb;
-}
-
-.feedback.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border-color: #f5c6cb;
-}
-
-/* ==========================================================================
-   MODAL (Pop-up de Nova Categoria)
-   ========================================================================== */
-.modal {
-    display: none; /* Começa oculto */
-    position: fixed; 
-    z-index: 1000; /* Fica na frente de tudo */
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgba(0,0,0,0.5); /* Fundo preto transparente */
-    backdrop-filter: blur(2px); /* Efeito de desfoque no fundo */
-}
-
-.modal-content {
-    background-color: var(--cor-branco-letra);
-    margin: 10% auto; /* 10% do topo e centralizado horizontalmente */
-    padding: 30px;
-    border: 1px solid var(--cor-borda);
-    border-radius: 8px;
-    width: 90%;
-    max-width: 450px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    position: relative;
-    animation: modalSlideDown 0.3s ease-out;
-}
-
-/* Cabeçalho do Modal */
-.modal-content h3 {
-    margin-bottom: 20px;
-    color: var(--cor-header);
-    border-bottom: 1px solid var(--cor-borda);
-    padding-bottom: 10px;
-    font-size: 1.2rem;
-}
-
-/* Botão fechar (X) */
-.close {
-    color: var(--cor-cinza-letra);
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 28px;
-    font-weight: bold;
+    margin: 2px;
+    border: none; /* Remove a borda feia padrão */
     cursor: pointer;
-    transition: color 0.2s;
+    color: white !important;
+    min-width: 80px;
+    text-align: center;
+    background-color: #6c757d; /* Cor cinza padrão caso não tenha classe */
+    transition: opacity 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.close:hover,
-.close:focus {
-    color: var(--cor-perigo); /* Fica vermelho ao passar o mouse */
-    text-decoration: none;
+.painel-admin table td button:hover,
+.painel-admin table td input:hover,
+.btn-small:hover { 
+    opacity: 0.85; 
 }
 
-/* Animações Simples */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* 2. Cores Específicas (Por Classe) */
+.btn-ativar   { background-color: var(--cor-sucesso) !important; } /* Verde */
+.btn-desativar { 
+    background-color: white !important; 
+    color: #333 !important; 
+    border: 1px solid #ccc !important; 
+} 
+.btn-excluir  { background-color: var(--cor-perigo) !important; } /* Vermelho */
+.btn-editar   { background-color: #343a40 !important; } /* Cinza Escuro */
+
+/* 3. Cores Inteligentes (Tenta adivinhar pelo HTML se não tiver classe) */
+/* Se for um input com value="Excluir", fica vermelho automaticamente */
+.painel-admin table td input[value="Excluir"] {
+    background-color: var(--cor-perigo) !important;
+}
+/* Se for um input com value="Ativar", fica verde automaticamente */
+.painel-admin table td input[value="Ativar"] {
+    background-color: var(--cor-sucesso) !important;
 }
 
-@keyframes modalSlideDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ==========================================================================
-   RESPONSIVIDADE
-   ========================================================================== */
-@media (max-width: 768px) {
-    /* Empilha o select e o botão de nova categoria em telas pequenas */
-    .grupo-categoria {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    /* Esconde colunas menos importantes da tabela no celular */
-    .painel-admin table th:nth-child(2), /* Categoria */
-    .painel-admin table td:nth-child(2),
-    .painel-admin table th:nth-child(3), /* Data */
-    .painel-admin table td:nth-child(3) {
-        display: none; 
-    }
-    
-    /* Ajusta tamanho dos botões para toque */
-    .btn-small {
-        padding: 8px 12px;
-        font-size: 14px;
-        margin-bottom: 5px;
-        display: block; /* Botões um em cima do outro */
-        width: 100%;
-        text-align: center;
-    }
-}
+/* Links PDF */
+.link-pdf { color: var(--cor-texto); font-weight: bold; }
+.link-pdf:hover { text-decoration: underline; color: var(--cor-destaque); }

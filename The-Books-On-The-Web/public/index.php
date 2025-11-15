@@ -12,6 +12,10 @@ $resultado = procurarLivros();
     <meta charset="UTF-8">
     <title>Home | TBOTW </title>
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/cards.css">
+    <link rel="stylesheet" href="styles/livros.css">
+    <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon" class="favicon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
 </head>
 
@@ -40,56 +44,49 @@ $resultado = procurarLivros();
             <nav class="opcoes">
                 <a href="index.php" class="item-menu">Home</a>
                 <a href="templates/biblioteca/resumo.html" class="item-menu">Sobre</a>
-                <a href="templates/biblioteca/livros.php" class="item-menu">Serviços</a>
                 <?php exibirBotoesCliente(); ?>
                 <?php exibirBotoesAdimin(); ?>
             </nav>
         </div>
     </header>
 
-    <head>
-        <base href="http://localhost/The-Books-On-The-Web/public/">
-        <link rel="stylesheet" href="styles/style.css">
-        <link rel="stylesheet" href="styles/cards.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
-    </head>
-
     <main>
         <div class="container-vitrine" style="padding: 20px; max-width: 800px; margin: auto;">
-            <h2>Destaques Aleatórios</h2>
+            <h2>Destaques Da Biblioteca</h2>
             <hr style="margin-bottom: 20px;">
 
-            <div class="lista-livros"> <?php
-                                        if (mysqli_num_rows($resultado) > 0) {
-                                            while ($livro = mysqli_fetch_assoc($resultado)) {
-                                                $caminhoPdf = '../database/pdfs/' . $livro['pdf'];
+            <div class="lista-livros">
+                <?php
+                if (mysqli_num_rows($resultado) > 0) {
+                    while ($livro = mysqli_fetch_assoc($resultado)) {
+                        $caminhoPdf = '../database/pdfs/' . $livro['pdf'];
 
-                                                echo '<div class="livro-card">';
+                        echo '<div class="livro-card">';
 
-                                                // CAPA
-                                                echo '<div class="capa-wrapper">';
-                                                if (!empty($livro['pdf'])) {
-                                                    echo '<canvas class="pdf-thumb" data-url="' . $caminhoPdf . '"></canvas>';
-                                                } else {
-                                                    echo '<div class="sem-capa">Sem Capa</div>';
-                                                }
-                                                echo '</div>';
+                        // CAPA
+                        echo '<div class="capa-wrapper">';
+                        if (!empty($livro['pdf'])) {
+                            echo '<canvas class="pdf-thumb" data-url="' . $caminhoPdf . '"></canvas>';
+                        } else {
+                            echo '<div class="sem-capa">Sem Capa</div>';
+                        }
+                        echo '</div>';
 
-                                                // TEXTO
-                                                echo '<div class="info-livro">';
-                                                echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
-                                                echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
-                                                // Se tiver categoria no SELECT do index.php, adicione aqui. Se não, remova o span abaixo.
-                                                // echo '<span class="categoria-tag">Categoria</span>';
-                                                
-                                                echo '</div>';
+                        // TEXTO
+                        echo '<div class="info-livro">';
+                        echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
+                        echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
+                        // Se tiver categoria no SELECT do index.php, adicione aqui. Se não, remova o span abaixo.
+                        echo '<span class="categoria-tag">' . htmlspecialchars($livro['nome_categoria']) .'</span>';
 
-                                                echo '</div>'; // Fim card
-                                            }
-                                        } else {
-                                            echo '<p>Nenhum livro encontrado.</p>';
-                                        }
-                                        ?>
+                        echo '</div>';
+
+                        echo '</div>'; // Fim card
+                    }
+                } else {
+                    echo '<p>Nenhum livro encontrado.</p>';
+                }
+                ?>
             </div>
         </div>
     </main>

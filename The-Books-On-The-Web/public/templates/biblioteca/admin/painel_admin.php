@@ -13,6 +13,8 @@ bloqueioAdimin();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Gerenciar Usuários</title>
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/cards.css">
+    <link rel="stylesheet" href="styles/livros.css">
     <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon">
 </head>
 
@@ -77,9 +79,9 @@ bloqueioAdimin();
                 </div>
 
                 <div class="valor">
-                    <div class="interativo">
-                        <button type="reset" id="btn-menu-criar" class="btn-menu">Limpar</button>
-                        <button type="submit" id="btn-menu-criar" class="btn-menu">Criar</button>
+                    <div class="botoes-rodape">
+                        <button type="reset" class="btn-menu">Limpar</button>
+                        <button type="submit" class="btn-menu btn-primary">Criar</button>
                     </div>
                     <p id="aviso" class="aviso"></p>
                 </div>

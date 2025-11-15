@@ -1,0 +1,50 @@
+/* ==========================================================================
+   LAYOUT (Header e Footer)
+   ========================================================================== */
+
+header {
+    width: 100%;
+    background-color: var(--cor-header);
+    color: var(--cor-branco-letra);
+}
+
+.header-cima, .header-baixo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.header-cima {
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.header-baixo {
+    justify-content: center;
+    padding: 10px 0 40px;
+    background-color: var(--cor-header);
+    gap: 10px;
+}
+
+/* Elementos header */
+.empresa {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nome-empresa { font-size: 12px; }
+.imagem-empresa { width: 50px; background: white; }
+.perfil-header { display: flex; gap: 10px; }
+.saudacao { font-size: 14px; opacity: .9; }
+
+/* Footer */
+.caixa-footer {
+    display: flex;
+    justify-content: center;
+    padding: 2%;
+    background-color: var(--cor-cinza);
+    border-top: 1px solid var(--cor-borda);
+    font-size: small;
+    margin-top: auto;
+}

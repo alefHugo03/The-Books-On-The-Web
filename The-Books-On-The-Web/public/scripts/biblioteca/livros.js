@@ -156,7 +156,7 @@ window.excluirCategoria = function(id) {
             alert('Categoria excluída!');
             window.location.reload();
         } else {
-            alert(data.error); // Mostra erro se tiver livros vinculados
+            alert(data.error);
         }
     });
 };

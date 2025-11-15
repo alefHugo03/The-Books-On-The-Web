@@ -33,7 +33,6 @@ require_once '../../api/conection/functionsBD.php';
     <nav class="opcoes"> 
         <a href="index.php" class="item-menu">Home</a>
         <a href="templates/biblioteca/resumo.html" class="item-menu">Sobre</a>
-        <a href="templates/biblioteca/livros.php" class="item-menu">Serviços</a>
         
         <?php
             exibirBotoesCliente();

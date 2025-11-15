@@ -2,7 +2,7 @@
 session_start();
 
 // Ajuste o caminho conforme sua estrutura de pastas
-require_once '../../api/conection/conectionBD.php';
+require_once '../../../api/conection/conectionBD.php';
 
 // 1. Segurança: Verificar Login Admin
 if (!isset($_SESSION['id_user']) || $_SESSION['tipo'] !== 'admin') {
@@ -217,6 +217,7 @@ if($resLiv) while ($row = mysqli_fetch_assoc($resLiv)) $livros[] = $row;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Livros</title>
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/cards.css">
     <link rel="stylesheet" href="styles/livros.css">
     <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon">
 </head>
@@ -343,7 +344,7 @@ if($resLiv) while ($row = mysqli_fetch_assoc($resLiv)) $livros[] = $row;
                         <tr style="border-bottom:1px solid #eee;">
                             <td style="padding:8px;"><?php echo htmlspecialchars($cat['nome_categoria']); ?></td>
                             <td style="text-align:right; padding:8px;">
-                                <button onclick="excluirCategoria(<?php echo $cat['id_categoria']; ?>)" style="color:red; background:none; border:none; cursor:pointer; font-weight:bold;">Excluir</button>
+                                <button onclick="excluirCategoria(<?php echo $cat['id_categoria']; ?>)" class="btn-excluir">Excluir</button>
                             </td>
                         </tr>
                         <?php endforeach; ?>
