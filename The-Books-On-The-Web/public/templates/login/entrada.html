@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/cards.css">
     <link rel="stylesheet" href="styles/livros.css">
-    <link rel="shortcut icon" href="styles/img/favicon.svg"  type="image/x-icon" class="favicon">
+    <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon">
     <title>Entrada | TBOTW</title>
 </head>
 <body>
@@ -19,24 +19,26 @@
 
             <form id="form-login" method="post" class="menu">
                 <div class="valor caixa-texto">
-                    <label for="email">Email: </label>
+                    <label for="emailEntrar">Email: </label>
                     <input type="email" name="email" class="valor-texto" id="emailEntrar" placeholder="Digite seu email">
-                    <p id="avisoEmail" class="aviso-email aviso-campo"></p>
+                    <p id="avisoEmail" class="aviso-campo"></p>
                 </div>
 
                 <div class="valor caixa-texto">
-                    <label for="senha">Senha: </label>
+                    <label for="senhaEntrar">Senha: </label>
                     <input type="password" name="senha" id="senhaEntrar" class="valor-texto" placeholder="Digite sua senha">
-                    <p id="avisoSenha" class="aviso-senha aviso-campo"></p>
+                    <p id="avisoSenha" class="aviso-campo"></p>
                 </div>
 
                 <div class="valor">
+                    <p id="aviso" class="aviso"></p>
                     <button type="submit" id="btnEntrar" class="btn-menu">Entrar</button>
                 </div>
             </form>
+
             <div class="valor links-menu menu">
-                    <a href="templates/login/seguranca.html" class="link-menu">Esqueci minha senha</a>
-                    <a href="templates/login/cadastro.html" class="link-menu">Criar uma conta</a>
+                <a href="templates/login/seguranca.html" class="link-menu">Esqueci minha senha</a>
+                <a href="templates/login/cadastro.html" class="link-menu">Criar uma conta</a>
             </div>
         </div>
     </main>

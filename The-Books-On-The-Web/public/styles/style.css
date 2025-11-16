@@ -1,5 +1,6 @@
 /* ==========================================================================
    ARQUIVO: public/styles/style.css
+   Tema Principal + Formulários + Layout Geral
    ========================================================================== */
 
 :root {
@@ -9,12 +10,12 @@
     --cor-borda: #ccc;
     --cor-cinza-claro: #e9ecef;
     
-    /* Cores de Status e Destaque (VERDE) */
-    --cor-sucesso: #28a745;
-    --cor-aviso: #ffc107;
-    --cor-perigo: #dc3545;
+    /* Cores de Status */
+    --cor-sucesso: #28a745;  /* Verde */
+    --cor-aviso: #ffc107;    /* Amarelo */
+    --cor-perigo: #dc3545;   /* Vermelho Erro */
     --cor-texto: #333;
-    --cor-destaque: #28a745;
+    --cor-destaque: #28a745; /* Verde Principal */
 }
 
 * {
@@ -75,7 +76,7 @@ header {
     font-weight: 500;
 }
 
-.btn-header {
+.btn-header, .btn-cadastro {
     padding: 8px 15px;
     border-radius: 4px;
     font-size: 0.9rem;
@@ -86,14 +87,15 @@ header {
     color: white;
     transition: 0.3s;
 }
-.btn-header:hover { background: rgba(255,255,255,0.3); }
+.btn-header:hover, .btn-cadastro:hover { background: rgba(255,255,255,0.3); }
 
 .header-baixo { background-color: #333; padding: 10px 0; display: flex; justify-content: center; gap: 20px; }
 .item-menu { color: #ccc; font-weight: 500; padding: 5px 10px; transition: 0.3s; }
 .item-menu:hover { color: white; text-decoration: underline; }
 
+
 /* ==========================================================================
-   MAIN & CONTAINERS GERAIS
+   MAIN & LAYOUTS GERAIS
    ========================================================================== */
 main {
     flex-grow: 1;
@@ -104,14 +106,14 @@ main {
     width: 100%;
 }
 
-/* Título Principal das Páginas de Texto */
+/* Títulos e Textos */
 main h1 {
     color: var(--cor-texto);
     margin-bottom: 10px;
     text-align: center;
 }
 
-main > p { /* Subtítulos soltos no main */
+main > p {
     color: #666;
     margin-bottom: 40px;
     text-align: center;
@@ -119,10 +121,8 @@ main > p { /* Subtítulos soltos no main */
 }
 
 /* ==========================================================================
-   PÁGINA SOBRE / RESUMO (Layout em Blocos)
+   PÁGINA SOBRE (Layout em Blocos)
    ========================================================================== */
-
-/* Container de cada bloco (Texto + Imagem) */
 .grupo {
     display: flex;
     align-items: center;
@@ -132,96 +132,201 @@ main > p { /* Subtítulos soltos no main */
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     width: 100%;
-    max-width: 1000px; /* Limita a largura para não esticar demais */
-    margin-bottom: 40px; /* Espaço entre os blocos */
+    max-width: 1000px;
+    margin-bottom: 40px;
     gap: 40px;
 }
 
-/* Alternância visual (se quiser mudar a ordem, pode usar classes especificas, 
-   mas o HTML atual já alterna a ordem das tags img/div) */
-
 .grupo img {
-    width: 180px; /* Tamanho padrão das logos */
+    width: 180px;
     height: auto;
     object-fit: contain;
     transition: transform 0.3s;
 }
-
 .grupo:hover img { transform: scale(1.05); }
 
-.resumo-projeto {
-    flex: 1; /* O texto ocupa o espaço restante */
-    text-align: left;
-}
-
+.resumo-projeto { flex: 1; text-align: left; }
 .resumo-projeto h2 {
-    color: var(--cor-destaque); /* Verde */
+    color: var(--cor-destaque);
     margin-bottom: 15px;
     font-size: 1.5rem;
-    border-bottom: none; /* Remove a borda padrão dos h2 de admin */
+    border-bottom: none;
 }
-
 .resumo-projeto p {
     color: #555;
     line-height: 1.6;
     font-size: 1rem;
-    text-align: justify; /* Texto justificado fica mais bonito em blocos */
+    text-align: justify;
 }
+
 
 /* ==========================================================================
-   FORMS E LOGIN (Mantido da versão anterior)
+   FORMULÁRIOS (Login, Cadastro, Admin)
    ========================================================================== */
-.caixa-menu, .caixa-menu-login {
-    background: white; padding: 40px; border-radius: 8px;
+
+/* Container dos Formulários */
+.caixa-menu, 
+.caixa-menu-login,
+.cadastro-menu {
+    background: white; 
+    padding: 40px; 
+    border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    width: 100%; max-width: 450px; text-align: center; margin: 20px auto;
+    width: 100%; 
+    max-width: 500px; /* Largura padrão para login/cadastro */
+    margin: 20px auto;
 }
 
+/* Container Largo (para Cadastro e Admin) */
 .cadastro-menu, .form-create {
-    background: white; padding: 40px; border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    width: 100%; max-width: 900px; margin: 0 auto;
+    max-width: 900px; 
 }
 
-.caixa-menu h2, .cadastro-menu h2, .form-create h2, .caixa-menu-login h2 {
-    margin-bottom: 25px; color: var(--cor-texto);
+/* Títulos dos Formulários */
+.caixa-menu h2, .cadastro-menu h2, .form-create h2, .caixa-menu-login h2, .painel-admin h2 {
+    margin-bottom: 25px; 
+    color: var(--cor-texto);
     border-bottom: 2px solid var(--cor-destaque);
-    padding-bottom: 10px; text-align: left;
+    padding-bottom: 10px; 
+    text-align: left;
+    display: flex;
+    justify-content: space-between; /* Para alinhar botão + à direita */
+    align-items: center;
 }
 
+/* Estrutura Interna do Form */
 .menu { display: flex; flex-direction: column; gap: 20px; }
-.valor, .caixa-texto { display: flex; flex-direction: column; text-align: left; gap: 5px; width: 100%; }
+
+/* Campos de Input */
+.valor, .caixa-texto { 
+    display: flex; 
+    flex-direction: column; 
+    text-align: left; 
+    gap: 5px; 
+    width: 100%; 
+}
+
 .valor label { font-weight: 600; font-size: 0.95rem; color: #444; }
-.valor-texto { padding: 12px; border: 1px solid var(--cor-borda); border-radius: 5px; font-size: 1rem; width: 100%; }
-.valor-texto:focus { border-color: var(--cor-destaque); outline: none; box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2); }
 
-.btn-menu { padding: 12px 20px; border: none; border-radius: 5px; font-size: 1rem; font-weight: bold; cursor: pointer; width: 100%; background: #e2e6ea; color: #333; }
+.valor-texto { 
+    padding: 12px; 
+    border: 1px solid var(--cor-borda); 
+    border-radius: 5px; 
+    font-size: 1rem; 
+    width: 100%; 
+}
+.valor-texto:focus { 
+    border-color: var(--cor-destaque); 
+    outline: none; 
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2); 
+}
+
+/* Botões Gerais */
+.btn-menu { 
+    padding: 12px 20px; 
+    border: none; 
+    border-radius: 5px; 
+    font-size: 1rem; 
+    font-weight: bold; 
+    cursor: pointer; 
+    width: 100%; 
+    background: #e2e6ea; 
+    color: #333; 
+    transition: 0.2s;
+}
+.btn-menu:hover { background: #dbe0e5; }
+
 .btn-primary { background: var(--cor-sucesso) !important; color: white !important; }
-.btn-sair { background: var(--cor-perigo) !important; color: white !important; width: 100%; padding: 10px; display: block; text-align: center; border-radius: 5px;}
+.btn-primary:hover { background: #218838 !important; }
 
-.botoes-rodape { display: flex; gap: 15px; margin-top: 30px; width: 100%; }
+.btn-sair { 
+    background: var(--cor-perigo) !important; 
+    color: white !important; 
+    width: 100%; 
+    padding: 10px; 
+    display: block; 
+    text-align: center; 
+    border-radius: 5px;
+}
+
+.botoes-rodape { display: flex; gap: 15px; margin-top: 10px; width: 100%; }
 .botoes-rodape button, .botoes-rodape a { flex: 1; text-align: center; }
 
-/* PERFIL INFO */
-.perfil-info { text-align: left; background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #eee; width: 100%; }
-.perfil-info p { margin-bottom: 8px; color: #555; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+.links-menu { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; text-align: center; }
+.link-menu { color: #007bff; font-size: 0.9rem; }
+.link-menu:hover { text-decoration: underline; }
 
-/* UTILITÁRIOS */
-.conteudo-oculto { display: none; opacity: 0; transition: opacity 0.3s ease; }
-.conteudo-oculto.ativo { display: block; opacity: 1; animation: fadeIn 0.5s; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+/* ==========================================================================
+   MENSAGENS DE ERRO E VALIDAÇÃO (VISUAL VERMELHO)
+   ========================================================================== */
+.aviso, 
+.aviso-campo, 
+.aviso-email, 
+.aviso-senha {
+    color: var(--cor-perigo) !important; /* Vermelho */
+    font-size: 0.85rem;
+    margin-top: 5px;
+    font-weight: 600;
+    display: block;
+    min-height: 20px; /* Garante altura para não pular layout */
+}
 
-.caixa-footer { text-align: center; padding: 20px; color: #888; font-size: 0.9rem; background: white; border-top: 1px solid #eee; margin-top: auto; }
+/* Inputs com erro */
+input.input-erro {
+    border: 1px solid var(--cor-perigo) !important;
+}
 
-/* RESPONSIVO */
+
+/* ==========================================================================
+   PAINEL DE USUÁRIO (PERFIL)
+   ========================================================================== */
+.perfil-info { 
+    text-align: left; 
+    background-color: #f9f9f9; 
+    padding: 20px; 
+    border-radius: 5px; 
+    margin-bottom: 20px; 
+    border: 1px solid #eee; 
+    width: 100%; 
+}
+.perfil-info p { 
+    margin-bottom: 8px; 
+    color: #555; 
+    border-bottom: 1px solid #eee; 
+    padding-bottom: 5px; 
+}
+
+
+/* ==========================================================================
+   UTILITÁRIOS E ANIMAÇÕES
+   ========================================================================== */
+.conteudo-oculto { 
+    display: none; 
+    opacity: 0; 
+    transition: opacity 0.3s ease; 
+}
+
+/* Footer */
+.caixa-footer { 
+    text-align: center; 
+    padding: 20px; 
+    color: #888; 
+    font-size: 0.9rem; 
+    background: white; 
+    border-top: 1px solid #eee; 
+    margin-top: auto; 
+}
+
+/* Responsivo */
 @media(max-width: 820px) {
     .header-cima { flex-direction: column; text-align: center; gap: 15px; }
     
-    /* Ajuste para a página Sobre no celular */
     .grupo { flex-direction: column; text-align: center; padding: 20px; }
     .resumo-projeto { text-align: center; }
     .resumo-projeto p { text-align: center; }
     
-    /* Inverte a ordem do grupo-dois para a imagem não ficar embaixo do texto no mobile */
+    /* Inverte ordem da imagem na segunda seção do sobre */
     .grupo-dois { flex-direction: column-reverse; }
+
+    .botoes-rodape { flex-direction: column; }
 }

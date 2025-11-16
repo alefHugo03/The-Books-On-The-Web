@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 16/11/2025 às 04:43
+-- Tempo de geração: 16/11/2025 às 19:15
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -37,9 +37,10 @@ CREATE TABLE `autor` (
 --
 
 INSERT INTO `autor` (`id_autor`, `nome_autor`) VALUES
-(2, 'Casa do Código'),
+(1, 'Jonathan Lamim Antunes, Casa do Código'),
+(2, 'Rosangela Marquesone, Casa do Código'),
 (3, 'Robert C. Martin'),
-(4, 'Charles Wheelan');
+(4, 'Charles Wheelan, Zahar');
 
 -- --------------------------------------------------------
 
@@ -77,8 +78,8 @@ CREATE TABLE `escritor` (
 --
 
 INSERT INTO `escritor` (`autor`, `livro`) VALUES
+(1, 14),
 (2, 13),
-(2, 14),
 (3, 12),
 (4, 15);
 
@@ -95,13 +96,6 @@ CREATE TABLE `favoritos` (
   `data_favoritado` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `favoritos`
---
-
-INSERT INTO `favoritos` (`id_favorito`, `id_user`, `id_livro`, `data_favoritado`) VALUES
-(2, 3, 15, '2025-11-15 23:40:34');
-
 -- --------------------------------------------------------
 
 --
@@ -111,7 +105,7 @@ INSERT INTO `favoritos` (`id_favorito`, `id_user`, `id_livro`, `data_favoritado`
 CREATE TABLE `livro` (
   `id_livro` int(11) NOT NULL,
   `titulo` varchar(255) NOT NULL,
-  `descricao` varchar(500) NOT NULL,
+  `descricao` varchar(1000) NOT NULL,
   `data_publi` date NOT NULL,
   `categoria` int(11) NOT NULL,
   `pdf` varchar(255) NOT NULL
@@ -122,10 +116,10 @@ CREATE TABLE `livro` (
 --
 
 INSERT INTO `livro` (`id_livro`, `titulo`, `descricao`, `data_publi`, `categoria`, `pdf`) VALUES
-(12, 'Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software', 'As regras universais de arquitetura de software aumentam dramaticamente a produtividade dos desenvolvedores ao longo da vida dos sistemas de software. Agora, aproveitando o sucesso dos seus best-selle', '2019-01-01', 2, '69194727ea014.pdf'),
-(13, 'Big Data - Técnicas e tecnologias para extração de valor dos dados', 'Estamos na era dos dados. Não importa qual seja a sua área de atuação, uma palavra atualmente em evidência é: Big Data. Podemos encontrar casos de uso em que esse conceito permitiu a redução do número', '2016-12-02', 2, '69194748ad8ac.pdf'),
-(14, 'Amazon AWS - Descomplicando a computação na nuvem', 'Quando se trata de grandes aplicações, infraestrutura é um ponto muito importante, pois é preciso pensar em escalabilidade, gerenciamento e, principalmente, os serviços necessários para seu bom funcio', '2016-12-16', 4, '691946ca7eaa6.pdf'),
-(15, 'Estatistica - O que e, para que serve, como funciona', 'Um livro que nos faz entender os números por trás dos fatos e apreciar a força extraordinária dos dados em diversos aspectos do cotidiano\r\n\r\nA estatística é uma ciência que está em toda parte, muito e', '2016-03-10', 3, '691947e157b09.pdf');
+(12, 'Arquitetura Limpa: O Guia do Artesão para Estrutura e Design de Software', 'Em \"Arquitetura Limpa\", Robert C. Martin apresenta uma abordagem universal para criar sistemas de software que sejam robustos, manuteníveis e escaláveis. O livro defende que as regras da arquitetura de software são as mesmas, independentemente de ser um sistema web, desktop ou mobile.\r\nO foco principal não é sobre escrever código \"bonito\", mas sim sobre gerenciar dependências e criar barreiras (limites) que protejam a lógica de negócios (o coração do software) das ferramentas externas (bancos de dados, frameworks e interfaces de usuário).', '2019-01-01', 2, '691a0c432a35d.pdf'),
+(13, 'Big Data - Técnicas e tecnologias para extração de valor dos dados', 'Este livro serve como um guia introdutório e prático para o universo do Big Data. A autora, Rosangela Marquesone, desmistifica o termo que muitas vezes é utilizado apenas como uma \"buzzword\". A obra guia o leitor desde os conceitos fundamentais até à implementação prática, cobrindo todo o ciclo de vida dos dados: captura, armazenamento, processamento, análise e visualização.\r\nÉ uma leitura essencial para quem deseja entender não só o que é Big Data, mas como as empresas estão a utilizar estas tecnologias (como Hadoop e NoSQL) para transformar volumes massivos de dados em decisões de negócio inteligentes.', '2016-12-02', 2, '691a0beb5e53a.pdf'),
+(14, 'Amazon AWS - Descomplicando a computação na nuvem', 'Este livro é um guia \"mão na massa\" voltado para desenvolvedores e administradores de sistemas que desejam migrar da hospedagem tradicional (servidores físicos ou VPS simples) para a nuvem da Amazon.\r\nAo contrário de manuais que tentam cobrir todos os centenas de serviços da AWS, Jonathan Lamim foca no \"cinto de utilidades\" essencial: o que você realmente precisa para colocar uma aplicação web robusta no ar. O livro guia o leitor desde a criação da conta gratuita (Free Tier) até a configuração de servidores Linux, bancos de dados e armazenamento de arquivos.', '2016-12-16', 4, '691a0b91dbd89.pdf'),
+(15, 'Estatística: O que é, para que serve, como funciona', 'Charles Wheelan \"despe\" a estatística de sua complexidade matemática (daí o título original Naked Statistics) para focar no raciocínio lógico que existe por trás dos números. O livro é famoso por usar exemplos divertidos — como o sistema de recomendação da Netflix, o problema de Monty Hall e fraudes em testes escolares — para explicar conceitos complexos.\r\nA premissa central é que a estatística é uma ferramenta poderosa para \"encontrar a verdade\" em meio a montanhas de dados, mas também é perigosa se usada incorretamente (ou maliciosamente) para distorcer a realidade. É um livro sobre alfabetização de dados.', '2016-03-10', 3, '691a0cd6a756e.pdf');
 
 -- --------------------------------------------------------
 
@@ -151,8 +145,8 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id_user`, `endereco`, `data_nascimento`, `nome`, `email`, `senha`, `cpf`, `tipo`, `is_active`) VALUES
 (1, NULL, '2000-12-12', 'alef', 'alef@gmail.com', '$2y$10$zMM9BR/eLytmKtEE4Dq2MeTY7a8wxNvt9GoHqAMJLUPG5FZRHtJbC', '123.123.123-12', 'admin', 1),
-(2, NULL, '2000-12-12', 'ana', 'ana@gmail.com', '$2y$10$HzrgcWhPdRV0lMRqYavemuPHc8BbRkIjWVl.cWhx.dLnxIWPDWfPG', '123.321.123-32', 'cliente', 1),
-(3, NULL, '2000-12-12', 'vitor', 'vitor@gmail.com', '$2y$10$yZXYKwAUp9uXqSfrqo.jVumsrXR3zHzS7m5wmrRVDte7cjBXVNFte', '123.456.789-10', 'cliente', 0);
+(2, NULL, '2000-12-12', 'ana', 'ana@gmail.com', '$2y$10$HzrgcWhPdRV0lMRqYavemuPHc8BbRkIjWVl.cWhx.dLnxIWPDWfPG', '123.321.123-32', 'cliente', 0),
+(3, NULL, '2000-12-12', 'vitor', 'vitor@gmail.com', '$2y$10$yZXYKwAUp9uXqSfrqo.jVumsrXR3zHzS7m5wmrRVDte7cjBXVNFte', '123.456.789-10', 'cliente', 1);
 
 --
 -- Índices para tabelas despejadas
@@ -219,7 +213,7 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de tabela `favoritos`
 --
 ALTER TABLE `favoritos`
-  MODIFY `id_favorito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_favorito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de tabela `livro`
