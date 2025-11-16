@@ -16,7 +16,7 @@ $resultado = procurarLivros();
     <link rel="stylesheet" href="styles/livros.css">
     <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon" class="favicon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js"></script>
 </head>
 
 <body>
@@ -51,7 +51,7 @@ $resultado = procurarLivros();
     </header>
 
     <main>
-        <div class="container-vitrine" style="padding: 20px; max-width: 800px; margin: auto;">
+        <div class="container-vitrine" style="padding: 20px; max-width: 1000px; margin: auto;">
             <h2>Destaques Da Biblioteca</h2>
             <hr style="margin-bottom: 20px;">
 
@@ -59,8 +59,11 @@ $resultado = procurarLivros();
                 <?php
                 if (mysqli_num_rows($resultado) > 0) {
                     while ($livro = mysqli_fetch_assoc($resultado)) {
+                        // CAMINHO AJUSTADO IGUAL AO ADMIN
                         $caminhoPdf = '../database/pdfs/' . $livro['pdf'];
 
+                        echo '<a href="templates\biblioteca\livros.php?id=' . $livro['id_livro'] . '" style="text-decoration:none; color:inherit;">';
+                        
                         echo '<div class="livro-card">';
 
                         // CAPA
@@ -76,12 +79,12 @@ $resultado = procurarLivros();
                         echo '<div class="info-livro">';
                         echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
                         echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
-                        // Se tiver categoria no SELECT do index.php, adicione aqui. Se não, remova o span abaixo.
                         echo '<span class="categoria-tag">' . htmlspecialchars($livro['nome_categoria']) .'</span>';
-
                         echo '</div>';
 
                         echo '</div>'; // Fim card
+                        
+                        echo '</a>'; 
                     }
                 } else {
                     echo '<p>Nenhum livro encontrado.</p>';

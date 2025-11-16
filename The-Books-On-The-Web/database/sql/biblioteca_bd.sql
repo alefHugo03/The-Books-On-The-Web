@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 14/11/2025 às 23:17
+-- Tempo de geração: 16/11/2025 às 04:43
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -32,20 +32,14 @@ CREATE TABLE `autor` (
   `nome_autor` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Estrutura para tabela `avaliacao`
+-- Despejando dados para a tabela `autor`
 --
 
-CREATE TABLE `avaliacao` (
-  `id_avaliacao` int(11) NOT NULL,
-  `nota` int(11) NOT NULL,
-  `comentario` varchar(200) DEFAULT NULL,
-  `dt_avaliacao` date NOT NULL,
-  `usuario` int(11) NOT NULL,
-  `livro` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `autor` (`id_autor`, `nome_autor`) VALUES
+(2, 'Casa do Código'),
+(3, 'Robert C. Martin'),
+(4, 'Charles Wheelan');
 
 -- --------------------------------------------------------
 
@@ -70,17 +64,6 @@ INSERT INTO `categoria` (`id_categoria`, `nome_categoria`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `contem`
---
-
-CREATE TABLE `contem` (
-  `livro` int(11) NOT NULL,
-  `pedido` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Estrutura para tabela `escritor`
 --
 
@@ -88,6 +71,36 @@ CREATE TABLE `escritor` (
   `autor` int(11) NOT NULL,
   `livro` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `escritor`
+--
+
+INSERT INTO `escritor` (`autor`, `livro`) VALUES
+(2, 13),
+(2, 14),
+(3, 12),
+(4, 15);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `favoritos`
+--
+
+CREATE TABLE `favoritos` (
+  `id_favorito` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `id_livro` int(11) NOT NULL,
+  `data_favoritado` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `favoritos`
+--
+
+INSERT INTO `favoritos` (`id_favorito`, `id_user`, `id_livro`, `data_favoritado`) VALUES
+(2, 3, 15, '2025-11-15 23:40:34');
 
 -- --------------------------------------------------------
 
@@ -97,8 +110,8 @@ CREATE TABLE `escritor` (
 
 CREATE TABLE `livro` (
   `id_livro` int(11) NOT NULL,
-  `titulo` varchar(50) NOT NULL,
-  `descricao` varchar(200) NOT NULL,
+  `titulo` varchar(255) NOT NULL,
+  `descricao` varchar(500) NOT NULL,
   `data_publi` date NOT NULL,
   `categoria` int(11) NOT NULL,
   `pdf` varchar(255) NOT NULL
@@ -109,22 +122,10 @@ CREATE TABLE `livro` (
 --
 
 INSERT INTO `livro` (`id_livro`, `titulo`, `descricao`, `data_publi`, `categoria`, `pdf`) VALUES
-(12, 'Arquitetura Limpa - O Guia do Artesão para Estrutu', 'As regras universais de arquitetura de software aumentam dramaticamente a produtividade dos desenvolvedores ao longo da vida dos sistemas de software. Agora, aproveitando o sucesso dos seus best-selle', '2019-01-01', 2, '6917a15a099f6.pdf'),
-(13, 'Big Data - Técnicas e tecnologias para extração de', 'Estamos na era dos dados. Não importa qual seja a sua área de atuação, uma palavra atualmente em evidência é: Big Data. Podemos encontrar casos de uso em que esse conceito permitiu a redução do número', '2016-12-02', 2, '6917a289229c4.pdf'),
-(14, 'Amazon AWS - Descomplicando a computação na nuvem', 'Quando se trata de grandes aplicações, infraestrutura é um ponto muito importante, pois é preciso pensar em escalabilidade, gerenciamento e, principalmente, os serviços necessários para seu bom funcio', '2016-12-16', 4, '6917a77549fab.pdf'),
-(15, 'Estatistica - O que e, para que serve, como funcio', 'Um livro que nos faz entender os números por trás dos fatos e apreciar a força extraordinária dos dados em diversos aspectos do cotidiano\r\n\r\nA estatística é uma ciência que está em toda parte, muito e', '2016-03-10', 3, '6917a81131c3e.pdf');
-
--- --------------------------------------------------------
-
---
--- Estrutura para tabela `pedido`
---
-
-CREATE TABLE `pedido` (
-  `id_pedido` int(11) NOT NULL,
-  `data_pedido` datetime NOT NULL,
-  `usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+(12, 'Arquitetura Limpa - O Guia do Artesão para Estrutura e Design de Software', 'As regras universais de arquitetura de software aumentam dramaticamente a produtividade dos desenvolvedores ao longo da vida dos sistemas de software. Agora, aproveitando o sucesso dos seus best-selle', '2019-01-01', 2, '69194727ea014.pdf'),
+(13, 'Big Data - Técnicas e tecnologias para extração de valor dos dados', 'Estamos na era dos dados. Não importa qual seja a sua área de atuação, uma palavra atualmente em evidência é: Big Data. Podemos encontrar casos de uso em que esse conceito permitiu a redução do número', '2016-12-02', 2, '69194748ad8ac.pdf'),
+(14, 'Amazon AWS - Descomplicando a computação na nuvem', 'Quando se trata de grandes aplicações, infraestrutura é um ponto muito importante, pois é preciso pensar em escalabilidade, gerenciamento e, principalmente, os serviços necessários para seu bom funcio', '2016-12-16', 4, '691946ca7eaa6.pdf'),
+(15, 'Estatistica - O que e, para que serve, como funciona', 'Um livro que nos faz entender os números por trás dos fatos e apreciar a força extraordinária dos dados em diversos aspectos do cotidiano\r\n\r\nA estatística é uma ciência que está em toda parte, muito e', '2016-03-10', 3, '691947e157b09.pdf');
 
 -- --------------------------------------------------------
 
@@ -150,8 +151,8 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id_user`, `endereco`, `data_nascimento`, `nome`, `email`, `senha`, `cpf`, `tipo`, `is_active`) VALUES
 (1, NULL, '2000-12-12', 'alef', 'alef@gmail.com', '$2y$10$zMM9BR/eLytmKtEE4Dq2MeTY7a8wxNvt9GoHqAMJLUPG5FZRHtJbC', '123.123.123-12', 'admin', 1),
-(2, NULL, '2000-12-12', 'ana', 'ana@gmail.com', '$2y$10$HzrgcWhPdRV0lMRqYavemuPHc8BbRkIjWVl.cWhx.dLnxIWPDWfPG', '123.321.123-32', 'cliente', 0),
-(3, NULL, '2000-12-12', 'vitor', 'vitor@gmail.com', '$2y$10$yZXYKwAUp9uXqSfrqo.jVumsrXR3zHzS7m5wmrRVDte7cjBXVNFte', '123.456.789-10', 'cliente', 1);
+(2, NULL, '2000-12-12', 'ana', 'ana@gmail.com', '$2y$10$HzrgcWhPdRV0lMRqYavemuPHc8BbRkIjWVl.cWhx.dLnxIWPDWfPG', '123.321.123-32', 'cliente', 1),
+(3, NULL, '2000-12-12', 'vitor', 'vitor@gmail.com', '$2y$10$yZXYKwAUp9uXqSfrqo.jVumsrXR3zHzS7m5wmrRVDte7cjBXVNFte', '123.456.789-10', 'cliente', 0);
 
 --
 -- Índices para tabelas despejadas
@@ -164,25 +165,10 @@ ALTER TABLE `autor`
   ADD PRIMARY KEY (`id_autor`);
 
 --
--- Índices de tabela `avaliacao`
---
-ALTER TABLE `avaliacao`
-  ADD PRIMARY KEY (`id_avaliacao`),
-  ADD KEY `usuario` (`usuario`),
-  ADD KEY `livro` (`livro`);
-
---
 -- Índices de tabela `categoria`
 --
 ALTER TABLE `categoria`
   ADD PRIMARY KEY (`id_categoria`);
-
---
--- Índices de tabela `contem`
---
-ALTER TABLE `contem`
-  ADD PRIMARY KEY (`livro`,`pedido`),
-  ADD KEY `pedido` (`pedido`);
 
 --
 -- Índices de tabela `escritor`
@@ -192,18 +178,19 @@ ALTER TABLE `escritor`
   ADD KEY `livro` (`livro`);
 
 --
+-- Índices de tabela `favoritos`
+--
+ALTER TABLE `favoritos`
+  ADD PRIMARY KEY (`id_favorito`),
+  ADD KEY `id_user` (`id_user`),
+  ADD KEY `id_livro` (`id_livro`);
+
+--
 -- Índices de tabela `livro`
 --
 ALTER TABLE `livro`
   ADD PRIMARY KEY (`id_livro`),
   ADD KEY `categoria` (`categoria`);
-
---
--- Índices de tabela `pedido`
---
-ALTER TABLE `pedido`
-  ADD PRIMARY KEY (`id_pedido`),
-  ADD KEY `usuario` (`usuario`);
 
 --
 -- Índices de tabela `usuarios`
@@ -220,13 +207,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `autor`
 --
 ALTER TABLE `autor`
-  MODIFY `id_autor` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `avaliacao`
---
-ALTER TABLE `avaliacao`
-  MODIFY `id_avaliacao` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_autor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `categoria`
@@ -235,16 +216,16 @@ ALTER TABLE `categoria`
   MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT de tabela `favoritos`
+--
+ALTER TABLE `favoritos`
+  MODIFY `id_favorito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT de tabela `livro`
 --
 ALTER TABLE `livro`
   MODIFY `id_livro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- AUTO_INCREMENT de tabela `pedido`
---
-ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
@@ -257,20 +238,6 @@ ALTER TABLE `usuarios`
 --
 
 --
--- Restrições para tabelas `avaliacao`
---
-ALTER TABLE `avaliacao`
-  ADD CONSTRAINT `avaliacao_ibfk_1` FOREIGN KEY (`usuario`) REFERENCES `usuarios` (`id_user`),
-  ADD CONSTRAINT `avaliacao_ibfk_2` FOREIGN KEY (`livro`) REFERENCES `livro` (`id_livro`);
-
---
--- Restrições para tabelas `contem`
---
-ALTER TABLE `contem`
-  ADD CONSTRAINT `contem_ibfk_1` FOREIGN KEY (`livro`) REFERENCES `livro` (`id_livro`),
-  ADD CONSTRAINT `contem_ibfk_2` FOREIGN KEY (`pedido`) REFERENCES `pedido` (`id_pedido`);
-
---
 -- Restrições para tabelas `escritor`
 --
 ALTER TABLE `escritor`
@@ -278,16 +245,17 @@ ALTER TABLE `escritor`
   ADD CONSTRAINT `escritor_ibfk_2` FOREIGN KEY (`livro`) REFERENCES `livro` (`id_livro`);
 
 --
+-- Restrições para tabelas `favoritos`
+--
+ALTER TABLE `favoritos`
+  ADD CONSTRAINT `favoritos_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `usuarios` (`id_user`) ON DELETE CASCADE,
+  ADD CONSTRAINT `favoritos_ibfk_2` FOREIGN KEY (`id_livro`) REFERENCES `livro` (`id_livro`) ON DELETE CASCADE;
+
+--
 -- Restrições para tabelas `livro`
 --
 ALTER TABLE `livro`
   ADD CONSTRAINT `livro_ibfk_1` FOREIGN KEY (`categoria`) REFERENCES `categoria` (`id_categoria`);
-
---
--- Restrições para tabelas `pedido`
---
-ALTER TABLE `pedido`
-  ADD CONSTRAINT `pedido_ibfk_1` FOREIGN KEY (`usuario`) REFERENCES `usuarios` (`id_user`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -9,6 +9,9 @@
     width: 100%;
 }
 
+/* Link cobrindo o card sem sublinhado */
+a { text-decoration: none; color: inherit; }
+
 .livro-card {
     display: flex;
     background: white;
@@ -17,7 +20,7 @@
     border: 1px solid #eee;
     height: 220px;
     overflow: hidden;
-    transition: transform 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .livro-card:hover {
@@ -33,6 +36,7 @@
     justify-content: center;
     border-right: 1px solid #eee;
     flex-shrink: 0;
+    overflow: hidden;
 }
 
 .pdf-thumb {
@@ -41,31 +45,48 @@
     object-fit: contain;
 }
 
+.sem-capa {
+    font-size: 0.8rem;
+    color: #999;
+    text-align: center;
+    padding: 10px;
+}
+
 .info-livro {
     padding: 20px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Importante para cortar o texto */
 }
 
+/* Título com 3 pontinhos em até 2 linhas */
 .info-livro h3 {
     margin: 0 0 10px 0;
     color: #333;
     font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+/* Descrição com 3 pontinhos em até 3 linhas */
 .info-livro p {
     color: #666;
     font-size: 0.9rem;
     line-height: 1.5;
+    
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 10px;
 }
 
 .categoria-tag {

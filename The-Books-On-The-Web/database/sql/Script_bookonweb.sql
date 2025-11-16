@@ -48,32 +48,6 @@ id_autor INT PRIMARY KEY AUTO_INCREMENT,
 nome_autor VARCHAR (50) NOT NULL
 );
 
--- -----------------------------------------------------
--- Tabela 'pedido'
--- -----------------------------------------------------
-CREATE TABLE pedido (
-id_pedido INT PRIMARY KEY AUTO_INCREMENT,
-data_pedido DATETIME NOT NULL,
-usuario INT NOT NULL,
-FOREIGN KEY (usuario) REFERENCES usuarios (id_user)
-);
-
-
--- -----------------------------------------------------
--- Tabela 'avaliacao'
--- -----------------------------------------------------
-CREATE TABLE avaliacao (
-id_avaliacao INT PRIMARY KEY AUTO_INCREMENT,
-nota INT NOT NULL,
-comentario VARCHAR (200),
-dt_avaliacao DATE NOT NULL,
-usuario INT NOT NULL,
-livro INT NOT NULL,
-FOREIGN KEY (usuario) REFERENCES usuarios (id_user),
-FOREIGN KEY (livro) REFERENCES livro (id_livro)
--- Mesma coisa aqui: adicione ON DELETE CASCADE se quiser
--- que as avaliações sumam ao deletar o usuário/livro.
-);
 
 -- -----------------------------------------------------
 -- Tabelas de Ligação (Muitos-para-Muitos)
@@ -86,13 +60,12 @@ FOREIGN KEY (autor) REFERENCES autor (id_autor),
 FOREIGN KEY (livro) REFERENCES livro (id_livro)
 );
 
-CREATE TABLE contem (
-livro INT NOT NULL,
-pedido INT NOT NULL,
-PRIMARY KEY (livro, pedido),
-FOREIGN KEY (livro) REFERENCES livro (id_livro),
-FOREIGN KEY (pedido) REFERENCES pedido (id_pedido)
+
+CREATE TABLE IF NOT EXISTS favoritos (
+    id_favorito INT AUTO_INCREMENT PRIMARY KEY,
+    id_user INT NOT NULL,
+    id_livro INT NOT NULL,
+    data_favoritado DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_user) REFERENCES usuarios(id_user) ON DELETE CASCADE,
+    FOREIGN KEY (id_livro) REFERENCES livro(id_livro) ON DELETE CASCADE
 );
-
-
-select * from livro
