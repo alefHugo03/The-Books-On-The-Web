@@ -1,7 +1,6 @@
 <?php
 require_once '../../../api/conection/bloqueioLogin.php';
 bloqueioAdimin();
-// Removido conectionBD.php daqui, pois a API que faz a conexão agora.
 ?>
 
 <!DOCTYPE html>
@@ -28,65 +27,63 @@ bloqueioAdimin();
             <button id="btn-toggle-cadastro" type="button">+</button>
         </h2>
 
-        <div class="form-create">
-            <form class="menu conteudo-oculto" id="form-cadastro">
-                <input type="hidden" name="action" value="create">
+        <form class="form-create menu conteudo-oculto" id="form-cadastro">
+            <input type="hidden" name="action" value="create">
 
-                <div class="valor caixa-texto">
-                    <label for="nomeAdmin">Nome: </label>
-                    <input type="text" name="nomeAdmin" id="nomeAdmin" class="valor-texto" placeholder="Digite seu nome">
-                    <p id="avisoNome" class="aviso"></p>
-                </div>
+            <div class="valor caixa-texto">
+                <label for="nomeAdmin">Nome: </label>
+                <input type="text" name="nomeAdmin" id="nomeAdmin" class="valor-texto" placeholder="Digite seu nome">
+                <p id="avisoNome" class="aviso"></p>
+            </div>
 
-                <div class="valor caixa-texto">
-                    <label for="emailAdmin">E-mail: </label>
-                    <input type="email" name="emailAdmin" id="emailAdmin" class="valor-texto" placeholder="Digite seu email">
-                    <p id="avisoEmail" class="aviso"></p>
-                </div>
+            <div class="valor caixa-texto">
+                <label for="emailAdmin">E-mail: </label>
+                <input type="email" name="emailAdmin" id="emailAdmin" class="valor-texto" placeholder="Digite seu email">
+                <p id="avisoEmail" class="aviso"></p>
+            </div>
 
-                <div class="valor caixa-texto">
-                    <label for="cpfAdmin">CPF: </label>
-                    <input type="text" name="cpfAdmin" id="cpfAdmin" class="valor-texto" maxlength="14" placeholder="Digite seu CPF">
-                    <p id="avisoCpf" class="aviso"></p>
-                </div>
+            <div class="valor caixa-texto">
+                <label for="cpfAdmin">CPF: </label>
+                <input type="text" name="cpfAdmin" id="cpfAdmin" class="valor-texto" maxlength="14" placeholder="Digite seu CPF">
+                <p id="avisoCpf" class="aviso"></p>
+            </div>
 
-                <div class="valor caixa-texto">
-                    <label for="dataAdmin">Data de Nascimento: </label>
-                    <input type="date" name="dataAdmin" id="dataAdmin" class="valor-texto">
-                    <p id="avisoData" class="aviso"></p>
-                </div>
+            <div class="valor caixa-texto">
+                <label for="dataAdmin">Data de Nascimento: </label>
+                <input type="date" name="dataAdmin" id="dataAdmin" class="valor-texto">
+                <p id="avisoData" class="aviso"></p>
+            </div>
 
-                <div class="valor caixa-texto">
-                    <label for="senhaAdmin">Senha: </label>
-                    <input type="password" name="senhaAdmin" id="senhaAdmin" class="valor-texto" placeholder="Digite sua senha">
-                    <p id="avisoSenha" class="aviso"></p>
-                </div>
+            <div class="valor caixa-texto">
+                <label for="senhaAdmin">Senha: </label>
+                <input type="password" name="senhaAdmin" id="senhaAdmin" class="valor-texto" placeholder="Digite sua senha">
+                <p id="avisoSenha" class="aviso"></p>
+            </div>
 
-                <div class="valor caixa-texto">
-                    <label for="senhaAdminDois">Repita a senha: </label>
-                    <input type="password" name="senhaAdminDois" id="senhaAdminDois" class="valor-texto" placeholder="Confirme a senha">
-                    <p id="avisoSenhaDois" class="aviso"></p>
-                </div>
+            <div class="valor caixa-texto">
+                <label for="senhaAdminDois">Repita a senha: </label>
+                <input type="password" name="senhaAdminDois" id="senhaAdminDois" class="valor-texto" placeholder="Confirme a senha">
+                <p id="avisoSenhaDois" class="aviso"></p>
+            </div>
 
-                <div class="valor caixa-texto">
-                    <label for="tipo">Tipo de Conta: </label>
-                    <select id="tipo" name="tipo" class="valor-texto">
-                        <option value="" selected disabled>Selecione</option>
-                        <option value="cliente">Cliente</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                    <p id="avisoTipo" class="aviso"></p>
-                </div>
+            <div class="valor caixa-texto">
+                <label for="tipo">Tipo de Conta: </label>
+                <select id="tipo" name="tipo" class="valor-texto">
+                    <option value="" selected disabled>Selecione</option>
+                    <option value="cliente">Cliente</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <p id="avisoTipo" class="aviso"></p>
+            </div>
 
-                <div class="valor">
-                    <div class="botoes-rodape">
-                        <button type="reset" class="btn-menu">Limpar</button>
-                        <button type="submit" class="btn-menu btn-primary">Criar</button>
-                    </div>
-                    <p id="aviso" class="aviso"></p>
+            <div class="valor">
+                <div class="botoes-rodape">
+                    <button type="reset" class="btn-menu">Limpar</button>
+                    <button type="submit" class="btn-menu btn-primary">Criar</button>
                 </div>
-            </form>
-        </div>
+                <p id="aviso" class="aviso"></p>
+            </div>
+        </form>
 
         <div>
             <h2>Usuários Ativos</h2>
@@ -121,7 +118,7 @@ bloqueioAdimin();
         </div>
     </main>
 
-<script type="module" src="scripts/login/tabela_user.js"></script>
+    <script type="module" src="scripts/login/tabela_user.js"></script>
     <script src="scripts/animations/ocultar.js"></script>
     <script src="scripts/script.js"></script>
 </body>

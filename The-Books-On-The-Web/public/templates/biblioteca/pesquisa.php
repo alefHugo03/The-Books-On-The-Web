@@ -6,6 +6,7 @@ if (!$con) { die("Falha na conexão: " . mysqli_connect_error()); }
 
 $termo_pesquisa = isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '';
 
+// Query ajustada para buscar também informações úteis se precisar
 $sql = "SELECT livro.*, categoria.nome_categoria 
         FROM livro 
         INNER JOIN categoria ON livro.categoria = categoria.id_categoria
@@ -33,26 +34,29 @@ $resultado = mysqli_stmt_get_result($stmt);
     <header id="header-placeholder"></header>
             
     <main>
-        <div class="container-pesquisa" style="padding: 20px; max-width: 800px; margin: auto;">
-            <h3>Resultado para: "<?php echo htmlspecialchars($termo_pesquisa);?>"</h3>
+        <div class="container-pesquisa" style="padding: 20px; max-width: 1000px; margin: auto;">
+            <h2>Resultado para: "<?php echo htmlspecialchars($termo_pesquisa);?>"</h2>
             <hr style="margin-bottom: 20px;">
             
             <div class="lista-livros">
                 <?php
                     if (mysqli_num_rows($resultado) == 0) {
-                        echo '<p style="color:#666; padding:20px; text-align:center;">Nenhum livro encontrado.</p>';
+                        echo '<p style="color:#666; padding:20px; text-align:center; width:100%;">Nenhum livro encontrado.</p>';
                     }
                         
                     while ($livro = mysqli_fetch_assoc($resultado)) {
-                        // O caminho deve ser relativo à pasta PUBLIC (definida no <base>)
-                        // Se a pasta database está em The-Books-On-The-Web/database, voltamos uma pasta (../)
+                        // Caminho absoluto para o PDF (para o renderizador JS)
                         $caminhoPdf = '/The-Books-On-The-Web/database/pdfs/' . $livro['pdf'];
+                        
+                        // -- ALTERAÇÃO AQUI: Link envolvendo o card --
+                        // Aponta para templates/biblioteca/livros.php enviando o ID
+                        echo '<a href="templates/biblioteca/livros.php?id=' . $livro['id_livro'] . '" style="text-decoration:none; color:inherit;">';
+                        
                         echo '<div class="livro-card">';
                             
                             // COLUNA 1: CAPA
                             echo '<div class="capa-wrapper">';
                             if (!empty($livro['pdf'])) {
-                                // Importante: data-url correto
                                 echo '<canvas class="pdf-thumb" data-url="' . $caminhoPdf . '"></canvas>';
                             } else {
                                 echo '<div class="sem-capa">Sem Capa</div>';
@@ -66,13 +70,16 @@ $resultado = mysqli_stmt_get_result($stmt);
                                 echo '<span class="categoria-tag">' . htmlspecialchars($livro['nome_categoria']) . '</span>';
                             echo '</div>';
                         
-                        echo '</div>'; // fim card
+                        echo '</div>'; // fim div card
+                        echo '</a>';   // fim link a
                     }                    
                 ?>
             </div>
             
             <br>
-            <a href="index.php"><button type="button" class="btn-menu">Voltar</button></a>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="index.php" class="btn-menu" style="padding: 10px 20px; background-color: #333; color: white; border-radius: 5px;">Voltar para Home</a>
+            </div>
         </div>
     </main>
 

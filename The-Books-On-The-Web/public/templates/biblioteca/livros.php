@@ -1,5 +1,6 @@
 <?php 
 session_start();
+// Ajuste o caminho conforme sua estrutura de pastas
 require_once '../../api/conection/conectionBD.php';
 
 // Verifica Login
@@ -12,7 +13,7 @@ $id_user = (int)$_SESSION['id_user'];
 $id_livro = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $tipo_user = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : 'cliente';
 
-// Lógica de Favoritar (Protegida contra Admin)
+// Lógica de Favoritar (Admin não pode favoritar)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'toggle_favorito') {
     if ($id_livro === 0 || $id_user === 0 || $tipo_user === 'admin') {
         header("Location: livros.php?id=$id_livro");
@@ -42,11 +43,11 @@ $livro = mysqli_fetch_assoc($res);
 
 if (!$livro) { header("Location: ../../index.php"); exit; }
 
-// Checar Favorito
+// Checar se já é favorito
 $favCheck = mysqli_query($con, "SELECT id_favorito FROM favoritos WHERE id_user = $id_user AND id_livro = $id_livro");
 $isFavorito = ($favCheck && mysqli_num_rows($favCheck) > 0);
 
-// Caminho Absoluto para evitar erros de rota
+// Caminho Absoluto para o PDF
 $caminhoPdf = '/The-Books-On-The-Web/database/pdfs/' . $livro['pdf'];
 ?>
 <!DOCTYPE html>
@@ -102,19 +103,26 @@ $caminhoPdf = '/The-Books-On-The-Web/database/pdfs/' . $livro['pdf'];
 
                 <div class="grupo-botoes">
                     <a href="<?php echo $caminhoPdf; ?>" target="_blank" class="btn-acao btn-ler">
-                        <span class="icon">📖</span> Ler / Baixar PDF
+                        Ler / Baixar PDF
                     </a>
 
                     <?php if ($tipo_user !== 'admin'): ?>
-                        <form method="POST" action="">
+                        <form method="POST" action="" style="display:flex;">
                             <input type="hidden" name="action" value="toggle_favorito">
+                            
                             <?php if ($isFavorito): ?>
-                                <button type="submit" class="btn-acao btn-fav-remover">
-                                    <span class="icon">❤️</span> Favoritado
+                                <button type="submit" class="btn-acao btn-fav-remover" title="Remover dos favoritos">
+                                    <svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                    </svg>
+                                    Favoritado
                                 </button>
                             <?php else: ?>
-                                <button type="submit" class="btn-acao btn-fav-adicionar">
-                                    <span class="icon">🤍</span> Adicionar aos Favoritos
+                                <button type="submit" class="btn-acao btn-fav-adicionar" title="Adicionar aos favoritos">
+                                    <svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                    </svg>
+                                    Favoritar
                                 </button>
                             <?php endif; ?>
                         </form>

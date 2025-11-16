@@ -1,10 +1,10 @@
 /* ==========================================================================
    ARQUIVO: public/styles/livros.css
-   CONTEÚDO: Painel Administrativo (Original) + Página de Detalhes (Novo)
+   CONTEÚDO: Painel Administrativo + Página de Detalhes + Ícones SVG
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   PARTE 1: ESTILOS DO PAINEL ADMINISTRATIVO (Restaurado)
+   PARTE 1: ESTILOS DO PAINEL ADMINISTRATIVO
    -------------------------------------------------------------------------- */
 
 .painel-admin { 
@@ -91,7 +91,7 @@ tr:hover { background-color: #f8f9fa; }
     font-size: 0.75rem;
     font-weight: bold;
     text-transform: uppercase;
-    border-radius: 20px; /* Borda arredondada estilo badge */
+    border-radius: 20px;
     text-decoration: none;
     margin: 2px;
     border: none;
@@ -99,7 +99,7 @@ tr:hover { background-color: #f8f9fa; }
     color: white !important;
     min-width: 80px;
     text-align: center;
-    background-color: #6c757d; /* Cor padrão */
+    background-color: #6c757d;
     transition: opacity 0.2s;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -120,20 +120,16 @@ tr:hover { background-color: #f8f9fa; }
 .btn-excluir  { background-color: var(--cor-perigo) !important; } 
 .btn-editar   { background-color: #343a40 !important; } 
 
-/* Cores Inteligentes (Pelo value do input) */
-.painel-admin table td input[value="Excluir"] {
-    background-color: var(--cor-perigo) !important;
-}
-.painel-admin table td input[value="Ativar"] {
-    background-color: var(--cor-sucesso) !important;
-}
+/* Cores Inteligentes */
+.painel-admin table td input[value="Excluir"] { background-color: var(--cor-perigo) !important; }
+.painel-admin table td input[value="Ativar"] { background-color: var(--cor-sucesso) !important; }
 
 .link-pdf { color: var(--cor-texto); font-weight: bold; }
 .link-pdf:hover { text-decoration: underline; color: var(--cor-destaque); }
 
 
 /* --------------------------------------------------------------------------
-   PARTE 2: ESTILOS DA PÁGINA DE DETALHES (livros.php) - NOVO
+   PARTE 2: ESTILOS DA PÁGINA DE DETALHES (livros.php)
    -------------------------------------------------------------------------- */
 
 /* Container do Botão Voltar */
@@ -163,7 +159,7 @@ tr:hover { background-color: #f8f9fa; }
     border-color: #bbb;
 }
 
-/* Layout Principal da Página de Detalhes */
+/* Layout Principal */
 .container-detalhes {
     display: flex;
     gap: 40px;
@@ -259,7 +255,9 @@ tr:hover { background-color: #f8f9fa; }
     margin-bottom: 30px;
 }
 
-/* Botões de Ação (Ler / Favoritar) */
+/* --------------------------------------------------------------------------
+   PARTE 3: BOTÕES E ÍCONES SVG
+   -------------------------------------------------------------------------- */
 .grupo-botoes {
     display: flex;
     gap: 15px;
@@ -279,11 +277,24 @@ tr:hover { background-color: #f8f9fa; }
     text-decoration: none;
     transition: all 0.2s;
     border: none;
-    gap: 8px;
+    min-width: 180px;
 }
 
-.icon { font-size: 1.2rem; }
+/* Ícones SVG */
+.icon-svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px; /* Espaço entre ícone e texto */
+    vertical-align: middle;
+    fill: currentColor; /* Pega a cor do texto do botão */
+    transition: transform 0.2s;
+}
 
+.btn-acao:hover .icon-svg {
+    transform: scale(1.1);
+}
+
+/* Cores e Estilos Específicos */
 .btn-ler {
     background-color: #0d6efd;
     color: white;
@@ -294,6 +305,7 @@ tr:hover { background-color: #f8f9fa; }
     transform: translateY(-2px);
 }
 
+/* Favoritado (Remover) - Ícone Branco Preenchido */
 .btn-fav-remover {
     background-color: #dc3545;
     color: white;
@@ -303,7 +315,11 @@ tr:hover { background-color: #f8f9fa; }
     background-color: #bb2d3b;
     transform: translateY(-2px);
 }
+.btn-fav-remover .icon-svg {
+    fill: white; 
+}
 
+/* Favoritar (Adicionar) - Borda Vermelha e Ícone Contorno */
 .btn-fav-adicionar {
     background-color: white;
     border: 2px solid #dc3545;
@@ -312,6 +328,11 @@ tr:hover { background-color: #f8f9fa; }
 .btn-fav-adicionar:hover {
     background-color: #dc3545;
     color: white;
+}
+.btn-fav-adicionar .icon-svg {
+    fill: none; 
+    stroke: currentColor;
+    stroke-width: 2;
 }
 
 /* Responsividade */
