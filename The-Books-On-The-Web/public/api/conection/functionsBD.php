@@ -1,7 +1,10 @@
 <?php
 function procurarLivros() {
     global $con;
-    $sql = "SELECT * FROM livro ORDER BY RAND() LIMIT 6";
+    $sql = "SELECT livro.*, categoria.nome_categoria 
+        FROM livro 
+        INNER JOIN categoria ON livro.categoria = categoria.id_categoria
+    ORDER BY RAND() LIMIT 6";
     $resultado = mysqli_query($con, $sql);
 
     if ($resultado === false) {
@@ -21,14 +24,12 @@ function procurarLivros() {
 
 function exibirMenuAutenticacao() {
     if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
-        echo "<div class='perfil-header'>";
-        echo '<a href="templates/login/painel_logado.php" class="btn-cadastro">Perfil</a>';
-        echo '<a href="api/login/logout.php" class="btn-cadastro">Sair</a>';
-        echo "</div>";
+        echo '<div class="perfil-header">
+            <span class="saudacao">Olá, ' . htmlspecialchars($_SESSION['nome_user']) . '!</span>
+                <a href="templates/login/painel_logado.php" class="btn-header">Perfil</a>
+                <a href="api/login/logout.php" class="btn-header">Sair</a>
+            </div>';
 
-        echo "<div class='span-header'>";
-        echo '<span class="saudacao">Olá, ' . htmlspecialchars($_SESSION['nome_user']) . '!</span>';
-        echo "</div>";
     } else {
         echo "<div class='perfil-header'>";
         echo '<a href="templates/login/entrada.html" class="btn-cadastro">Entrar</a>';
@@ -38,14 +39,15 @@ function exibirMenuAutenticacao() {
 }
 
 function exibirBotoesCliente(){
-    if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
-        echo '<a href="templates/biblioteca/mybooks.php" class="item-menu">Meus Livros</a>';
+    if (isset($_SESSION['logado']) && $_SESSION['tipo'] === 'cliente') {
+        echo '<a href="templates/biblioteca/mybooksClient.php" class="item-menu">Meus Livros</a>';
     }
 }
 
 function exibirBotoesAdimin(){
     if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin') {
-        echo '<a href="templates/biblioteca/admin/painel_admin.php" class="item-menu">Painel Admin</a>';
+        echo '<a href="templates/biblioteca/admin/mybooksAdmin.php" class="item-menu">Meus Livros</a>
+         <a href="templates/biblioteca/admin/painel_admin.php" class="item-menu">Painel Admin</a>';
     }
 }
 

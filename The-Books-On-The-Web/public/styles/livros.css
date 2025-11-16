@@ -1,233 +1,328 @@
 /* ==========================================================================
    ARQUIVO: public/styles/livros.css
-   Estilos específicos para a página de gerenciamento de livros.
-   Requer que style.css já esteja carregado na página.
+   CONTEÚDO: Painel Administrativo (Original) + Página de Detalhes (Novo)
    ========================================================================== */
 
-/* --- Ajustes de Layout do Painel --- */
-.painel-admin h2 {
-    /* Alinha o título com o botão de adicionar (+) */
-    display: flex;
-    align-items: center;
-    gap: 15px; 
+/* --------------------------------------------------------------------------
+   PARTE 1: ESTILOS DO PAINEL ADMINISTRATIVO (Restaurado)
+   -------------------------------------------------------------------------- */
+
+.painel-admin { 
+    width: 100%; 
+    max-width: 1200px; 
+    margin: 0 auto; 
 }
 
-/* --- Botão Redondo de Alternar (+) --- */
+/* Cabeçalho do Admin */
+.painel-admin h2 {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    border-bottom: 2px solid var(--cor-destaque); 
+    padding-bottom: 10px; 
+    margin-bottom: 20px;
+}
+
 #btn-toggle-cadastro {
-    background-color: var(--cor-sucesso); /* Verde (definido no style.css ou fallback abaixo) */
-    color: var(--cor-branco-letra);
+    background: var(--cor-sucesso); 
+    color: white;
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
     border: none;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    font-size: 24px;
+    font-size: 1.5rem; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    transition: transform 0.2s;
+}
+#btn-toggle-cadastro:hover { transform: scale(1.1); }
+
+/* Formulário de Cadastro/Edição */
+.form-create textarea.valor-texto { min-height: 120px; resize: vertical; }
+input[type="file"].valor-texto { background: #f8f9fa; padding: 10px; }
+
+.grupo-categoria { display: flex; gap: 10px; }
+.grupo-categoria select { flex-grow: 1; }
+.btn-nova-cat { 
+    background: var(--cor-sucesso); 
+    color: white; 
+    border: none; 
+    padding: 0 15px; 
+    border-radius: 4px; 
+    font-weight: bold; 
+    cursor: pointer; 
+}
+
+/* --- TABELA DE GERENCIAMENTO --- */
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    background: white; 
+    border-radius: 8px; 
+    overflow: hidden; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+    margin-top: 20px; 
+}
+th { 
+    background: #343a40; 
+    color: white; 
+    padding: 15px; 
+    text-transform: uppercase; 
+    font-size: 0.85rem; 
+}
+td { 
+    padding: 15px; 
+    border-bottom: 1px solid #eee; 
+    color: #555; 
+    text-align: center; 
+    vertical-align: middle; 
+}
+tr:hover { background-color: #f8f9fa; }
+
+/* BOTÕES DA TABELA (Estilo Badge) */
+.painel-admin table td button,
+.painel-admin table td input[type="submit"],
+.painel-admin table td input[type="button"],
+.btn-small {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 0.75rem;
     font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 20px; /* Borda arredondada estilo badge */
+    text-decoration: none;
+    margin: 2px;
+    border: none;
     cursor: pointer;
+    color: white !important;
+    min-width: 80px;
+    text-align: center;
+    background-color: #6c757d; /* Cor padrão */
+    transition: opacity 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.painel-admin table td button:hover,
+.painel-admin table td input:hover,
+.btn-small:hover { 
+    opacity: 0.85; 
+}
+
+/* Cores Específicas por Classe */
+.btn-ativar   { background-color: var(--cor-sucesso) !important; } 
+.btn-desativar { 
+    background-color: white !important; 
+    color: #333 !important; 
+    border: 1px solid #ccc !important; 
+} 
+.btn-excluir  { background-color: var(--cor-perigo) !important; } 
+.btn-editar   { background-color: #343a40 !important; } 
+
+/* Cores Inteligentes (Pelo value do input) */
+.painel-admin table td input[value="Excluir"] {
+    background-color: var(--cor-perigo) !important;
+}
+.painel-admin table td input[value="Ativar"] {
+    background-color: var(--cor-sucesso) !important;
+}
+
+.link-pdf { color: var(--cor-texto); font-weight: bold; }
+.link-pdf:hover { text-decoration: underline; color: var(--cor-destaque); }
+
+
+/* --------------------------------------------------------------------------
+   PARTE 2: ESTILOS DA PÁGINA DE DETALHES (livros.php) - NOVO
+   -------------------------------------------------------------------------- */
+
+/* Container do Botão Voltar */
+.container-voltar {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 20px auto;
+    padding-left: 10px;
+}
+
+.btn-voltar {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #555;
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+}
+.btn-voltar:hover {
+    background-color: #e9ecef;
+    color: #333;
+    border-color: #bbb;
+}
+
+/* Layout Principal da Página de Detalhes */
+.container-detalhes {
+    display: flex;
+    gap: 40px;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    align-items: flex-start;
+}
+
+/* Coluna da Capa */
+.detalhes-capa {
+    flex: 1;
+    max-width: 300px;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.detalhes-capa canvas {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    border: 1px solid #eee;
+    background-color: #f8f9fa;
+}
+
+.sem-capa {
+    width: 100%;
+    height: 300px;
+    background: #f0f2f5;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    line-height: 1; /* Centraliza o + verticalmente */
-}
-
-#btn-toggle-cadastro:hover {
-    transform: scale(1.1);
-    background-color: #218838; /* Verde um pouco mais escuro */
-}
-
-/* --- Ajustes de Campos do Formulário --- */
-
-/* Garante que a área de texto tenha altura mínima e fonte correta */
-textarea.valor-texto {
-    resize: vertical; /* Usuário pode redimensionar apenas a altura */
-    min-height: 80px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Estilo especial para o input de arquivo PDF */
-input[type="file"].valor-texto {
-    padding: 6px;
-    background-color: white;
-    line-height: normal;
-}
-
-/* Grupo para alinhar Select de Categoria com botão de Nova */
-.grupo-categoria {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.grupo-categoria select {
-    flex-grow: 1; /* O select ocupa todo o espaço disponível */
-}
-
-/* --- Botões Pequenos da Tabela --- */
-.btn-small {
-    padding: 6px 12px;
-    font-size: 13px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    font-weight: bold;
-    transition: opacity 0.2s;
-    color: var(--cor-branco-letra);
-    margin-right: 5px;
-}
-
-.btn-small:hover {
-    opacity: 0.9;
-}
-
-/* Cores específicas dos botões */
-.btn-edit-livro {
-    background-color: var(--cor-aviso); /* Amarelo */
-    color: var(--cor-preto); /* Texto preto para contraste */
-}
-
-.btn-delete-livro {
-    background-color: var(--cor-perigo); /* Vermelho */
-}
-
-/* Botão pequeno azul (usado para "+ Nova" categoria) */
-.btn-nova-cat {
-    background-color: var(--cor-azul-destaque);
-    height: 38px; /* Mesma altura do input padrão */
-    white-space: nowrap;
-}
-
-/* --- Links e Textos na Tabela --- */
-.link-pdf {
-    color: var(--cor-azul-destaque);
-    font-weight: bold;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.link-pdf:hover {
-    text-decoration: underline;
-}
-
-/* --- Feedback (Mensagens de Sucesso/Erro) --- */
-.feedback {
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    text-align: center;
-    font-weight: bold;
-    border: 1px solid transparent;
-    animation: fadeIn 0.5s;
-}
-
-.feedback.success {
-    background-color: #d4edda;
-    color: #155724;
-    border-color: #c3e6cb;
-}
-
-.feedback.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border-color: #f5c6cb;
-}
-
-/* ==========================================================================
-   MODAL (Pop-up de Nova Categoria)
-   ========================================================================== */
-.modal {
-    display: none; /* Começa oculto */
-    position: fixed; 
-    z-index: 1000; /* Fica na frente de tudo */
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgba(0,0,0,0.5); /* Fundo preto transparente */
-    backdrop-filter: blur(2px); /* Efeito de desfoque no fundo */
-}
-
-.modal-content {
-    background-color: var(--cor-branco-letra);
-    margin: 10% auto; /* 10% do topo e centralizado horizontalmente */
-    padding: 30px;
-    border: 1px solid var(--cor-borda);
+    color: #aaa;
     border-radius: 8px;
-    width: 90%;
-    max-width: 450px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    position: relative;
-    animation: modalSlideDown 0.3s ease-out;
+    border: 1px dashed #ccc;
+    text-align: center;
 }
 
-/* Cabeçalho do Modal */
-.modal-content h3 {
-    margin-bottom: 20px;
-    color: var(--cor-header);
-    border-bottom: 1px solid var(--cor-borda);
-    padding-bottom: 10px;
-    font-size: 1.2rem;
+.categoria-badge {
+    display: inline-block;
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
 }
 
-/* Botão fechar (X) */
-.close {
-    color: var(--cor-cinza-letra);
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 28px;
-    font-weight: bold;
+/* Coluna das Informações */
+.detalhes-info {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.detalhes-info h1 {
+    font-size: 2.2rem;
+    color: #212529;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.detalhes-meta {
+    font-size: 0.95rem;
+    color: #6c757d;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.sinopse-box h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #343a40;
+}
+
+.texto-sinopse {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #495057;
+    text-align: justify;
+    margin-bottom: 30px;
+}
+
+/* Botões de Ação (Ler / Favoritar) */
+.grupo-botoes {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: auto;
+}
+
+.btn-acao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
     cursor: pointer;
-    transition: color 0.2s;
-}
-
-.close:hover,
-.close:focus {
-    color: var(--cor-perigo); /* Fica vermelho ao passar o mouse */
     text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    gap: 8px;
 }
 
-/* Animações Simples */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.icon { font-size: 1.2rem; }
+
+.btn-ler {
+    background-color: #0d6efd;
+    color: white;
+    box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+}
+.btn-ler:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
 }
 
-@keyframes modalSlideDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+.btn-fav-remover {
+    background-color: #dc3545;
+    color: white;
+    box-shadow: 0 4px 6px rgba(220, 53, 69, 0.2);
+}
+.btn-fav-remover:hover {
+    background-color: #bb2d3b;
+    transform: translateY(-2px);
 }
 
-/* ==========================================================================
-   RESPONSIVIDADE
-   ========================================================================== */
+.btn-fav-adicionar {
+    background-color: white;
+    border: 2px solid #dc3545;
+    color: #dc3545;
+}
+.btn-fav-adicionar:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Responsividade */
 @media (max-width: 768px) {
-    /* Empilha o select e o botão de nova categoria em telas pequenas */
-    .grupo-categoria {
+    .container-detalhes {
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
+        padding: 20px;
     }
-    
-    /* Esconde colunas menos importantes da tabela no celular */
-    .painel-admin table th:nth-child(2), /* Categoria */
-    .painel-admin table td:nth-child(2),
-    .painel-admin table th:nth-child(3), /* Data */
-    .painel-admin table td:nth-child(3) {
-        display: none; 
-    }
-    
-    /* Ajusta tamanho dos botões para toque */
-    .btn-small {
-        padding: 8px 12px;
-        font-size: 14px;
-        margin-bottom: 5px;
-        display: block; /* Botões um em cima do outro */
-        width: 100%;
-        text-align: center;
-    }
+    .detalhes-capa { width: 100%; margin-bottom: 20px; }
+    .detalhes-info h1 { text-align: center; font-size: 1.8rem; }
+    .grupo-botoes { width: 100%; flex-direction: column; }
+    .btn-acao { width: 100%; }
 }

@@ -25,7 +25,8 @@ $resultado = mysqli_stmt_get_result($stmt);
     <meta charset="UTF-8">
     <title>Pesquisa | TBOTW</title>
     <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="styles/cards.css"> 
+    <link rel="stylesheet" href="styles/cards.css">
+    <link rel="stylesheet" href="styles/livros.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
 </head>
 <body>

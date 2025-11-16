@@ -26,21 +26,23 @@ document.addEventListener("DOMContentLoaded", function() {
         formLivro.addEventListener('submit', function(event) {
             event.preventDefault(); 
             
-            // Limpa avisos específicos de livro
-            const avisosLivro = ["avisoTitulo", "avisoDescricao", "avisoDataPubli", "avisoCategoria", "avisoPdf"];
+            // Limpa avisos (Incluindo o novo avisoAutor)
+            const avisosLivro = ["avisoTitulo", "avisoDescricao", "avisoDataPubli", "avisoCategoria", "avisoAutor", "avisoPdf"];
             avisosLivro.forEach(id => limparAviso(id));
 
             const actionInput = document.getElementById('action');
             const isEditMode = actionInput && actionInput.value === 'edit';
 
-            // Validações (IDs de aviso conforme seu utilits.js)
+            // Validações
             const titulo = validarTitulo('titulo', 'avisoTitulo');
             const descricao = validarDescricao('descricao', 'avisoDescricao');
             const dataPubli = validarDataPublicacao('data_publi', 'avisoDataPubli');
             const categoria = validarCategoria('categoria', 'avisoCategoria');
+            // Reutilizamos validarCategoria para o Autor, pois é um <select> igual
+            const autor = validarCategoria('autor', 'avisoAutor'); 
             const pdf = validarPdf('pdf_file', 'avisoPdf', !isEditMode); 
 
-            if (titulo && descricao && dataPubli && categoria && pdf) {
+            if (titulo && descricao && dataPubli && categoria && autor && pdf) {
                 formLivro.submit();
             }
         });
@@ -68,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('livro_id').value = '';
             formLivro.reset();
             
-            const avisosLivro = ["avisoTitulo", "avisoDescricao", "avisoDataPubli", "avisoCategoria", "avisoPdf"];
+            const avisosLivro = ["avisoTitulo", "avisoDescricao", "avisoDataPubli", "avisoCategoria", "avisoAutor", "avisoPdf"];
             avisosLivro.forEach(id => limparAviso(id));
 
             const pdfMsg = document.getElementById('existingPdf');
@@ -85,6 +87,8 @@ document.addEventListener("DOMContentLoaded", function() {
 window.editarLivro = function(livro) {
     const form = document.getElementById('form-cadastro');
     form.classList.remove('conteudo-oculto');
+    // Garante que o form fique visível se estiver usando a lógica de ocultar
+    if(form.style.display === 'none') form.style.display = 'block';
 
     document.getElementById('action').value = 'edit';
     document.getElementById('livro_id').value = livro.id_livro;
@@ -92,6 +96,11 @@ window.editarLivro = function(livro) {
     document.getElementById('descricao').value = livro.descricao;
     document.getElementById('data_publi').value = livro.data_publi;
     document.getElementById('categoria').value = livro.categoria;
+    
+    // Preenche o Autor
+    if(livro.id_autor) {
+        document.getElementById('autor').value = livro.id_autor;
+    }
 
     const existingPdf = document.getElementById('existingPdf');
     if (existingPdf) existingPdf.innerText = livro.pdf ? 'Arquivo atual: ' + livro.pdf : '';
@@ -102,69 +111,94 @@ window.editarLivro = function(livro) {
 
 // --- CATEGORIAS (ADICIONAR E EXCLUIR) ---
 
-window.showNewCategoryForm = function() {
-    document.getElementById('novaCategoriaModal').style.display = 'block';
-};
+window.showNewCategoryForm = function() { document.getElementById('novaCategoriaModal').style.display = 'block'; };
+window.hideNewCategoryForm = function() { document.getElementById('novaCategoriaModal').style.display = 'none'; };
+window.showManageCategoryForm = function() { document.getElementById('gerenciarCategoriaModal').style.display = 'block'; };
+window.hideManageCategoryForm = function() { document.getElementById('gerenciarCategoriaModal').style.display = 'none'; };
 
-window.hideNewCategoryForm = function() {
-    document.getElementById('novaCategoriaModal').style.display = 'none';
-};
+// --- AUTORES (ADICIONAR E EXCLUIR) - NOVO ---
 
-window.showManageCategoryForm = function() {
-    document.getElementById('gerenciarCategoriaModal').style.display = 'block';
-};
-
-window.hideManageCategoryForm = function() {
-    document.getElementById('gerenciarCategoriaModal').style.display = 'none';
-};
+window.showNewAutorForm = function() { document.getElementById('novoAutorModal').style.display = 'block'; };
+window.hideNewAutorForm = function() { document.getElementById('novoAutorModal').style.display = 'none'; };
+window.showManageAutorForm = function() { document.getElementById('gerenciarAutorModal').style.display = 'block'; };
+window.hideManageAutorForm = function() { document.getElementById('gerenciarAutorModal').style.display = 'none'; };
 
 // Salvar Categoria
 window.salvarCategoria = function() {
-    const nomeInput = document.getElementById('nome_categoria_modal');
+    enviarDadosAjax('add_categoria', 'nome_categoria_modal', 'Categoria Criada!');
+};
+
+// Salvar Autor
+window.salvarAutor = function() {
+    enviarDadosAjax('add_autor', 'nome_autor_modal', 'Autor Criado!');
+};
+
+// Função Genérica para Salvar (Categoria ou Autor)
+function enviarDadosAjax(action, inputId, successMsg) {
+    const nomeInput = document.getElementById(inputId);
     const nome = nomeInput.value.trim();
     
     if (!nome) { alert('Insira um nome.'); return; }
 
     const formData = new FormData();
-    formData.append('action', 'add_categoria');
-    formData.append('nome_categoria', nome);
+    formData.append('action', action);
+    // O PHP espera 'nome_categoria' ou 'nome_autor', dependendo da action
+    if (action === 'add_autor') formData.append('nome_autor', nome);
+    else formData.append('nome_categoria', nome);
 
-    fetch('templates/biblioteca/mybooks.php', { method: 'POST', body: formData })
+    // IMPORTANTE: Ajuste o caminho se necessário (mybooksAdmin.php)
+    fetch('templates/biblioteca/admin/mybooksAdmin.php', { method: 'POST', body: formData })
     .then(r => r.json())
     .then(data => {
         if (data.success) {
-            alert('Categoria Criada!');
+            alert(successMsg);
             window.location.reload();
         } else {
             alert('Erro: ' + data.error);
         }
-    });
-};
+    })
+    .catch(err => console.error("Erro Ajax:", err));
+}
 
 // Excluir Categoria
 window.excluirCategoria = function(id) {
-    if (!confirm("Tem certeza que deseja excluir esta categoria?")) return;
+    excluirItemAjax('delete_categoria', 'id_categoria', id, 'Categoria excluída!');
+};
+
+// Excluir Autor
+window.excluirAutor = function(id) {
+    excluirItemAjax('delete_autor', 'id_autor', id, 'Autor excluído!');
+};
+
+// Função Genérica para Excluir
+function excluirItemAjax(action, idKey, idVal, successMsg) {
+    if (!confirm("Tem certeza que deseja excluir?")) return;
 
     const formData = new FormData();
-    formData.append('action', 'delete_categoria');
-    formData.append('id_categoria', id);
+    formData.append('action', action);
+    formData.append(idKey, idVal);
 
-    fetch('templates/biblioteca/mybooks.php', { method: 'POST', body: formData })
+    fetch('templates/biblioteca/admin/mybooksAdmin.php', { method: 'POST', body: formData })
     .then(r => r.json())
     .then(data => {
         if (data.success) {
-            alert('Categoria excluída!');
+            alert(successMsg);
             window.location.reload();
         } else {
-            alert(data.error); // Mostra erro se tiver livros vinculados
+            alert(data.error);
         }
     });
-};
+}
 
-// Fechar Modais
+// Fechar Modais ao clicar fora
 window.onclick = function(event) {
     const m1 = document.getElementById('novaCategoriaModal');
     const m2 = document.getElementById('gerenciarCategoriaModal');
+    const m3 = document.getElementById('novoAutorModal');
+    const m4 = document.getElementById('gerenciarAutorModal');
+    
     if (event.target == m1) window.hideNewCategoryForm();
     if (event.target == m2) window.hideManageCategoryForm();
+    if (event.target == m3) window.hideNewAutorForm();
+    if (event.target == m4) window.hideManageAutorForm();
 }
