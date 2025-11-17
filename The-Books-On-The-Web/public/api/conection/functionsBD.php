@@ -1,10 +1,15 @@
 <?php
-function procurarLivros() {
+// Modifiquei para aceitar o início e a quantidade (Paginação)
+function procurarLivros($inicio = 0, $quantidade = 6) {
     global $con;
+    
+    // Alterado de RAND() para ORDER BY id_livro DESC para manter a ordem na paginação
     $sql = "SELECT livro.*, categoria.nome_categoria 
-        FROM livro 
-        INNER JOIN categoria ON livro.categoria = categoria.id_categoria
-    ORDER BY RAND() LIMIT 6";
+            FROM livro 
+            INNER JOIN categoria ON livro.categoria = categoria.id_categoria
+            ORDER BY livro.id_livro DESC 
+            LIMIT $inicio, $quantidade";
+            
     $resultado = mysqli_query($con, $sql);
 
     if ($resultado === false) {
@@ -13,14 +18,17 @@ function procurarLivros() {
 
     return $resultado;
 }
-// ifIsAdmin() {
-//     if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'admin') {
-//     }
-// }
-// ifIsClient() {
-//         if (isset($_SESSION['tipo']) && $_SESSION['tipo'] === 'cliente') {
-//         }
-// } 
+
+// Nova função para saber quantos botões de página criar
+function contarTotalLivros() {
+    global $con;
+    $sql = "SELECT COUNT(*) as total FROM livro";
+    $resultado = mysqli_query($con, $sql);
+    $dados = mysqli_fetch_assoc($resultado);
+    return $dados['total'];
+}
+
+// --- Funções originais mantidas abaixo ---
 
 function exibirMenuAutenticacao() {
     if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
@@ -50,5 +58,4 @@ function exibirBotoesAdimin(){
          <a href="templates/biblioteca/admin/painel_admin.php" class="item-menu">Painel Admin</a>';
     }
 }
-
 ?>

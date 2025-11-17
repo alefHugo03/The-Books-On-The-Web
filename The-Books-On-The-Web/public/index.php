@@ -2,7 +2,21 @@
 session_start();
 require_once './api/conection/conectionBD.php';
 require_once './api/conection/functionsBD.php';
-$resultado = procurarLivros();
+
+// --- LÓGICA DE PAGINAÇÃO ---
+$itens_por_pagina = 6; // Defina quantos livros quer por página
+$pagina_atual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+if ($pagina_atual < 1) $pagina_atual = 1;
+
+// Calcula o ponto de partida para o SQL
+$inicio = ($pagina_atual - 1) * $itens_por_pagina;
+
+// Busca os livros com limite
+$resultado = procurarLivros($inicio, $itens_por_pagina);
+
+// Calcula totais para gerar os botões
+$total_livros = contarTotalLivros();
+$total_paginas = ceil($total_livros / $itens_por_pagina);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -59,11 +73,10 @@ $resultado = procurarLivros();
                 <?php
                 if (mysqli_num_rows($resultado) > 0) {
                     while ($livro = mysqli_fetch_assoc($resultado)) {
-                        // CAMINHO AJUSTADO IGUAL AO ADMIN
                         $caminhoPdf = '../database/pdfs/' . $livro['pdf'];
 
                         echo '<a href="templates\biblioteca\livros.php?id=' . $livro['id_livro'] . '" style="text-decoration:none; color:inherit;">';
-                        
+
                         echo '<div class="livro-card">';
 
                         // CAPA
@@ -79,23 +92,51 @@ $resultado = procurarLivros();
                         echo '<div class="info-livro">';
                         echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
                         echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
-                        echo '<span class="categoria-tag">' . htmlspecialchars($livro['nome_categoria']) .'</span>';
+                        echo '<span class="categoria-tag">' . htmlspecialchars($livro['nome_categoria']) . '</span>';
                         echo '</div>';
 
                         echo '</div>'; // Fim card
-                        
-                        echo '</a>'; 
+
+                        echo '</a>';
                     }
                 } else {
                     echo '<p>Nenhum livro encontrado.</p>';
                 }
                 ?>
             </div>
-        </div>
+
+            <?php if ($total_paginas > 1): ?>
+            <div class="paginacao-container">
+                <div class="paginacao">
+                    <?php
+                    // Botão Anterior
+                    if ($pagina_atual > 1) {
+                        echo '<a href="index.php?pagina=' . ($pagina_atual - 1) . '" class="btn-pag anterior">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                              </a>';
+                    }
+
+                    // Botões Numéricos
+                    for ($i = 1; $i <= $total_paginas; $i++) {
+                        $classe_ativa = ($i == $pagina_atual) ? 'active' : '';
+                        echo '<a href="index.php?pagina=' . $i . '" class="btn-pag ' . $classe_ativa . '">' . $i . '</a>';
+                    }
+
+                    // Botão Próximo
+                    if ($pagina_atual < $total_paginas) {
+                        echo '<a href="index.php?pagina=' . ($pagina_atual + 1) . '" class="btn-pag proximo">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                              </a>';
+                    }
+                    ?>
+                </div>
+            </div>
+            <?php endif; ?>
+            </div>
     </main>
 
     <footer class="caixa-footer">
-        <p>© 2024 The Books On The Web.</p>
+        <p>© 2025 The Books On The Web. Todos os direitos reservados.</p>
     </footer>
     <script src="scripts/script.js"></script>
     <script src="scripts/pdfRender.js"></script>

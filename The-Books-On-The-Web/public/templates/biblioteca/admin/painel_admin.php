@@ -27,7 +27,7 @@ bloqueioAdimin();
             <button id="btn-toggle-cadastro" type="button">+</button>
         </h2>
 
-        <form class="form-create menu conteudo-oculto" id="form-cadastro">
+        <form class="cadastro-menu menu conteudo-oculto" id="form-cadastro" style="margin: 20px auto;">
             <input type="hidden" name="action" value="create">
 
             <div class="valor caixa-texto">
@@ -85,7 +85,7 @@ bloqueioAdimin();
             </div>
         </form>
 
-        <div>
+        <div style="margin-top: 40px;">
             <h2>Usuários Ativos</h2>
             <table>
                 <thead>
@@ -101,7 +101,7 @@ bloqueioAdimin();
             </table>
         </div>
 
-        <div>
+        <div style="margin-top: 40px;">
             <h2>Usuários Inativos</h2>
             <table>
                 <thead>
@@ -122,5 +122,4 @@ bloqueioAdimin();
     <script src="scripts/animations/ocultar.js"></script>
     <script src="scripts/script.js"></script>
 </body>
-
 </html>
