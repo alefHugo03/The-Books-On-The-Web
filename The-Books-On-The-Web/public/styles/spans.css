@@ -1,0 +1,186 @@
+/* ==========================================================================
+   ARQUIVO: public/styles/spans.css
+   CONTEÚDO: Estilos exclusivos da página Resumo/Sobre e Cards Especiais (GitHub)
+   ========================================================================== */
+
+/* --- LAYOUT DA PÁGINA SOBRE (ZIG-ZAG) --- */
+
+.container-sobre {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header-sobre {
+    text-align: center;
+    margin-bottom: 50px;
+}
+.header-sobre h1 { margin-bottom: 5px; }
+.header-sobre p { margin-bottom: 0; font-size: 1.1rem; color: #777; }
+
+/* Seções de Conteúdo */
+.secao-conteudo {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    margin-bottom: 40px;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%;
+}
+
+.secao-conteudo:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+}
+
+.secao-conteudo.reverso {
+    flex-direction: row-reverse;
+}
+
+/* Wrappers (Imagem e Texto) */
+.img-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-wrapper img {
+    max-width: 150px;
+    height: auto;
+    object-fit: contain;
+    filter: grayscale(10%);
+    transition: filter 0.3s, transform 0.3s;
+}
+.img-wrapper img:hover {
+    filter: grayscale(0%);
+    transform: scale(1.05);
+}
+
+.texto-wrapper { flex: 2; }
+.texto-wrapper h2 {
+    color: var(--cor-destaque);
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #f0f2f5;
+    display: inline-block;
+    padding-bottom: 5px;
+    text-align: left;
+}
+.texto-wrapper p {
+    color: #555;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    text-align: justify;
+    margin-bottom: 0;
+}
+
+/* --- CARD GITHUB (ESTILO OUTLINE PRETO) --- */
+
+.cta-github-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    width: 100%;
+}
+
+.card-github-compacto {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    
+    /* Estilo Transparente com Borda Preta */
+    background: transparent; 
+    border: 2px solid #333;
+    color: #333;
+    
+    padding: 15px 25px;
+    border-radius: 50px;
+    width: auto;
+    max-width: 600px;
+    transition: all 0.3s ease;
+}
+
+/* Hover: Fica preto sólido */
+.card-github-compacto:hover {
+    background: #333;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+}
+
+/* Ícone */
+.card-github-compacto .icon-git img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    padding: 2px;
+    display: block;
+    filter: grayscale(100%);
+    transition: 0.3s;
+}
+
+.card-github-compacto:hover .icon-git img {
+    filter: grayscale(0%);
+    background: white;
+}
+
+/* Textos */
+.info-git h3 { font-size: 1rem; margin: 0; color: #333; text-align: left; transition: color 0.3s; }
+.info-git p { font-size: 0.8rem; color: #666; margin: 0; text-align: left; transition: color 0.3s; }
+
+.card-github-compacto:hover .info-git h3,
+.card-github-compacto:hover .info-git p {
+    color: white;
+}
+
+/* Botão */
+.btn-git-acessar {
+    background: #333;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    margin-left: 15px;
+    white-space: nowrap;
+}
+
+.card-github-compacto:hover .btn-git-acessar {
+    background: white;
+    color: #333;
+}
+
+/* --- RESPONSIVO ESPECÍFICO DESSA PÁGINA --- */
+@media (max-width: 820px) {
+    .secao-conteudo, .secao-conteudo.reverso {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .card-github-compacto {
+        flex-direction: column;
+        text-align: center;
+        border-radius: 15px;
+        padding: 20px;
+        width: 100%;
+    }
+    
+    .btn-git-acessar {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+    }
+    
+    .texto-wrapper h2, .info-git h3, .info-git p {
+        text-align: center;
+    }
+}
