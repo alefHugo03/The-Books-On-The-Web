@@ -1,91 +1,64 @@
 <?php
-// ARQUIVO: public/api/biblioteca/admin/gerenciarUsuarios.php
+// ARQUIVO: public/api/biblioteca/gerenciarLivros.php
+
+ob_start();
+session_start();
+
+// Imports
+require_once '../conection/conectionBD.php';
+require_once '../classes/Biblioteca.php'; // Inclui a nova classe
 
 header('Content-Type: application/json');
 
-// Inicia sessão se necessário
-if (session_status() === PHP_SESSION_NONE) { session_start(); }
-
-// Imports necessários
-require_once '../../conection/bloqueioLogin.php'; 
-bloqueioAdimin(); // Segurança
-
-require_once '../../conection/conectionBD.php';
-require_once '../classes/Admin.php'; // IMPORTANTE: Caminho para sua nova classe
-
-// Instancia a Classe passando a conexão do banco
-// Agora o objeto $admin tem todo o poder da classe
-$admin = new Admin($con);
-
-$id_admin_logado = $_SESSION['id_user'] ?? 0;
-$response = ['success' => false, 'message' => ''];
-
-// --- MÉTODO GET (Listar) ---
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Olha como ficou limpo! Sem SQL aqui no meio.
-    $ativos = $admin->listarUsuarios($id_admin_logado, 1);
-    $inativos = $admin->listarUsuarios($id_admin_logado, 0);
-
-    echo json_encode([
-        'success' => true,
-        'ativos' => $ativos,
-        'inativos' => $inativos
-    ]);
+// Segurança
+if (!isset($_SESSION['id_user']) || $_SESSION['tipo'] !== 'admin') {
+    echo json_encode(['success' => false, 'error' => 'Acesso negado.']);
     exit;
 }
 
-// --- MÉTODO POST (Ações) ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Instancia a classe
+$biblioteca = new Biblioteca($con);
+$method = $_SERVER['REQUEST_METHOD'];
+
+// --- GET: Listar Tudo ---
+if ($method === 'GET') {
+    try {
+        $dados = $biblioteca->listarTudo();
+        echo json_encode(['success' => true] + $dados); // Junta o success com os arrays
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
+// --- POST: Ações de Escrita ---
+if ($method === 'POST') {
+    ob_clean();
     
     $action = $_POST['action'] ?? '';
+    $response = ['success' => false, 'error' => 'Ação inválida'];
 
-    // 1. CRIAR
-    if ($action === 'create') {
-        // Validação básica
-        if(empty($_POST['nomeAdmin']) || empty($_POST['emailAdmin'])) {
-            echo json_encode(['success' => false, 'message' => 'Preencha os campos obrigatórios.']);
-            exit;
-        }
-
-        // Prepara os dados num array organizado
-        $dadosUsuario = [
-            'nome'  => $_POST['nomeAdmin'],
-            'email' => $_POST['emailAdmin'],
-            'cpf'   => $_POST['cpfAdmin'],
-            'data'  => $_POST['dataAdmin'],
-            'senha' => $_POST['senhaAdmin'],
-            'tipo'  => $_POST['tipo']
-        ];
-
-        // Chama a classe para criar
-        $response = $admin->criarUsuario($dadosUsuario);
+    // 1. LIVROS (Adicionar/Editar)
+    if ($action === 'add' || $action === 'edit') {
+        $response = $biblioteca->salvarLivro($_POST, $_FILES);
     }
-    
-    // 2. DESATIVAR (Soft Delete)
-    elseif ($action === 'delete') { 
-        $id = $_POST['id_user'];
-        if ($id == $id_admin_logado) {
-            $response['message'] = "Não pode desativar a si mesmo.";
-        } else {
-            // Passa 0 para status inativo
-            $response = $admin->alterarStatus($id, 0);
-        }
+    // 2. LIVROS (Excluir)
+    elseif ($action === 'delete') {
+        $response = $biblioteca->excluirLivro($_POST['livro_id']);
     }
-    
-    // 3. ATIVAR
-    elseif ($action === 'activate') { 
-        // Passa 1 para status ativo
-        $response = $admin->alterarStatus($_POST['id_user'], 1);
+    // 3. CATEGORIAS
+    elseif ($action === 'add_categoria') {
+        $response = $biblioteca->gerenciarAuxiliar('categoria', 'add', null, $_POST['nome_categoria']);
     }
-    
-    // 4. EXCLUIR PERMANENTE
-    elseif ($action === 'delete_permanent') { 
-        $id = $_POST['id_user'];
-        if ($id == $id_admin_logado) {
-            $response['message'] = "Não pode se excluir.";
-        } else {
-            $response = $admin->excluirPermanente($id);
-        }
+    elseif ($action === 'delete_categoria') {
+        $response = $biblioteca->gerenciarAuxiliar('categoria', 'delete', $_POST['id_categoria']);
+    }
+    // 4. AUTORES
+    elseif ($action === 'add_autor') {
+        $response = $biblioteca->gerenciarAuxiliar('autor', 'add', null, $_POST['nome_autor']);
+    }
+    elseif ($action === 'delete_autor') {
+        $response = $biblioteca->gerenciarAuxiliar('autor', 'delete', $_POST['id_autor']);
     }
 
     echo json_encode($response);
