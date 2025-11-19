@@ -9,6 +9,7 @@ mysqli_stmt_bind_param($stmt, "sss", $termo_like, $termo_like, $termo_like);
 mysqli_stmt_execute($stmt);
 $resultado = mysqli_stmt_get_result($stmt);
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

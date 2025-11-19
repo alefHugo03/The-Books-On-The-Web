@@ -2,6 +2,7 @@
 session_start();
 require_once '../../api/conection/conectionBD.php';
 
+// Verifica Login
 if ( !isset($_SESSION['logado']) || $_SESSION['logado'] !== true ) {
     header("Location: ../login/entrada.html");
     exit; 
