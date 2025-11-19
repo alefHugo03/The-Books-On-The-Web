@@ -64,3 +64,90 @@ input[type="file"].valor-texto { background: #f8f9fa; padding: 10px; }
 .btn-fav-adicionar { background-color: white; border: 2px solid #dc3545; color: #dc3545; }
 .btn-fav-adicionar:hover { background-color: #dc3545; color: white; }
 .btn-fav-adicionar .icon-svg { fill: none; stroke: currentColor; stroke-width: 2; }
+
+/* ==========================================================================
+   ESTILOS DA TABELA DE USUÁRIOS (Painel Admin)
+   ========================================================================== */
+
+.tabela-usuarios {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden; /* Para arredondar os cantos do cabeçalho */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+/* Cabeçalho */
+.tabela-usuarios thead tr {
+    background-color: #2c3035; /* Mesma cor escura do outro painel */
+    color: #ffffff;
+    text-align: left;
+}
+
+.tabela-usuarios th {
+    padding: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* Corpo */
+.tabela-usuarios td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+
+/* Efeito Zebrado (linhas alternadas) */
+.tabela-usuarios tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Hover na linha */
+.tabela-usuarios tbody tr:hover {
+    background-color: #e2e6ea;
+    transition: background-color 0.2s;
+}
+
+/* Ajuste da coluna de Ações (Botões) */
+.tabela-usuarios td:last-child {
+    white-space: nowrap; /* Impede que os botões quebrem linha */
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+/* Estilo base dos botões da tabela (caso não pegue do global) */
+.tabela-usuarios button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    transition: opacity 0.2s;
+}
+
+.tabela-usuarios button:hover {
+    opacity: 0.9;
+}
+
+/* --- CORES DOS BOTÕES --- */
+/* (Garante que funcionem mesmo se o JS não colocar a classe .btn-small) */
+
+/* Botão Desativar / Excluir */
+.btn-delete, button[onclick*="delete"] {
+    background-color: var(--cor-perigo, #dc3545);
+}
+
+/* Botão Ativar */
+button[onclick*="activate"] {
+    background-color: var(--cor-sucesso, #28a745);
+}
