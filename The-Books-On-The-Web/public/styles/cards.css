@@ -1,9 +1,11 @@
 /* ==========================================================================
    ARQUIVO: public/styles/cards.css
    ========================================================================== */
+
 .lista-livros {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    /* CORREÇÃO: Força sempre 2 colunas de tamanho igual */
+    grid-template-columns: 1fr 1fr; 
     gap: 30px;
     padding: 10px;
     width: 100%;
@@ -21,6 +23,7 @@ a { text-decoration: none; color: inherit; }
     height: 220px;
     overflow: hidden;
     transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%; /* Garante que o card ocupe a célula inteira */
 }
 
 .livro-card:hover {
@@ -57,7 +60,7 @@ a { text-decoration: none; color: inherit; }
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Importante para cortar o texto */
+    overflow: hidden;
 }
 
 /* Título com 3 pontinhos em até 2 linhas */
@@ -98,4 +101,17 @@ a { text-decoration: none; color: inherit; }
     border-radius: 4px;
     font-size: 0.8rem;
     font-weight: 600;
+}
+
+/* RESPONSIVIDADE */
+/* Se a tela for menor que 900px (Tablets/Celulares), muda para 1 coluna */
+@media (max-width: 900px) {
+    .lista-livros {
+        grid-template-columns: 1fr; /* 1 por linha */
+    }
+    
+    .livro-card {
+        height: auto; /* Altura automática no mobile */
+        min-height: 200px;
+    }
 }

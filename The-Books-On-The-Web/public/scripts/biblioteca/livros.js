@@ -9,30 +9,26 @@ import {
 
 import { etapa, limparAviso } from "../validations/utilits.js";
 
-// CAMINHO DA API
 const API_URL = "/The-Books-On-The-Web/public/api/biblioteca/gerenciarLivros.php";
 
-// --- VARIÁVEIS GLOBAIS ---
 let todosLivros = []; 
 let paginaAtual = 1;
 let itensPorPagina = 10;
 
+// Variáveis Tom Select
+let tomAutor = null;
+let tomCategoria = null;
+let tomEditora = null;
+
 document.addEventListener("DOMContentLoaded", function() {
-    
-    // 1. Carregar dados iniciais
     carregarDadosTela();
 
-    // 2. Listeners de Pesquisa e Paginação
     const inputBusca = document.getElementById('buscaLivroInput');
     const selectItens = document.getElementById('itensPorPagina');
 
     if(inputBusca) {
-        inputBusca.addEventListener('input', function() { 
-            paginaAtual = 1; 
-            atualizarTabelaFrontend();
-        });
+        inputBusca.addEventListener('input', () => { paginaAtual = 1; atualizarTabelaFrontend(); });
     }
-
     if(selectItens) {
         selectItens.addEventListener('change', function() {
             itensPorPagina = parseInt(this.value);
@@ -41,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // 3. Formulário de Livros
     const formLivro = document.getElementById('form-cadastro');
     if (formLivro) {
         formLivro.addEventListener('submit', function(event) {
@@ -56,8 +51,15 @@ document.addEventListener("DOMContentLoaded", function() {
             const v1 = validarTitulo('titulo', 'avisoTitulo');
             const v2 = validarDescricao('descricao', 'avisoDescricao');
             const v3 = validarDataPublicacao('data_publi', 'avisoDataPubli');
-            const v4 = validarCategoria('categoria', 'avisoCategoria');
-            const v5 = validarCategoria('autor', 'avisoAutor'); 
+            
+            // Validação Tom Select
+            const catVal = document.getElementById('categoria').value;
+            const autVal = document.getElementById('autor').value;
+            
+            let v4 = true; let v5 = true;
+            if(!catVal) { document.getElementById('avisoCategoria').innerText = "Selecione ao menos uma categoria."; v4 = false; }
+            if(!autVal) { document.getElementById('avisoAutor').innerText = "Selecione ao menos um autor."; v5 = false; }
+
             const v6 = validarPdf('pdf_file', 'avisoPdf', !isEditMode); 
 
             if (v1 && v2 && v3 && v4 && v5 && v6) {
@@ -66,7 +68,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // 4. Auto-preencher título com PDF
     const pdfInput = document.getElementById('pdf_file');
     if (pdfInput) {
         pdfInput.addEventListener('change', function() {
@@ -80,19 +81,26 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
     
-    // 5. Resetar formulário
+    // --- CORREÇÃO DO TOGGLE (GRID) ---
     const btnToggle = document.getElementById('btn-toggle-cadastro');
     if (btnToggle && formLivro) {
         btnToggle.addEventListener('click', function() {
             const form = document.getElementById('form-cadastro');
             
+            // Se está oculto (tem a classe ou display none)
             if(form.classList.contains('conteudo-oculto') || form.style.display === 'none') {
                 form.classList.remove('conteudo-oculto');
-                form.style.display = 'block';
+                form.style.display = 'grid'; // <--- IMPORTANTE: Usa GRID, não block
                 
+                // Reseta para modo Adicionar
                 document.getElementById('action').value = 'add';
                 document.getElementById('livro_id').value = '';
                 form.reset();
+                
+                if(tomAutor) tomAutor.clear();
+                if(tomCategoria) tomCategoria.clear();
+                if(tomEditora) tomEditora.clear();
+
                 document.getElementById('btn-menu-criar').innerText = "Salvar Livro";
                 const existingPdf = document.getElementById('existingPdf');
                 if(existingPdf) existingPdf.innerText = '';
@@ -104,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// --- COMUNICAÇÃO COM API ---
+// --- API ---
 
 function carregarDadosTela() {
     fetch(API_URL + '?acao=listar_tudo')
@@ -113,10 +121,13 @@ function carregarDadosTela() {
         if(data.success) {
             todosLivros = data.livros;
             
-            renderizarSelect('categoria', data.categorias, 'id_categoria', 'nome_categoria');
-            renderizarSelect('autor', data.autores, 'id_autor', 'nome_autor');
+            inicializarTomSelect('autor', data.autores, 'id_autor', 'nome_autor', true);
+            inicializarTomSelect('categoria', data.categorias, 'id_categoria', 'nome_categoria', true);
+            inicializarTomSelect('editora', data.editoras, 'id_editora', 'nome_editora', false);
+            
             renderizarTabelaModal('lista-categorias-modal', data.categorias, 'nome_categoria', 'id_categoria', 'delete_categoria');
             renderizarTabelaModal('lista-autores-modal', data.autores, 'nome_autor', 'id_autor', 'delete_autor');
+            renderizarTabelaModal('lista-editoras-modal', data.editoras, 'nome_editora', 'id_editora', 'delete_editora');
 
             atualizarTabelaFrontend();
         } else {
@@ -132,7 +143,11 @@ function enviarFormularioLivro(formData) {
     .then(data => {
         if(data.success) {
             alert(data.msg || "Sucesso!");
-            document.getElementById('form-cadastro').reset();
+            const form = document.getElementById('form-cadastro');
+            form.reset();
+            if(tomAutor) tomAutor.clear();
+            if(tomCategoria) tomCategoria.clear();
+            if(tomEditora) tomEditora.clear();
             document.getElementById('action').value = 'add';
             document.getElementById('livro_id').value = '';
             document.getElementById('existingPdf').innerText = '';
@@ -144,27 +159,23 @@ function enviarFormularioLivro(formData) {
     .catch(e => console.error(e));
 }
 
-// --- PAGINAÇÃO, FILTRO E CONTADOR ---
+// --- FRONTEND ---
 
 function atualizarTabelaFrontend() {
     const buscaInput = document.getElementById('buscaLivroInput');
     const termo = buscaInput ? buscaInput.value.toLowerCase() : '';
     
-    // 1. Filtrar
     const livrosFiltrados = todosLivros.filter(livro => {
         const titulo = (livro.titulo || '').toLowerCase();
-        const autor = (livro.nome_autor || '').toLowerCase();
-        const categoria = (livro.nome_categoria || '').toLowerCase();
-        return titulo.includes(termo) || autor.includes(termo) || categoria.includes(termo);
+        const autor = (livro.nomes_autores || '').toLowerCase();
+        const categoria = (livro.nomes_categorias || '').toLowerCase();
+        const editora = (livro.nome_editora || '').toLowerCase(); 
+        return titulo.includes(termo) || autor.includes(termo) || categoria.includes(termo) || editora.includes(termo);
     });
 
-    // 2. Atualizar Contador (NOVO)
     const contadorEl = document.getElementById('contador-livros');
-    if(contadorEl) {
-        contadorEl.innerText = `Total: ${livrosFiltrados.length}`;
-    }
+    if(contadorEl) contadorEl.innerText = `Total: ${livrosFiltrados.length}`;
 
-    // 3. Paginar
     const totalItens = livrosFiltrados.length;
     const totalPaginas = Math.ceil(totalItens / itensPorPagina);
     
@@ -175,7 +186,6 @@ function atualizarTabelaFrontend() {
     const fim = inicio + itensPorPagina;
     const livrosPagina = livrosFiltrados.slice(inicio, fim);
 
-    // 4. Renderizar
     renderizarTabela(livrosPagina);
     renderizarBotoesPaginacao(totalPaginas);
 }
@@ -186,7 +196,7 @@ function renderizarTabela(livros) {
     tbody.innerHTML = '';
 
     if(livros.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" align="center" style="padding:20px;">Nenhum livro encontrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" align="center" style="padding:20px;">Nenhum livro encontrado.</td></tr>';
         return;
     }
 
@@ -196,8 +206,9 @@ function renderizarTabela(livros) {
         
         tr.innerHTML = `
             <td><strong>${livro.titulo}</strong></td>
-            <td>${livro.nome_autor || '<em style="color:#999">N/A</em>'}</td>
-            <td><span class="categoria-badge">${livro.nome_categoria}</span></td>
+            <td>${livro.nomes_autores || '<em style="color:#999">N/A</em>'}</td>
+            <td>${livro.nome_editora || '<em style="color:#999">-</em>'}</td>
+            <td><span class="categoria-badge">${livro.nomes_categorias || 'Sem categoria'}</span></td>
             <td style="text-align:center;">
                 <button class="btn-small btn-editar" onclick="preencherFormulario(${jsonLivro})">Editar</button>
                 <button class="btn-small btn-excluir" onclick="deletarItem('delete', ${livro.id_livro})">Excluir</button>
@@ -211,17 +222,14 @@ function renderizarBotoesPaginacao(totalPaginas) {
     const container = document.getElementById('paginacaoContainer');
     if(!container) return;
     container.innerHTML = '';
-
     if(totalPaginas <= 1) return;
 
-    // Botão Anterior
     const btnPrev = document.createElement('button');
     btnPrev.innerText = '<';
     btnPrev.disabled = paginaAtual === 1;
     btnPrev.onclick = () => { paginaAtual--; atualizarTabelaFrontend(); };
     container.appendChild(btnPrev);
 
-    // Botões Numéricos
     let startPage = Math.max(1, paginaAtual - 2);
     let endPage = Math.min(totalPaginas, paginaAtual + 2);
 
@@ -249,7 +257,6 @@ function renderizarBotoesPaginacao(totalPaginas) {
         container.appendChild(btnLast);
     }
 
-    // Botão Próximo
     const btnNext = document.createElement('button');
     btnNext.innerText = '>';
     btnNext.disabled = paginaAtual === totalPaginas;
@@ -257,31 +264,44 @@ function renderizarBotoesPaginacao(totalPaginas) {
     container.appendChild(btnNext);
 }
 
-// --- OUTRAS FUNÇÕES (MANTIDAS) ---
+// --- AUXILIARES ---
 
-function renderizarSelect(idSelect, dados, keyId, keyNome) {
+function inicializarTomSelect(idSelect, dados, keyId, keyNome, isMultiple) {
     const select = document.getElementById(idSelect);
-    if(!select) return;
-    const valorAtual = select.value; 
+    if (!select) return;
+
+    if (idSelect === 'autor' && tomAutor) { tomAutor.destroy(); tomAutor = null; }
+    if (idSelect === 'categoria' && tomCategoria) { tomCategoria.destroy(); tomCategoria = null; }
+    if (idSelect === 'editora' && tomEditora) { tomEditora.destroy(); tomEditora = null; }
+
+    select.innerHTML = '';
+    if (!isMultiple) select.innerHTML = '<option value="">Selecione...</option>';
     
-    select.innerHTML = '<option value="" disabled selected>Selecione...</option>';
     dados.forEach(item => {
-        select.innerHTML += `<option value="${item[keyId]}">${item[keyNome]}</option>`;
+        const opt = document.createElement('option');
+        opt.value = item[keyId];
+        opt.text = item[keyNome];
+        select.appendChild(opt);
     });
 
-    if(valorAtual) select.value = valorAtual;
+    const config = {
+        plugins: isMultiple ? ['remove_button'] : [], 
+        create: false, 
+        sortField: { field: "text", direction: "asc" },
+        placeholder: isMultiple ? "Selecione..." : "Selecione uma opção..."
+    };
+
+    const instance = new TomSelect(`#${idSelect}`, config);
+    if (idSelect === 'autor') tomAutor = instance;
+    if (idSelect === 'categoria') tomCategoria = instance;
+    if (idSelect === 'editora') tomEditora = instance;
 }
 
 function renderizarTabelaModal(tbodyId, dados, keyNome, keyId, actionDelete) {
     const tbody = document.getElementById(tbodyId);
     if(!tbody) return;
     tbody.innerHTML = '';
-
-    if(dados.length === 0) {
-        tbody.innerHTML = '<tr><td>Vazio.</td></tr>';
-        return;
-    }
-
+    if(dados.length === 0) { tbody.innerHTML = '<tr><td>Vazio.</td></tr>'; return; }
     dados.forEach(item => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -294,11 +314,13 @@ function renderizarTabelaModal(tbodyId, dados, keyNome, keyId, actionDelete) {
     });
 }
 
-// Funções Globais (window)
+// --- GLOBAIS ---
+
 window.preencherFormulario = function(livro) {
     const form = document.getElementById('form-cadastro');
+    // Força mostrar como GRID
     form.classList.remove('conteudo-oculto');
-    form.style.display = 'block';
+    form.style.display = 'grid';
 
     document.getElementById('action').value = 'edit';
     document.getElementById('livro_id').value = livro.id_livro;
@@ -306,12 +328,20 @@ window.preencherFormulario = function(livro) {
     document.getElementById('descricao').value = livro.descricao;
     document.getElementById('data_publi').value = livro.data_publi;
     
-    setTimeout(() => {
-        const catSelect = document.getElementById('categoria');
-        const autSelect = document.getElementById('autor');
-        if(catSelect) catSelect.value = livro.categoria;
-        if(autSelect && livro.id_autor) autSelect.value = livro.id_autor;
-    }, 100);
+    if(tomEditora) {
+        tomEditora.clear(); 
+        if(livro.fk_editora) tomEditora.setValue(livro.fk_editora);
+    }
+
+    if(tomCategoria && livro.ids_categorias) {
+        tomCategoria.clear();
+        tomCategoria.setValue(livro.ids_categorias.toString().split(','));
+    }
+
+    if(tomAutor && livro.ids_autores) {
+        tomAutor.clear();
+        tomAutor.setValue(livro.ids_autores.toString().split(','));
+    }
 
     document.getElementById('btn-menu-criar').innerText = "Atualizar Livro";
     const existingPdf = document.getElementById('existingPdf');
@@ -322,12 +352,13 @@ window.preencherFormulario = function(livro) {
 
 window.deletarItem = function(action, id) {
     if(!confirm("Tem certeza que deseja excluir?")) return;
-    
     const fd = new FormData();
     fd.append('action', action);
+    
     if(action === 'delete') fd.append('livro_id', id);
     else if(action.includes('categoria')) fd.append('id_categoria', id);
     else if(action.includes('autor')) fd.append('id_autor', id);
+    else if(action.includes('editora')) fd.append('id_editora', id);
     
     fetch(API_URL, { method: 'POST', body: fd })
     .then(r => r.json())
@@ -342,19 +373,17 @@ window.deletarItem = function(action, id) {
     .catch(e => console.error(e));
 };
 
-// Modais
 window.salvarCategoria = function() { salvarItemModal('add_categoria', 'nome_categoria_modal', 'nome_categoria'); };
 window.salvarAutor = function() { salvarItemModal('add_autor', 'nome_autor_modal', 'nome_autor'); };
+window.salvarEditora = function() { salvarItemModal('add_editora', 'nome_editora_modal', 'nome_editora'); };
 
 function salvarItemModal(action, inputId, keyPost) {
     const input = document.getElementById(inputId);
     const valor = input.value.trim();
     if(!valor) { alert("Digite um nome."); return; }
-
     const fd = new FormData();
     fd.append('action', action);
     fd.append(keyPost, valor);
-
     fetch(API_URL, { method: 'POST', body: fd })
     .then(r => r.json())
     .then(data => {
@@ -370,13 +399,17 @@ function salvarItemModal(action, inputId, keyPost) {
 }
 
 window.showNewCategoryForm = () => document.getElementById('novaCategoriaModal').style.display = 'block';
-window.showNewAutorForm = () => document.getElementById('novoAutorModal').style.display = 'block';
 window.showManageCategoryForm = () => document.getElementById('gerenciarCategoriaModal').style.display = 'block';
-window.showManageAutorForm = () => document.getElementById('gerenciarAutorModal').style.display = 'block';
 window.hideNewCategoryForm = () => document.getElementById('novaCategoriaModal').style.display = 'none';
-window.hideNewAutorForm = () => document.getElementById('novoAutorModal').style.display = 'none';
 window.hideManageCategoryForm = () => document.getElementById('gerenciarCategoriaModal').style.display = 'none';
+window.showNewAutorForm = () => document.getElementById('novoAutorModal').style.display = 'block';
+window.showManageAutorForm = () => document.getElementById('gerenciarAutorModal').style.display = 'block';
+window.hideNewAutorForm = () => document.getElementById('novoAutorModal').style.display = 'none';
 window.hideManageAutorForm = () => document.getElementById('gerenciarAutorModal').style.display = 'none';
+window.showNewEditoraForm = () => document.getElementById('novaEditoraModal').style.display = 'block';
+window.showManageEditoraForm = () => document.getElementById('gerenciarEditoraModal').style.display = 'block';
+window.hideNewEditoraForm = () => document.getElementById('novaEditoraModal').style.display = 'none';
+window.hideManageEditoraForm = () => document.getElementById('gerenciarEditoraModal').style.display = 'none';
 
 window.onclick = function(event) {
     if (event.target.classList.contains('modal')) {
