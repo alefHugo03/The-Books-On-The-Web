@@ -1,104 +1,111 @@
 <?php
-header('Content-Type: application/json');
+// ARQUIVO: public/api/biblioteca/gerenciarUsuarios.php
 
-// CAMINHOS CORRIGIDOS BASEADOS NA PASTA api/login/admin/
-require_once '../../conection/bloqueioLogin.php'; 
-bloqueioAdimin(); 
+// 1. Limpa qualquer lixo de HTML que possa ter sido gerado antes
+ob_start(); 
+session_start();
 
-require_once '../../conection/conectionBD.php';
+header('Content-Type: application/json; charset=utf-8');
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-$id_admin_logado = $_SESSION['id_user'] ?? 0;
-$response = ['success' => false, 'message' => ''];
-
-// --- MÉTODO GET: LER DADOS ---
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    
-    // Busca Ativos
-    $sql_ativos = "SELECT id_user, nome, email, tipo FROM usuarios WHERE id_user != ? AND is_active = 1";
-    $stmt = mysqli_prepare($con, $sql_ativos);
-    mysqli_stmt_bind_param($stmt, "i", $id_admin_logado);
-    mysqli_stmt_execute($stmt);
-    $ativos = mysqli_fetch_all(mysqli_stmt_get_result($stmt), MYSQLI_ASSOC);
-
-    // Busca Inativos
-    $sql_inativos = "SELECT id_user, nome, email, tipo FROM usuarios WHERE id_user != ? AND is_active = 0";
-    $stmt2 = mysqli_prepare($con, $sql_inativos);
-    mysqli_stmt_bind_param($stmt2, "i", $id_admin_logado);
-    mysqli_stmt_execute($stmt2);
-    $inativos = mysqli_fetch_all(mysqli_stmt_get_result($stmt2), MYSQLI_ASSOC);
-
-    echo json_encode([
-        'success' => true,
-        'ativos' => $ativos,
-        'inativos' => $inativos
-    ]);
+// Função para retornar erro limpo em JSON se algo falhar
+function enviarErroFatal($msg) {
+    ob_clean(); 
+    echo json_encode(['success' => false, 'message' => $msg]);
     exit;
 }
 
-// --- MÉTODO POST: AÇÕES ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+try {
+    // --- CORREÇÃO DOS CAMINHOS (Baseado na sua imagem) ---
     
-    $action = $_POST['action'] ?? '';
+    // 1. Conexão e Segurança (Estão em public/conection)
+    // Saímos de 'biblioteca', saímos de 'api', entramos em 'conection'
+    $pathSeguranca = '../../conection/bloqueioLogin.php';
+    $pathConexao   = '../../conection/conectionBD.php';
+    
+    if (!file_exists($pathSeguranca)) throw new Exception("Arquivo não encontrado: $pathSeguranca");
+    if (!file_exists($pathConexao))   throw new Exception("Arquivo não encontrado: $pathConexao");
+    
+    require_once $pathSeguranca; 
+    bloqueioAdimin(); 
 
-    if ($action === 'create') {
-        $nome = $_POST['nomeAdmin'];
-        $email = $_POST['emailAdmin'];
-        $cpf = $_POST['cpfAdmin'];
-        $data = $_POST['dataAdmin'];
-        $senha = $_POST['senhaAdmin'];
-        $tipo = $_POST['tipo'];
-        $hash = password_hash($senha, PASSWORD_DEFAULT);
-        
-        $sql = "INSERT INTO usuarios (data_nascimento, nome, email, senha, cpf, tipo, is_active) VALUES (?, ?, ?, ?, ?, ?, 1)";
-        $stmt = mysqli_prepare($con, $sql);
-        mysqli_stmt_bind_param($stmt, 'ssssss', $data, $nome, $email, $hash, $cpf, $tipo);
+    require_once $pathConexao;
 
-        if (mysqli_stmt_execute($stmt)) {
-            $response['success'] = true;
-            $response['message'] = "Usuário criado com sucesso!";
-        } else {
-            $response['message'] = (mysqli_errno($con) == 1062) ? "E-mail ou CPF já em uso." : "Erro SQL: " . mysqli_error($con);
-        }
+    // 2. Classe Admin (Está em public/api/classes)
+    // Saímos de 'biblioteca', entramos em 'classes' (estão na mesma pasta 'api')
+    $pathClasse = '../../classes/Admin.php';
+    
+    if (!file_exists($pathClasse)) throw new Exception("Arquivo não encontrado: $pathClasse");
+    require_once $pathClasse; 
+
+    // --- FIM DOS INCLUDES ---
+
+    // Verificação da conexão
+    if (!isset($con)) {
+        throw new Exception('Erro crítico: Conexão com banco ($con) não existe.');
     }
-    elseif ($action === 'delete') {
-        $id = $_POST['id_user'];
-        if ($id == $id_admin_logado) {
-            $response['message'] = "Não pode desativar a si mesmo.";
-        } else {
-            $stmt = mysqli_prepare($con, "UPDATE usuarios SET is_active = 0 WHERE id_user = ?");
-            mysqli_stmt_bind_param($stmt, 'i', $id);
-            if (mysqli_stmt_execute($stmt)) {
-                $response['success'] = true;
-                $response['message'] = "Usuário desativado.";
+
+    $admin = new Admin($con);
+    $id_admin_logado = $_SESSION['id_user'] ?? 0;
+
+    // --- GET ---
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $ativos = $admin->listarUsuarios($id_admin_logado, 1);
+        $inativos = $admin->listarUsuarios($id_admin_logado, 0);
+
+        ob_clean(); // Garante JSON limpo
+        echo json_encode([
+            'success' => true,
+            'ativos' => $ativos,
+            'inativos' => $inativos
+        ]);
+        exit;
+    }
+
+    // --- POST ---
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $action = $_POST['action'] ?? '';
+        $response = ['success' => false, 'message' => 'Ação inválida'];
+
+        if ($action === 'create') {
+            if(empty($_POST['nomeAdmin']) || empty($_POST['emailAdmin'])) {
+                enviarErroFatal('Preencha os campos obrigatórios.');
+            }
+            $dadosUsuario = [
+                'nome'  => $_POST['nomeAdmin'],
+                'email' => $_POST['emailAdmin'],
+                'cpf'   => $_POST['cpfAdmin'],
+                'data'  => $_POST['dataAdmin'],
+                'senha' => $_POST['senhaAdmin'],
+                'tipo'  => $_POST['tipo']
+            ];
+            $response = $admin->criarUsuario($dadosUsuario);
+        }
+        elseif ($action === 'delete') { 
+            $id = $_POST['id_user'];
+            if ($id == $id_admin_logado) {
+                $response['message'] = "Não pode desativar a si mesmo.";
+            } else {
+                $response = $admin->alterarStatus($id, 0);
             }
         }
-    }
-    elseif ($action === 'activate') {
-        $id = $_POST['id_user'];
-        $stmt = mysqli_prepare($con, "UPDATE usuarios SET is_active = 1 WHERE id_user = ?");
-        mysqli_stmt_bind_param($stmt, 'i', $id);
-        if (mysqli_stmt_execute($stmt)) {
-            $response['success'] = true;
-            $response['message'] = "Usuário ativado.";
+        elseif ($action === 'activate') { 
+            $response = $admin->alterarStatus($_POST['id_user'], 1);
         }
-    }
-    elseif ($action === 'delete_permanent') {
-        $id = $_POST['id_user'];
-        $stmt = mysqli_prepare($con, "DELETE FROM usuarios WHERE id_user = ?");
-        mysqli_stmt_bind_param($stmt, 'i', $id);
-        if (mysqli_stmt_execute($stmt)) {
-            $response['success'] = true;
-            $response['message'] = "Usuário excluído permanentemente.";
-        } else {
-            $response['message'] = "Erro ao excluir (verifique dependências).";
+        elseif ($action === 'delete_permanent') { 
+            $id = $_POST['id_user'];
+            if ($id == $id_admin_logado) {
+                $response['message'] = "Não pode se excluir.";
+            } else {
+                $response = $admin->excluirPermanente($id);
+            }
         }
+
+        ob_clean();
+        echo json_encode($response);
+        exit;
     }
 
-    echo json_encode($response);
-    exit;
+} catch (Exception $e) {
+    enviarErroFatal('Erro no Servidor: ' . $e->getMessage());
 }
 ?>

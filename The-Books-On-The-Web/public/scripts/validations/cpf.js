@@ -40,10 +40,19 @@ export const validarCpf = (cpfValue) => {
 
     //avisos retirados devido a formatação resolver parcialmente eles
     if (nome === "") return avisoFalas(nomeFalas[0], ID_AVISO); 
-    // if (nome.length < 14) return avisoFalas(nomeFalas[1] , ID_AVISO); 
-    // if (!nomeRegex.test(nome)) return avisoFalas(nomeFalas[2], ID_AVISO);
+    if (nome.length < 14) return avisoFalas(nomeFalas[1] , ID_AVISO); 
     
     
     limparAviso(ID_AVISO); 
     return nome;
+};
+
+export const barraCpf = (id) => {
+    const cpfInput = document.getElementById(id);
+        if (cpfInput) {
+            // Anexa a função importada diretamente ao evento 'input'
+            cpfInput.addEventListener('input', () => {
+                validarCpf(id);
+            });
+        };
 };

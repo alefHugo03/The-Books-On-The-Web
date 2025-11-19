@@ -2,42 +2,75 @@
 <html lang="pt-br">
 
 <head>
-    <base href="http://localhost/The-Books-On-The-Web/public/">
+    <base href="http://192.168.0.136:80/The-Books-On-The-Web/public/">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/cards.css">
+    <link rel="stylesheet" href="styles/spans.css">
+    
+    <link rel="stylesheet" href="styles/stylephone.css">
+    
     <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon" class="favicon">
-    <title>Resumo | TBOTW</title>
+    <title>Sobre o Projeto | TBOTW</title>
 </head>
 
 <body>
     <header id="header-placeholder"></header>
 
-    <main>
+    <main class="container-sobre">
 
-        <h1>Iniciatica de um projeto UMC</h1>
-        <p>Começo de um código</p>
-
-
-        <div class="grupo-um grupo">
-            <a href="https://portal.umc.br/" class="logo-umc" target="_blank"><img src="styles/img/logo-umc.png" width="150" height="100"
-                    alt="Imagem empresa"></a>
-            <div class="resumo-projeto">
-                <h2>Projeto da Universidade de Mogi das Cruzes</h2>
-                <p>No segundo semestre de 2025 foi criado esse site em busca de oferecer books de livros voltados para a
-                    área da tecnologia, com o intuito de facilitar a pesquisa e acesso a esses livros que hoje no
-                    mercado fisico possui um valor muito elevado e de baixo acesso aos interessados</p>
-            </div>
+        <div class="header-sobre">
+            <h1>Iniciativa UMC</h1>
+            <p>Tecnologia e acessibilidade para estudantes.</p>
         </div>
 
-        <div class="grupo-dois grupo">
-            <div class="resumo-projeto projeto2">
-                <h2>Como foi feito a coleta dos dados</h2>
-                <p>Foi coletado por contas do github que publicam livros muito famosos de tecnologia e que sua versão física
-                    é muito mais cara do que sendo pega pela web, esses livros coletados ficam aqui tendo uma visão
-                    mais agradavel doque serem pegas pelo repositorio e mais facil de entender o livro</p>
+        <section class="secao-conteudo">
+            <div class="img-wrapper">
+                <a href="https://portal.umc.br/" target="_blank" title="Ir para site da UMC">
+                    <img src="styles/img/logo-umc.png" alt="Logo UMC">
+                </a>
             </div>
-            <a href="https://github.com/" class="logo-github" target="_blank"><img src="styles/img/logo-github.png"alt="Imagem empresa" width="150" height="150"></a>
+            <div class="texto-wrapper">
+                <h2>Projeto Universitário</h2>
+                <p>
+                    Desenvolvido no segundo semestre de 2025, este projeto visa democratizar o acesso 
+                    a materiais de estudo na área de tecnologia. Nosso objetivo é facilitar a pesquisa 
+                    e o acesso a livros técnicos que, no mercado físico, possuem valor elevado.
+                </p>
+            </div>
+        </section>
+
+        <section class="secao-conteudo reverso">
+            <div class="img-wrapper">
+                <img src="styles/img/logo-github.png" alt="Logo GitHub" class="img-destaque">
+            </div>
+            <div class="texto-wrapper">
+                <h2>Metodologia de Coleta</h2>
+                <p>
+                    O acervo é curado através de repositórios open-source no GitHub que disponibilizam 
+                    conteúdo educacional. Nossa plataforma organiza esses materiais brutos em uma 
+                    interface amigável, com capas, sinopses e leitura facilitada, transformando 
+                    repositórios de código em uma biblioteca digital visual.
+                </p>
+            </div>
+        </section>
+
+        <div class="cta-github-container">
+            <div class="card-github-compacto">
+                <div class="icon-git">
+                    <img src="styles/img/logo-github.png" alt="Icone Git">
+                </div>
+                <div class="info-git">
+                    <h3>Colabore conosco</h3>
+                    <p>O projeto é Open Source.</p>
+                </div>
+                <a href="https://github.com/alefHugo03/The-Books-On-The-Web" target="_blank" class="btn-git-acessar">
+                    Acessar Repositório &rarr;
+                </a>
+            </div>
         </div>
 
     </main>
