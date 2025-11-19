@@ -2,15 +2,16 @@
 session_start();
 require_once '../../api/conection/conectionBD.php';
 
-// Verifica Login
-if ( !isset($_SESSION['logado']) || $_SESSION['logado'] !== true ) {
-    header("Location: ../login/entrada.html");
-    exit; 
+// 1. Recupera o ID do livro (Segurança contra injeção)
+$id_livro = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+if ($id_livro === 0) {
+    header("Location: ../../index.php");
+    exit;
 }
 
-$id_user = (int)$_SESSION['id_user'];
-$id_livro = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-$tipo_user = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : 'cliente';
+$id_user = isset($_SESSION['id_user']) ? (int)$_SESSION['id_user'] : 0;
+$tipo_user = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : 'visitante';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'toggle_favorito') {
     if ($id_livro === 0 || $id_user === 0 || $tipo_user === 'admin') {
@@ -23,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     } else {
         mysqli_query($con, "INSERT INTO favoritos (id_user, id_livro) VALUES ($id_user, $id_livro)");
     }
+    // Recarrega a página para atualizar o ícone
     header("Location: livros.php?id=$id_livro");
     exit;
 }
@@ -31,7 +33,11 @@ $sql = "SELECT l.*, c.nome_categoria, a.nome_autor FROM livro l LEFT JOIN catego
 $res = mysqli_query($con, $sql);
 $livro = mysqli_fetch_assoc($res);
 
-if (!$livro) { header("Location: ../../index.php"); exit; }
+if (!$livro) { 
+    // Se o livro não existe, volta para home
+    header("Location: ../../index.php"); 
+    exit; 
+}
 
 $favCheck = mysqli_query($con, "SELECT id_favorito FROM favoritos WHERE id_user = $id_user AND id_livro = $id_livro");
 $isFavorito = ($favCheck && mysqli_num_rows($favCheck) > 0);
@@ -50,12 +56,13 @@ $caminhoPdf = '/The-Books-On-The-Web/database/pdfs/' . $livro['pdf'];
     <link rel="stylesheet" href="styles/stylephone.css?v=<?php echo time(); ?>">
     <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js"></script>
 </head>
 <body>
     <header id="header-placeholder"></header>
     <main>
         <div class="container-voltar">
-            <button onclick="history.back()" class="btn-voltar">⬅ Voltar</button>
+            <a href="index.php" class="btn-voltar">⬅ Voltar</a>
         </div>
         <div class="container-detalhes">
             <div class="detalhes-capa">
@@ -64,7 +71,17 @@ $caminhoPdf = '/The-Books-On-The-Web/database/pdfs/' . $livro['pdf'];
                 <?php else: ?>
                     <div class="sem-capa">Sem Capa Disponível</div>
                 <?php endif; ?>
-                <span class="categoria-badge"><?php echo htmlspecialchars($livro['nome_categoria']); ?></span>
+                
+                <?php if(!empty($livro['nome_categoria'])): ?>
+                    <div style="margin-top:10px; text-align:center;">
+                        <?php 
+                            $cats = explode(',', $livro['nome_categoria']);
+                            foreach($cats as $cat) {
+                                echo '<span class="categoria-badge" style="margin:2px;">'.trim($cat).'</span> ';
+                            }
+                        ?>
+                    </div>
+                <?php endif; ?>
             </div>
             <div class="detalhes-info">
                 <h1><?php echo htmlspecialchars($livro['titulo']); ?></h1>
@@ -97,7 +114,7 @@ $caminhoPdf = '/The-Books-On-The-Web/database/pdfs/' . $livro['pdf'];
         </div>
     </main>
     <footer id="footer-placeholder" class="caixa-footer"></footer>
+    <script src="scripts/script.js"></script>
+    <script src="scripts/pdfRender.js"></script>
 </body>
-<script src="scripts/script.js"></script>
-<script src="scripts/pdfRender.js"></script>
 </html>

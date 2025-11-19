@@ -12,6 +12,7 @@ if (!isset($_SESSION['id_user']) || $_SESSION['tipo'] !== 'admin') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gerenciar Livros | Admin</title>
+    
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/cards.css">
     <link rel="stylesheet" href="styles/livros.css">

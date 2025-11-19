@@ -10,7 +10,6 @@ class Auth {
 
     // --- 1. MÉTODO DE LOGIN ---
     public function login($email, $senha) {
-        // Busca usuário ativo pelo email
         $sql = "SELECT id_user, nome, senha, tipo FROM usuarios WHERE email = ? AND is_active = 1 LIMIT 1";
         $stmt = mysqli_prepare($this->db, $sql);
         mysqli_stmt_bind_param($stmt, "s", $email);

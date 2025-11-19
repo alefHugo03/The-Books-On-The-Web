@@ -4,14 +4,13 @@ if (!$con) { die("Falha na conexão: " . mysqli_connect_error()); }
 $termo_pesquisa = isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '';
 $sql = "SELECT livro.*, categoria.nome_categoria FROM livro INNER JOIN categoria ON livro.categoria = categoria.id_categoria WHERE livro.titulo LIKE ? OR livro.descricao LIKE ? OR categoria.nome_categoria LIKE ?";
 $stmt = mysqli_prepare($con, $sql);
-$termo_like = "%" . $termo_pesquisa . "%";
-mysqli_stmt_bind_param($stmt, "sss", $termo_like, $termo_like, $termo_like);
+mysqli_stmt_bind_param($stmt, "i", $id_user);
 mysqli_stmt_execute($stmt);
 $resultado = mysqli_stmt_get_result($stmt);
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <base href="http://192.168.0.136:80/The-Books-On-The-Web/public/">
     <meta charset="UTF-8">
@@ -23,7 +22,8 @@ $resultado = mysqli_stmt_get_result($stmt);
     <link rel="stylesheet" href="styles/stylephone.css?v=<?php echo time(); ?>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
 </head>
-<body>
+
+<body style="display: flex; flex-direction: column; min-height: 100vh;">
     <header id="header-placeholder"></header>
     <main>
         <div class="container-pesquisa" style="padding: 20px; max-width: 1000px; margin: auto;">
@@ -58,7 +58,7 @@ $resultado = mysqli_stmt_get_result($stmt);
         </div>
     </main>
     <footer id="footer-placeholder" class="caixa-footer"></footer>
-    <script src="scripts/script.js"></script>
-    <script src="scripts/pdfRender.js"></script>
 </body>
+<script src="scripts/script.js"></script>
+<script src="scripts/pdfRender.js"></script>
 </html>

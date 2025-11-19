@@ -21,6 +21,7 @@ $resultado = mysqli_query($con, $sql);
     <link rel="stylesheet" href="styles/stylephone.css?v=<?php echo time(); ?>">
     <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon" class="favicon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js"></script>
     <title>Meus Favoritos | TBOTW</title>
 </head>
 <body>
@@ -42,7 +43,7 @@ $resultado = mysqli_query($con, $sql);
                         echo '<div class="info-livro">';
                         echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
                         echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
-                        echo '<span class="categoria-tag">' . htmlspecialchars($livro['nome_categoria']) . '</span>';
+                        echo '<span class="categoria-tag">' . htmlspecialchars($cats) . '</span>';
                         echo '</div>';
                         echo '</div>';
                         echo '</a>';
