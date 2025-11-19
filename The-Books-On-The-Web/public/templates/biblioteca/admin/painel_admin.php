@@ -1,19 +1,22 @@
 <?php
-require_once '../../../api/conection/bloqueioLogin.php';
+require_once(__DIR__ . '/../../../api/conection/bloqueioLogin.php');
 bloqueioAdimin();
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
-    <base href="http://localhost/The-Books-On-The-Web/public/">
+    <base href="http://192.168.0.136:80/The-Books-On-The-Web/public/">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Admin | Gerenciar Usuários</title>
+    
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/cards.css">
     <link rel="stylesheet" href="styles/livros.css">
+    
+    <link rel="stylesheet" href="styles/stylephone.css?v=<?php echo time(); ?>">
+    
     <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon">
 </head>
 
@@ -87,34 +90,38 @@ bloqueioAdimin();
 
         <div style="margin-top: 40px;">
             <h2>Usuários Ativos</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Tipo</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-ativos"></tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="tabela-usuarios">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Tipo</th>
+                            <th style="text-align: center;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-ativos"></tbody>
+                </table>
+            </div>
         </div>
 
         <div style="margin-top: 40px;">
             <h2>Usuários Inativos</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Email</th>
-                        <th>Tipo</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-inativos"></tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="tabela-usuarios">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Tipo</th>
+                            <th style="text-align: center;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-inativos"></tbody>
+                </table>
+            </div>
         </div>
     </main>
 

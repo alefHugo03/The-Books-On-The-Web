@@ -33,19 +33,35 @@ a { text-decoration: none; color: inherit; }
 
 .capa-wrapper {
     width: 150px;
-    background: #f8f9fa;
+    /* Um fundo levemente cinza para destacar a capa branca */
+    background: #f3f4f6; 
     display: flex;
     align-items: center;
     justify-content: center;
     border-right: 1px solid #eee;
     flex-shrink: 0;
     overflow: hidden;
+    padding: 10px; /* Espaço de respiro para o livro não colar na borda */
+    position: relative;
 }
 
+/* --- ALTERAÇÃO AQUI: Ajuste da Imagem --- */
 .pdf-thumb {
+    /* Define limites máximos, mas permite que a imagem tenha seu tamanho natural */
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain;
+    width: auto;
+    height: auto;
+    
+    /* Garante que o livro apareça inteiro */
+    object-fit: contain; 
+    
+    /* Sombra elegante para dar efeito 3D ("flutuando") */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15); 
+    
+    /* Borda sutil para capas muito brancas não sumirem no fundo */
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 2px; /* Leve arredondamento para parecer livro físico */
 }
 
 .sem-capa {
@@ -60,7 +76,7 @@ a { text-decoration: none; color: inherit; }
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: hidden; 
 }
 
 /* Título com 3 pontinhos em até 2 linhas */

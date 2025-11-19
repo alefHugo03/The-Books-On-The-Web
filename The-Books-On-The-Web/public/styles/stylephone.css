@@ -1,0 +1,177 @@
+/* ==========================================================================
+   ARQUIVO: public/styles/stylephone.css
+   OBJETIVO: Responsividade Mobile (Versão Scroll Direto na Tabela)
+   ========================================================================== */
+
+/* --- REGRAS GERAIS PARA TABLETS E CELULARES (< 900px) --- */
+@media (max-width: 900px) {
+    
+    /* 1. CORREÇÃO DE ESTRUTURA */
+    body, html {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    /* 2. HEADER */
+    .header-cima {
+        flex-direction: column !important;
+        padding: 15px !important;
+        gap: 15px !important;
+        text-align: center;
+    }
+
+    .empresa, .pesquisa, .area-cadastro {
+        width: 100% !important;
+        justify-content: center !important;
+        max-width: none !important;
+    }
+
+    .pesquisar { width: 100%; display: flex; }
+    .input-pesquisa { width: 100%; }
+    .botoes-rodape { flex-direction: column; }
+
+    /* 3. CARDS DE LIVROS */
+    .lista-livros {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+        padding: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .livro-card {
+        width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 160px !important;
+        margin: 0 !important;
+    }
+
+    .capa-wrapper { width: 120px !important; min-width: 120px !important; }
+    .info-livro h3 { font-size: 1rem !important; }
+    
+    /* 4. CORREÇÃO DE TABELAS (Scroll na Própria Tabela) */
+    
+    /* Aplica diretamente na tabela para garantir o funcionamento */
+    .admin-table, 
+    .tabela-usuarios {
+        display: block !important; /* Transforma em bloco para aceitar scroll */
+        width: 100% !important;
+        overflow-x: auto !important; /* Força a barra de rolagem */
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 20px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        background: white;
+        white-space: nowrap; /* Garante que o conteúdo estique a tabela */
+    }
+
+    /* Garante que o conteúdo interno tenha tamanho mínimo para ativar o scroll */
+    .admin-table tbody, .tabela-usuarios tbody,
+    .admin-table thead, .tabela-usuarios thead {
+        display: table; /* Mantém o alinhamento interno das células */
+        width: 100%;
+        min-width: 600px; /* O SEGREDO: Largura forçada maior que a tela do celular */
+    }
+
+    /* Ajuste das Células */
+    .admin-table th, .admin-table td,
+    .tabela-usuarios th, .tabela-usuarios td {
+        padding: 12px 15px !important;
+        text-align: left;
+        vertical-align: middle;
+        border-bottom: 1px solid #eee;
+        font-size: 0.85rem !important;
+    }
+
+    /* Cabeçalho Escuro */
+    .tabela-usuarios thead,
+    .admin-table thead {
+        background-color: #2c3035;
+        color: white;
+    }
+
+    /* Botões menores */
+    .tabela-usuarios button, 
+    .admin-table button {
+        padding: 5px 10px !important;
+        font-size: 0.7rem !important;
+        margin: 0 2px !important;
+    }
+
+    /* Centralizar Ações */
+    .admin-table td:last-child,
+    .tabela-usuarios td:last-child {
+        text-align: center;
+    }
+
+    /* Títulos e Botão + */
+    .painel-admin h2 {
+        font-size: 1.3rem !important;
+        margin-bottom: 15px !important;
+    }
+    
+    #btn-toggle-cadastro {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 1.2rem !important;
+    }
+
+    /* 5. AJUSTES GERAIS */
+    .container-vitrine, main {
+        overflow: visible !important;
+        height: auto !important;
+        padding-bottom: 20px !important;
+    }
+    
+    .paginacao-container {
+        width: 100% !important;
+        margin: 20px 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    .paginacao {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 5px !important;
+    }
+
+    .btn-pag {
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 0.9rem !important;
+    }
+
+    .caixa-footer {
+        position: relative !important;
+        z-index: 10;
+        margin-top: auto !important;
+        width: 100%;
+    }
+}
+
+/* --- OUTROS DISPOSITIVOS --- */
+@media (max-width: 768px) {
+    .tabela-controles { flex-direction: column; align-items: stretch; }
+    .controles-direita { justify-content: space-between; margin-top: 10px; width: 100%; }
+    .input-busca-admin { max-width: 100%; width: 100%; }
+    .container-detalhes { flex-direction: column; padding: 20px; }
+    .detalhes-capa { width: 100%; margin-bottom: 20px; }
+    .detalhes-capa canvas { max-width: 200px; }
+}
+
+@media (max-width: 820px) {
+    .secao-conteudo, .secao-conteudo.reverso { flex-direction: column !important; text-align: center; gap: 20px; }
+    .img-wrapper, .texto-wrapper { width: 100%; }
+    .card-github-compacto { flex-direction: column; text-align: center; padding: 20px; width: 100%; }
+    .btn-git-acessar { margin-left: 0; margin-top: 10px; width: 100%; }
+}
+
+@media (max-width: 400px) {
+    .livro-card { flex-direction: column !important; }
+    .capa-wrapper { width: 100% !important; height: 200px !important; border-right: none !important; border-bottom: 1px solid #eee !important; }
+    .pdf-thumb { max-height: 180px; }
+}

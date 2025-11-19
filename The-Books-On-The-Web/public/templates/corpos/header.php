@@ -1,18 +1,18 @@
 <?php
 session_start();
-require_once '../../api/conection/functionsBD.php';
+require_once(__DIR__ . '/../../api/conection/functionsBD.php');
 ?>
 
 <div class="cabecalho header-cima">
     <div class="empresa">
-        <a href="index.php" class="nome-empresa">
+        <a href="http://192.168.0.136:80/The-Books-On-The-Web/public/index.php" class="nome-empresa">
             <h1>The Books<br> On The Web</h1>
         </a>
-        <a href="index.php" class="nome-empresa"><img src="styles/img/favicon.svg" alt="imagem logo" class="imagem-empresa"></a>
+        <a href="http://192.168.0.136:80/The-Books-On-The-Web/public/index.php" class="nome-empresa"><img src="styles/img/favicon.svg" alt="imagem logo" class="imagem-empresa"></a>
     </div>
 
     <div class="pesquisa">
-        <form action="templates/biblioteca/pesquisa.php" id="pesquisar" class="pesquisar" method="get">
+        <form action="http://192.168.0.136:80/The-Books-On-The-Web/public/templates/biblioteca/pesquisa.php" id="pesquisar" class="pesquisar" method="get">
             <input type="text" class="input-pesquisa" id="campoPesquisa" placeholder="Pesquisar..." name="pesquisa">
             <button type="submit" class="btn-pesquisa">
                 <svg width="24" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -31,8 +31,8 @@ require_once '../../api/conection/functionsBD.php';
 
 <div class="cabecalho header-baixo"> 
     <nav class="opcoes"> 
-        <a href="index.php" class="item-menu">Home</a>
-        <a href="templates/biblioteca/resumo.html" class="item-menu">Sobre</a>
+        <a href="http://192.168.0.136:80/The-Books-On-The-Web/public/index.php" class="item-menu">Home</a>
+        <a href="http://192.168.0.136:80/The-Books-On-The-Web/public/templates/biblioteca/resumo.html" class="item-menu">Sobre</a>
         
         <?php
             exibirBotoesCliente();

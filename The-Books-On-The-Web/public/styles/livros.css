@@ -3,317 +3,151 @@
    CONTEÚDO: Painel Administrativo Completo
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   PARTE 1: ESTILOS GERAIS DO PAINEL
-   -------------------------------------------------------------------------- */
-
-.painel-admin { 
-    width: 100%; 
-    max-width: 1200px; 
-    margin: 0 auto; 
-}
-
-.painel-admin h2 {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    border-bottom: 2px solid var(--cor-destaque); 
-    padding-bottom: 10px; 
-    margin-bottom: 20px;
-}
-
-#btn-toggle-cadastro {
-    background: var(--cor-sucesso); 
-    color: white;
-    width: 40px; 
-    height: 40px; 
-    border-radius: 50%; 
-    border: none;
-    font-size: 1.5rem; 
-    cursor: pointer; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    transition: transform 0.2s;
-}
+.painel-admin { width: 100%; max-width: 1200px; margin: 0 auto; }
+.painel-admin h2 { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--cor-destaque); padding-bottom: 10px; margin-bottom: 20px; }
+#btn-toggle-cadastro { background: var(--cor-sucesso); color: white; width: 40px; height: 40px; border-radius: 50%; border: none; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
 #btn-toggle-cadastro:hover { transform: scale(1.1); }
-
-/* Formulário */
 .form-create textarea.valor-texto { min-height: 120px; resize: vertical; }
 input[type="file"].valor-texto { background: #f8f9fa; padding: 10px; }
-
 .grupo-categoria { display: flex; gap: 10px; }
 .grupo-categoria select { flex-grow: 1; }
-.btn-nova-cat { 
-    background: var(--cor-sucesso); 
-    color: white; 
-    border: none; 
-    padding: 0 15px; 
-    border-radius: 4px; 
-    font-weight: bold; 
-    cursor: pointer; 
-}
+.btn-nova-cat { background: var(--cor-sucesso); color: white; border: none; padding: 0 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-/* --------------------------------------------------------------------------
-   PARTE 2: BARRA DE CONTROLES E TABELA UNIFICADA
-   -------------------------------------------------------------------------- */
-
-/* Barra Superior (Pesquisa + Filtros) */
-.tabela-controles {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;          
-    box-sizing: border-box;
-    
-    /* Unificação Visual: Cola na tabela */
-    margin-bottom: 0;
-    background: white;
-    padding: 20px 25px;   
-    
-    border-radius: 8px 8px 0 0; 
-    border-bottom: 1px solid #eee; 
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.02); 
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-/* Lado Direito da Barra */
-.controles-direita {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-/* Badge do Contador */
-.badge-total {
-    background-color: #e9ecef;
-    color: #495057;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.grupo-exibir {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #666;
-    font-size: 0.9rem;
-}
-
-.grupo-exibir select {
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: white;
-    cursor: pointer;
-}
-
-/* Input de Pesquisa com Lupa */
-.input-busca-admin {
-    flex-grow: 1; /* Expande para ocupar o espaço */
-    max-width: 500px; 
-    padding: 10px 15px 10px 40px; /* Espaço esquerdo para a lupa */
-    border: 1px solid #e0e0e0;
-    border-radius: 20px;
-    font-size: 0.95rem;
-    transition: all 0.3s;
-    background-color: #f8f9fa;
-    
-    /* Ícone SVG da Lupa */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: 12px center; 
-    background-size: 18px; 
-}
-
-.input-busca-admin:focus {
-    background-color: #fff;
-    border-color: var(--cor-destaque);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
-}
-
-/* Tabela Inferior */
-.table-responsive {
-    background: white; 
-    
-    /* Cola na barra superior */
-    margin-top: 0; 
-    border-radius: 0 0 8px 8px; 
-    
-    overflow-x: auto; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-}
-
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 600px; 
-}
-
-.admin-table thead tr {
-    background-color: #2c3035; 
-    color: white;
-    text-align: left;
-}
-
-.admin-table th {
-    padding: 15px;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    border-bottom: none;
-}
-
-.admin-table td {
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-    color: #555;
-    vertical-align: middle;
-}
-
-.admin-table tbody tr:hover {
-    background-color: #f8f9fa;
-}
-
-/* Botões e Badges */
-.categoria-badge {
-    background-color: #e9ecef;
-    color: #495057;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.painel-admin table td button,
-.btn-small {
-    display: inline-block;
-    padding: 6px 12px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    border-radius: 20px;
-    text-decoration: none;
-    margin: 2px;
-    border: none;
-    cursor: pointer;
-    color: white !important;
-    min-width: 70px;
-    text-align: center;
-    background-color: #6c757d;
-    transition: opacity 0.2s, transform 0.1s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.painel-admin table td button:hover,
-.btn-small:hover { 
-    opacity: 0.9; 
-    transform: translateY(-1px);
-}
-
+/* BARRA DE CONTROLES E TABELA */
+.tabela-controles { display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box; margin-bottom: 0; background: white; padding: 20px 25px; border-radius: 8px 8px 0 0; border-bottom: 1px solid #eee; box-shadow: 0 -2px 5px rgba(0,0,0,0.02); flex-wrap: wrap; gap: 15px; }
+.controles-direita { display: flex; align-items: center; gap: 20px; }
+.badge-total { background-color: #e9ecef; color: #495057; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; white-space: nowrap; }
+.grupo-exibir { display: flex; align-items: center; gap: 8px; color: #666; font-size: 0.9rem; }
+.grupo-exibir select { padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; background: white; cursor: pointer; }
+.input-busca-admin { flex-grow: 1; max-width: 500px; padding: 10px 15px 10px 40px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 0.95rem; transition: all 0.3s; background-color: #f8f9fa; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 12px center; background-size: 18px; }
+.input-busca-admin:focus { background-color: #fff; border-color: var(--cor-destaque); outline: none; box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1); }
+.table-responsive { background: white; margin-top: 0; border-radius: 0 0 8px 8px; overflow-x: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.admin-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+.admin-table thead tr { background-color: #2c3035; color: white; text-align: left; }
+.admin-table th { padding: 15px; text-transform: uppercase; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px; border-bottom: none; }
+.admin-table td { padding: 15px; border-bottom: 1px solid #eee; color: #555; vertical-align: middle; }
+.admin-table tbody tr:hover { background-color: #f8f9fa; }
+.categoria-badge { background-color: #e9ecef; color: #495057; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
+.painel-admin table td button, .btn-small { display: inline-block; padding: 6px 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; border-radius: 20px; text-decoration: none; margin: 2px; border: none; cursor: pointer; color: white !important; min-width: 70px; text-align: center; background-color: #6c757d; transition: opacity 0.2s, transform 0.1s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.painel-admin table td button:hover, .btn-small:hover { opacity: 0.9; transform: translateY(-1px); }
 .btn-ativar { background-color: var(--cor-sucesso) !important; } 
 .btn-excluir { background-color: var(--cor-perigo) !important; } 
 .btn-editar { background-color: #343a40 !important; } 
+.paginacao-admin { display: flex; justify-content: flex-end; align-items: center; gap: 5px; margin-top: 20px; }
+.paginacao-admin button { padding: 8px 14px; border: 1px solid #dee2e6; background: white; color: #0d6efd; cursor: pointer; border-radius: 4px; font-weight: 500; transition: all 0.2s; }
+.paginacao-admin button:hover:not(:disabled) { background-color: #e9ecef; border-color: #dee2e6; }
+.paginacao-admin button.ativo { background-color: var(--cor-destaque); color: white; border-color: var(--cor-destaque); }
+.paginacao-admin button:disabled { color: #ccc; cursor: not-allowed; background: #f9f9f9; }
 
-/* Paginação */
-.paginacao-admin {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 5px;
-    margin-top: 20px;
-}
-
-.paginacao-admin button {
-    padding: 8px 14px;
-    border: 1px solid #dee2e6;
-    background: white;
-    color: #0d6efd; 
-    cursor: pointer;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-.paginacao-admin button:hover:not(:disabled) {
-    background-color: #e9ecef;
-    border-color: #dee2e6;
-}
-
-.paginacao-admin button.ativo {
-    background-color: var(--cor-destaque);
-    color: white;
-    border-color: var(--cor-destaque);
-}
-
-.paginacao-admin button:disabled {
-    color: #ccc;
-    cursor: not-allowed;
-    background: #f9f9f9;
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-    .tabela-controles {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .controles-direita {
-        justify-content: space-between;
-        margin-top: 10px;
-    }
-    .input-busca-admin {
-        max-width: 100%; 
-    }
-}
-
-/* --------------------------------------------------------------------------
-   PARTE 3: ESTILOS DA PÁGINA DE DETALHES (Mantido Original)
-   -------------------------------------------------------------------------- */
-
+/* DETALHES */
 .container-voltar { width: 100%; max-width: 1000px; margin: 0 auto 20px auto; padding-left: 10px; }
 .btn-voltar { background-color: transparent; border: 1px solid #ccc; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 1rem; color: #555; transition: 0.3s; display: inline-flex; align-items: center; font-weight: 600; }
 .btn-voltar:hover { background-color: #e9ecef; color: #333; border-color: #bbb; }
-
 .container-detalhes { display: flex; gap: 40px; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); width: 100%; max-width: 1000px; margin: 0 auto; align-items: flex-start; }
-
 .detalhes-capa { flex: 1; max-width: 300px; min-width: 250px; display: flex; flex-direction: column; gap: 15px; }
 .detalhes-capa canvas { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 1px solid #eee; background-color: #f8f9fa; }
 .sem-capa { width: 100%; height: 300px; background: #f0f2f5; display: flex; align-items: center; justify-content: center; color: #aaa; border-radius: 8px; border: 1px dashed #ccc; text-align: center; }
-
 .detalhes-info { flex: 2; display: flex; flex-direction: column; }
 .detalhes-info h1 { font-size: 2.2rem; color: #212529; margin-bottom: 10px; line-height: 1.2; text-align: left; }
 .detalhes-meta { font-size: 0.95rem; color: #6c757d; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-
 .sinopse-box h3 { font-size: 1.3rem; margin-bottom: 10px; color: #343a40; }
 .texto-sinopse { font-size: 1rem; line-height: 1.7; color: #495057; text-align: justify; margin-bottom: 30px; }
-
 .grupo-botoes { display: flex; gap: 15px; flex-wrap: wrap; margin-top: auto; }
 .btn-acao { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; font-size: 1rem; font-weight: 600; border-radius: 8px; cursor: pointer; text-decoration: none; transition: all 0.2s; border: none; min-width: 180px; }
 .icon-svg { width: 20px; height: 20px; margin-right: 8px; vertical-align: middle; fill: currentColor; transition: transform 0.2s; }
 .btn-acao:hover .icon-svg { transform: scale(1.1); }
-
 .btn-ler { background-color: #0d6efd; color: white; box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2); }
 .btn-ler:hover { background-color: #0b5ed7; transform: translateY(-2px); }
-
 .btn-fav-remover { background-color: #dc3545; color: white; box-shadow: 0 4px 6px rgba(220, 53, 69, 0.2); }
 .btn-fav-remover:hover { background-color: #bb2d3b; transform: translateY(-2px); }
 .btn-fav-remover .icon-svg { fill: white; }
-
 .btn-fav-adicionar { background-color: white; border: 2px solid #dc3545; color: #dc3545; }
 .btn-fav-adicionar:hover { background-color: #dc3545; color: white; }
 .btn-fav-adicionar .icon-svg { fill: none; stroke: currentColor; stroke-width: 2; }
 
-@media (max-width: 768px) {
-    .container-detalhes { flex-direction: column; align-items: center; padding: 20px; }
-    .detalhes-capa { width: 100%; margin-bottom: 20px; }
-    .detalhes-info h1 { text-align: center; font-size: 1.8rem; }
-    .grupo-botoes { width: 100%; flex-direction: column; }
-    .btn-acao { width: 100%; }
+/* ==========================================================================
+   ESTILOS DA TABELA DE USUÁRIOS (Painel Admin)
+   ========================================================================== */
+
+.tabela-usuarios {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden; /* Para arredondar os cantos do cabeçalho */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+/* Cabeçalho */
+.tabela-usuarios thead tr {
+    background-color: #2c3035; /* Mesma cor escura do outro painel */
+    color: #ffffff;
+    text-align: left;
+}
+
+.tabela-usuarios th {
+    padding: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* Corpo */
+.tabela-usuarios td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    color: #555;
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+
+/* Efeito Zebrado (linhas alternadas) */
+.tabela-usuarios tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Hover na linha */
+.tabela-usuarios tbody tr:hover {
+    background-color: #e2e6ea;
+    transition: background-color 0.2s;
+}
+
+/* Ajuste da coluna de Ações (Botões) */
+.tabela-usuarios td:last-child {
+    white-space: nowrap; /* Impede que os botões quebrem linha */
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+/* Estilo base dos botões da tabela (caso não pegue do global) */
+.tabela-usuarios button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    transition: opacity 0.2s;
+}
+
+.tabela-usuarios button:hover {
+    opacity: 0.9;
+}
+
+/* --- CORES DOS BOTÕES --- */
+/* (Garante que funcionem mesmo se o JS não colocar a classe .btn-small) */
+
+/* Botão Desativar / Excluir */
+.btn-delete, button[onclick*="delete"] {
+    background-color: var(--cor-perigo, #dc3545);
+}
+
+/* Botão Ativar */
+button[onclick*="activate"] {
+    background-color: var(--cor-sucesso, #28a745);
 }
