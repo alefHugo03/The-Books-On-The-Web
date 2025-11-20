@@ -27,7 +27,7 @@ if (!$usuario) {
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <base href="http://192.168.0.136:80/The-Books-On-The-Web/public/">
+        <base href="/The-Books-On-The-Web/public/">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles/style.css">

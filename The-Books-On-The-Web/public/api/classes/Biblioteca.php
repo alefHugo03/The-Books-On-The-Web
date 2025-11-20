@@ -7,41 +7,44 @@ class Biblioteca {
 
     public function __construct($conexao) {
         $this->db = $conexao;
+        // Ajusta o caminho para a pasta de PDFs
         $this->uploadDir = dirname(__DIR__, 3) . '/database/pdfs/';
-        
-        if (!is_dir($this->uploadDir)) {
-            mkdir($this->uploadDir, 0777, true);
-        }
+        if (!is_dir($this->uploadDir)) { @mkdir($this->uploadDir, 0777, true); }
     }
 
-    // --- 1. LISTAGEM GERAL ---
+    // --- 1. LISTAR TUDO (Preenche tabelas e selects) ---
     public function listarTudo() {
         $dados = [];
 
-        // Busca Listas para os Selects
-        $dados['categorias'] = $this->db->query("SELECT * FROM CATEGORIA ORDER BY nome_categoria")->fetch_all(MYSQLI_ASSOC);
-        $dados['autores']    = $this->db->query("SELECT * FROM AUTOR ORDER BY nome_autor")->fetch_all(MYSQLI_ASSOC);
-        // NOVO: Busca Editoras
+        // Buscas Auxiliares
+        $dados['categorias'] = $this->db->query("SELECT * FROM categoria ORDER BY nome_categoria")->fetch_all(MYSQLI_ASSOC);
+        $dados['autores']    = $this->db->query("SELECT * FROM autor ORDER BY nome_autor")->fetch_all(MYSQLI_ASSOC);
         $dados['editoras']   = $this->db->query("SELECT * FROM editora ORDER BY nome_editora")->fetch_all(MYSQLI_ASSOC);
 
-        // Busca Livros (Agora com nome da Editora)
+        // Busca Principal (Livros)
+        // Atenção: Nomes de tabelas em minúsculo conforme seu banco
         $sql = "SELECT l.*, 
                        ed.nome_editora,
                        GROUP_CONCAT(DISTINCT c.nome_categoria SEPARATOR ', ') as nomes_categorias,
                        GROUP_CONCAT(DISTINCT c.id_categoria) as ids_categorias,
                        GROUP_CONCAT(DISTINCT a.nome_autor SEPARATOR ', ') as nomes_autores,
                        GROUP_CONCAT(DISTINCT a.id_autor) as ids_autores
-                FROM LIVRO l 
+                FROM livro l 
                 LEFT JOIN editora ed ON l.fk_editora = ed.id_editora
-                LEFT JOIN Temas t ON l.id_livro = t.fk_LIVRO_id_livro
-                LEFT JOIN CATEGORIA c ON t.fk_CATEGORIA_id_categoria = c.id_categoria
-                LEFT JOIN ESCRITOR e ON l.id_livro = e.FK_LIVRO_id_livro
-                LEFT JOIN AUTOR a ON e.FK_AUTOR_id_autor = a.id_autor
+                LEFT JOIN temas t ON l.id_livro = t.fk_LIVRO_id_livro
+                LEFT JOIN categoria c ON t.fk_CATEGORIA_id_categoria = c.id_categoria
+                LEFT JOIN escritor e ON l.id_livro = e.FK_LIVRO_id_livro
+                LEFT JOIN autor a ON e.FK_AUTOR_id_autor = a.id_autor
                 GROUP BY l.id_livro
-                ORDER BY l.titulo DESC";
+                ORDER BY l.titulo ASC";
         
         $res = $this->db->query($sql);
-        $dados['livros'] = $res->fetch_all(MYSQLI_ASSOC);
+        
+        if ($res) {
+            $dados['livros'] = $res->fetch_all(MYSQLI_ASSOC);
+        } else {
+            $dados['livros'] = []; // Evita travamento se der erro SQL
+        }
         
         return $dados;
     }
@@ -51,15 +54,17 @@ class Biblioteca {
         $titulo = $post['titulo'];
         $descricao = $post['descricao'];
         $dataPubli = $post['data_publi'];
-        $editoraId = !empty($post['editora']) ? intval($post['editora']) : null; // NOVO
+        // Captura a editora (pode vir vazia)
+        $editoraId = !empty($post['editora']) ? intval($post['editora']) : null;
         $idLivro = $post['livro_id'] ?? '';
         $acao = $post['action'];
         
-        $categoriasIds = $post['categoria'] ?? []; 
-        $autoresIds = $post['autor'] ?? [];       
+        // Garante arrays para selects múltiplos
+        $categoriasIds = isset($post['categoria']) ? (is_array($post['categoria']) ? $post['categoria'] : [$post['categoria']]) : [];
+        $autoresIds = isset($post['autor']) ? (is_array($post['autor']) ? $post['autor'] : [$post['autor']]) : [];
 
         if (empty($categoriasIds) || empty($autoresIds)) {
-            return ['success' => false, 'error' => 'Selecione pelo menos um autor e uma categoria.'];
+            return ['success' => false, 'error' => 'Selecione Autor e Categoria.'];
         }
 
         // Upload PDF
@@ -74,86 +79,90 @@ class Biblioteca {
             }
         }
 
-        // --- INSERÇÃO (ADD) ---
+        // ADD
         if ($acao === 'add') {
-            if (!$pdfName) return ['success' => false, 'error' => 'O arquivo PDF é obrigatório.'];
+            if (!$pdfName) return ['success' => false, 'error' => 'PDF obrigatório.'];
 
-            // NOVO: Adicionado fk_editora
-            $stmt = $this->db->prepare("INSERT INTO LIVRO (titulo, descricao, data_publi, fk_editora, pdf) VALUES (?, ?, ?, ?, ?)");
+            $stmt = $this->db->prepare("INSERT INTO livro (titulo, descricao, data_publi, fk_editora, pdf) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("sssis", $titulo, $descricao, $dataPubli, $editoraId, $pdfName);
 
             if ($stmt->execute()) {
                 $novoId = $stmt->insert_id;
                 $this->vincularRelacoes($novoId, $autoresIds, $categoriasIds);
-                return ['success' => true, 'msg' => 'Livro criado com sucesso!'];
+                return ['success' => true, 'msg' => 'Cadastrado com sucesso!'];
             }
         } 
-        // --- EDIÇÃO (EDIT) ---
+        // EDIT
         elseif ($acao === 'edit') {
-            // NOVO: Atualiza fk_editora
             if ($pdfName) {
-                $stmt = $this->db->prepare("UPDATE LIVRO SET titulo=?, descricao=?, data_publi=?, fk_editora=?, pdf=? WHERE id_livro=?");
+                $stmt = $this->db->prepare("UPDATE livro SET titulo=?, descricao=?, data_publi=?, fk_editora=?, pdf=? WHERE id_livro=?");
                 $stmt->bind_param("sssisi", $titulo, $descricao, $dataPubli, $editoraId, $pdfName, $idLivro);
             } else {
-                $stmt = $this->db->prepare("UPDATE LIVRO SET titulo=?, descricao=?, data_publi=?, fk_editora=? WHERE id_livro=?");
+                $stmt = $this->db->prepare("UPDATE livro SET titulo=?, descricao=?, data_publi=?, fk_editora=? WHERE id_livro=?");
                 $stmt->bind_param("sssii", $titulo, $descricao, $dataPubli, $editoraId, $idLivro);
             }
 
             if ($stmt->execute()) {
                 $this->vincularRelacoes($idLivro, $autoresIds, $categoriasIds);
-                return ['success' => true, 'msg' => 'Livro atualizado!'];
+                return ['success' => true, 'msg' => 'Atualizado com sucesso!'];
             }
         }
 
-        return ['success' => false, 'error' => 'Erro no banco de dados: ' . $this->db->error];
+        return ['success' => false, 'error' => 'Erro Banco: ' . $this->db->error];
     }
 
-    // --- MÉTODOS AUXILIARES ---
-
+    // --- AUXILIARES ---
     private function vincularRelacoes($idLivro, $autores, $categorias) {
-        $this->db->query("DELETE FROM ESCRITOR WHERE FK_LIVRO_id_livro = $idLivro");
-        $this->db->query("DELETE FROM Temas WHERE fk_LIVRO_id_livro = $idLivro");
+        // Limpa antigos
+        $this->db->query("DELETE FROM escritor WHERE FK_LIVRO_id_livro = $idLivro");
+        $this->db->query("DELETE FROM temas WHERE fk_LIVRO_id_livro = $idLivro");
 
-        if (is_array($autores)) {
-            foreach ($autores as $autorId) {
-                $aid = intval($autorId);
-                $this->db->query("INSERT INTO ESCRITOR (FK_LIVRO_id_livro, FK_AUTOR_id_autor) VALUES ($idLivro, $aid)");
+        // Reinsere
+        if (!empty($autores)) {
+            $stmt = $this->db->prepare("INSERT INTO escritor (FK_LIVRO_id_livro, FK_AUTOR_id_autor) VALUES (?, ?)");
+            foreach ($autores as $aid) {
+                $aid = intval($aid);
+                if($aid > 0) { $stmt->bind_param("ii", $idLivro, $aid); $stmt->execute(); }
             }
         }
-        if (is_array($categorias)) {
-            foreach ($categorias as $catId) {
-                $cid = intval($catId);
-                $this->db->query("INSERT INTO Temas (fk_LIVRO_id_livro, fk_CATEGORIA_id_categoria) VALUES ($idLivro, $cid)");
+        if (!empty($categorias)) {
+            $stmt = $this->db->prepare("INSERT INTO temas (fk_LIVRO_id_livro, fk_CATEGORIA_id_categoria) VALUES (?, ?)");
+            foreach ($categorias as $cid) {
+                $cid = intval($cid);
+                if($cid > 0) { $stmt->bind_param("ii", $idLivro, $cid); $stmt->execute(); }
             }
         }
     }
 
     public function excluirLivro($id) {
         $id = intval($id);
-        $q = $this->db->query("SELECT pdf FROM LIVRO WHERE id_livro = $id");
+        $q = $this->db->query("SELECT pdf FROM livro WHERE id_livro = $id");
         $livro = $q->fetch_assoc();
 
-        $this->db->query("DELETE FROM ESCRITOR WHERE FK_LIVRO_id_livro = $id");
-        $this->db->query("DELETE FROM Temas WHERE fk_LIVRO_id_livro = $id");
+        // Limpeza manual (caso CASCADE falhe)
+        $this->db->query("DELETE FROM escritor WHERE FK_LIVRO_id_livro = $id");
+        $this->db->query("DELETE FROM temas WHERE fk_LIVRO_id_livro = $id");
         
-        if ($this->db->query("DELETE FROM LIVRO WHERE id_livro = $id")) {
-            if ($livro && $livro['pdf']) {
+        if ($this->db->query("DELETE FROM livro WHERE id_livro = $id")) {
+            if ($livro && !empty($livro['pdf'])) {
                 $file = $this->uploadDir . $livro['pdf'];
-                if (file_exists($file)) unlink($file);
+                if (file_exists($file)) @unlink($file);
             }
-            return ['success' => true, 'msg' => 'Livro excluído!'];
+            return ['success' => true, 'msg' => 'Excluído!'];
         }
-        return ['success' => false, 'error' => 'Erro ao excluir: ' . $this->db->error];
+        return ['success' => false, 'error' => 'Erro SQL: ' . $this->db->error];
     }
 
+    // Gerencia Categorias, Autores e EDITORAS
     public function gerenciarAuxiliar($tipo, $acao, $id = null, $nome = null) {
-        // NOVO: Suporte para tabela editora
         if ($tipo === 'categoria') {
-            $tabela = 'CATEGORIA'; $colId = 'id_categoria'; $colNome = 'nome_categoria';
+            $tabela = 'categoria'; $colId = 'id_categoria'; $colNome = 'nome_categoria';
         } elseif ($tipo === 'autor') {
-            $tabela = 'AUTOR'; $colId = 'id_autor'; $colNome = 'nome_autor';
-        } else {
+            $tabela = 'autor'; $colId = 'id_autor'; $colNome = 'nome_autor';
+        } elseif ($tipo === 'editora') {
             $tabela = 'editora'; $colId = 'id_editora'; $colNome = 'nome_editora';
+        } else {
+            return ['success'=>false, 'error'=>'Tipo inválido'];
         }
 
         if ($acao === 'add') {
@@ -164,13 +173,14 @@ class Biblioteca {
         }
 
         if ($acao === 'delete') {
-            // Limpeza de FKs antes de deletar
-            if ($tipo === 'categoria') $this->db->query("DELETE FROM Temas WHERE fk_CATEGORIA_id_categoria = $id");
-            elseif ($tipo === 'autor') $this->db->query("DELETE FROM ESCRITOR WHERE FK_AUTOR_id_autor = $id");
-            elseif ($tipo === 'editora') $this->db->query("UPDATE LIVRO SET fk_editora = NULL WHERE fk_editora = $id");
+            // Remove dependências antes de apagar o item
+            if ($tipo === 'categoria') $this->db->query("DELETE FROM temas WHERE fk_CATEGORIA_id_categoria = $id");
+            elseif ($tipo === 'autor') $this->db->query("DELETE FROM escritor WHERE FK_AUTOR_id_autor = $id");
+            elseif ($tipo === 'editora') $this->db->query("UPDATE livro SET fk_editora = NULL WHERE fk_editora = $id");
 
-            $this->db->query("DELETE FROM $tabela WHERE $colId = $id");
-            return ['success'=>true];
+            return $this->db->query("DELETE FROM $tabela WHERE $colId = $id") 
+                ? ['success'=>true] 
+                : ['success'=>false, 'error'=>$this->db->error];
         }
     }
 }

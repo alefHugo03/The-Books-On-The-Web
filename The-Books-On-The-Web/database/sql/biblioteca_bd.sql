@@ -6,7 +6,8 @@
 -- Tempo de geração: 19/11/2025 às 01:37
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
-
+CREATE DATABASE biblioteca_bd;
+USE biblioteca_bd;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";

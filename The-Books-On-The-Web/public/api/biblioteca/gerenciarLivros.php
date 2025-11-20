@@ -1,68 +1,53 @@
 <?php
 // ARQUIVO: public/api/biblioteca/gerenciarLivros.php
 
-// 1. Inicia Buffer e Sessão (Previne erros de HTML vazando antes do JSON)
-ob_start(); 
+// 1. Prepara o terreno (Limpa buffer e inicia sessão)
+ob_start();
 session_start();
 
-// 2. Define Header JSON
+// 2. Define que a resposta será JSON
 header('Content-Type: application/json; charset=utf-8');
 
-// Função auxiliar para parar o script e enviar erro limpo
-function enviarErro($msg) {
-    ob_clean(); // Limpa qualquer lixo (warnings, br, b) do buffer
-    echo json_encode(['success' => false, 'error' => $msg]);
+// Função para encerrar com erro limpo
+function enviarJson($dados) {
+    ob_clean(); // Apaga qualquer HTML ou Warning que tenha aparecido antes
+    echo json_encode($dados);
     exit;
 }
 
 try {
-    // --- CORREÇÃO DOS CAMINHOS (Baseado na sua imagem) ---
-    // Estamos em: public/api/biblioteca/
-    // Voltamos 1 nível (../) para chegar em: public/api/
-    
-    // 3. Incluir Conexão
-    $caminhoConexao = '../conection/conectionBD.php';
-    if (!file_exists($caminhoConexao)) {
-        throw new Exception("Arquivo de conexão não encontrado em: $caminhoConexao");
+    // 3. Verifica Permissão
+    if (!isset($_SESSION['id_user']) || $_SESSION['tipo'] !== 'admin') {
+        enviarJson(['success' => false, 'error' => 'Acesso negado. Login de Admin necessário.']);
     }
-    require_once $caminhoConexao;
 
-    // 4. Incluir Classe Biblioteca
+    // 4. Inclui Dependências
+    // Caminho: estamos em api/biblioteca, precisamos voltar para api/conection e api/classes
+    $caminhoConexao = '../conection/conectionBD.php';
     $caminhoClasse = '../classes/Biblioteca.php';
-    if (!file_exists($caminhoClasse)) {
-        throw new Exception("Arquivo da Classe Biblioteca não encontrado em: $caminhoClasse");
-    }
+
+    if (!file_exists($caminhoConexao)) throw new Exception("Arquivo de conexão não encontrado.");
+    if (!file_exists($caminhoClasse)) throw new Exception("Arquivo da classe Biblioteca não encontrado.");
+
+    require_once $caminhoConexao;
     require_once $caminhoClasse;
 
-    // 5. Verificações de Segurança
-    if (!isset($con)) {
-        throw new Exception('Erro crítico: Variável de conexão ($con) não existe.');
-    }
+    if (!isset($con)) throw new Exception("Falha na conexão com o banco de dados.");
 
-    if (!isset($_SESSION['id_user']) || $_SESSION['tipo'] !== 'admin') {
-        enviarErro('Acesso negado. Faça login como administrador.');
-    }
-
-    // 6. Instancia a Classe
+    // 5. Processa a Requisição
     $biblioteca = new Biblioteca($con);
     $method = $_SERVER['REQUEST_METHOD'];
 
-    // ==================================================================
-    // GET: Listar Dados (Tabelas e Selects)
-    // ==================================================================
+    // --- GET: Buscar Dados ---
     if ($method === 'GET') {
         $dados = $biblioteca->listarTudo();
-        ob_clean(); // Garante resposta limpa
-        echo json_encode(['success' => true] + $dados);
-        exit;
+        enviarJson(['success' => true] + $dados);
     }
 
-    // ==================================================================
-    // POST: Adicionar, Editar, Excluir
-    // ==================================================================
+    // --- POST: Salvar ou Excluir ---
     if ($method === 'POST') {
         $action = $_POST['action'] ?? '';
-        $response = ['success' => false, 'error' => 'Ação inválida'];
+        $response = ['success' => false, 'error' => 'Ação desconhecida'];
 
         // A. LIVROS
         if ($action === 'add' || $action === 'edit') {
@@ -73,28 +58,34 @@ try {
         }
         
         // B. CATEGORIAS
-        elseif ($action === 'add_categoria') {
-            $response = $biblioteca->gerenciarAuxiliar('categoria', 'add', null, $_POST['nome_categoria']);
-        }
-        elseif ($action === 'delete_categoria') {
-            $response = $biblioteca->gerenciarAuxiliar('categoria', 'delete', $_POST['id_categoria']);
+        elseif (strpos($action, '_categoria') !== false) {
+            // Remove '_categoria' para sobrar só 'add' ou 'delete'
+            $act = str_replace('_categoria', '', $action); 
+            $id = $_POST['id_categoria'] ?? null;
+            $nome = $_POST['nome_categoria'] ?? null;
+            $response = $biblioteca->gerenciarAuxiliar('categoria', $act, $id, $nome);
         }
         
         // C. AUTORES
-        elseif ($action === 'add_autor') {
-            $response = $biblioteca->gerenciarAuxiliar('autor', 'add', null, $_POST['nome_autor']);
+        elseif (strpos($action, '_autor') !== false) {
+            $act = str_replace('_autor', '', $action);
+            $id = $_POST['id_autor'] ?? null;
+            $nome = $_POST['nome_autor'] ?? null;
+            $response = $biblioteca->gerenciarAuxiliar('autor', $act, $id, $nome);
         }
-        elseif ($action === 'delete_autor') {
-            $response = $biblioteca->gerenciarAuxiliar('autor', 'delete', $_POST['id_autor']);
+        
+        // D. EDITORAS (Isso faltava!)
+        elseif (strpos($action, '_editora') !== false) {
+            $act = str_replace('_editora', '', $action);
+            $id = $_POST['id_editora'] ?? null;
+            $nome = $_POST['nome_editora'] ?? null;
+            $response = $biblioteca->gerenciarAuxiliar('editora', $act, $id, $nome);
         }
 
-        ob_clean(); // Limpa antes de enviar
-        echo json_encode($response);
-        exit;
+        enviarJson($response);
     }
 
 } catch (Exception $e) {
-    // Captura erros de arquivo ou lógica e envia como JSON legível
-    enviarErro('Erro no Servidor: ' . $e->getMessage());
+    enviarJson(['success' => false, 'error' => 'Erro interno: ' . $e->getMessage()]);
 }
 ?>

@@ -1,189 +1,113 @@
-import { validarData } from "../validations/data.js";
-import { validarEmail } from "../validations/email.js";
-import { validarNome } from "../validations/name.js";
-import { validarSenha, validarConfirmarSenha } from "../validations/password.js";
-import { validarCpf, barraCpf } from "../validations/cpf.js";
-import { etapa, limparAviso, avisoFalas } from "../validations/utilits.js";
+import { avisoFalas, limparAviso, etapa } from "../validations/utilits.js";
+// Importamos os validadores antigos apenas se forem usados dentro da classe, 
+// mas agora usaremos o FormValidator injetado ou criado aqui.
+import FormValidator from "./FormValidator.js";
 
 export default class GerenciadorAdmin {
-    /**
-     * Construtor: Define as configurações iniciais e elementos do DOM.
-     * @param {Object} config - Objeto com IDs e URLs da API.
-     */
     constructor(config) {
-        // Configurações (URLs e IDs)
-        this.apiUrl = config.apiUrl || 'api/login/admin/gerenciarUsuarios.php';
-        
-        // Elementos do DOM
+        this.apiUrl = config.apiUrl;
         this.formCadastro = document.getElementById(config.formId);
         this.tbodyAtivos = document.getElementById(config.tableAtivosId);
         this.tbodyInativos = document.getElementById(config.tableInativosId);
         this.selectTipo = document.getElementById(config.tipoSelectId);
+        
+        this.validator = new FormValidator();
 
-        // Vincula o contexto do 'this' para métodos que são chamados por eventos
+        // Bindings
         this.processarCadastro = this.processarCadastro.bind(this);
         this.gerenciarCliquesTabela = this.gerenciarCliquesTabela.bind(this);
     }
 
-    /**
-     * Método Inicializador: Coloca tudo para rodar.
-     */
     init() {
-        console.log("Gerenciador Admin: Iniciado (POO)");
-        
-        // 1. Carregar dados iniciais
+        console.log("Admin Manager: Iniciado");
         this.carregarUsuarios();
         
-        // 2. Ativar máscara de CPF
-        barraCpf('cpfAdmin');
-
-        // 3. Escutar envio do formulário
-        if (this.formCadastro) {
-            this.formCadastro.addEventListener('submit', this.processarCadastro);
-        }
-
-        // 4. Escutar cliques nas tabelas (Event Delegation)
-        // Isso substitui o onclick no HTML, deixando o código mais limpo
+        if (this.formCadastro) this.formCadastro.addEventListener('submit', this.processarCadastro);
         if (this.tbodyAtivos) this.tbodyAtivos.addEventListener('click', this.gerenciarCliquesTabela);
         if (this.tbodyInativos) this.tbodyInativos.addEventListener('click', this.gerenciarCliquesTabela);
     }
 
-    /* --- MÉTODOS DE LÓGICA (CRUD) --- */
-
     carregarUsuarios() {
         fetch(this.apiUrl, { method: 'GET' })
-            .then(response => response.json())
+            .then(r => r.json())
             .then(data => {
                 if (data.success) {
                     this._renderizarTabela(this.tbodyAtivos, data.ativos, true);
                     this._renderizarTabela(this.tbodyInativos, data.inativos, false);
                 }
             })
-            .catch(error => console.error("Erro ao carregar usuários:", error));
+            .catch(err => console.error("Erro ao carregar usuários:", err));
     }
 
     processarCadastro(event) {
         event.preventDefault();
-        console.log("POO: Processando cadastro...");
-
         etapa.forEach(limparAviso);
-        limparAviso('avisoTipo');
-        limparAviso('aviso');
 
-        // Validações
-        const validacoes = [
-            validarNome('nomeAdmin'),
-            validarEmail('emailAdmin'),
-            validarData('dataAdmin'),
-            validarSenha('senhaAdmin'),
-            validarConfirmarSenha(document.getElementById('senhaAdmin').value, 'senhaAdminDois'),
-            validarCpf('cpfAdmin')
-        ];
+        // Validação usando a Classe FormValidator
+        const vNome = this.validator.validarCampo('nomeAdmin', 'avisoNome', ['obrigatorio', 'nome']);
+        const vEmail = this.validator.validarCampo('emailAdmin', 'avisoEmail', ['obrigatorio', 'email']);
+        const vCpf = this.validator.validarCampo('cpfAdmin', 'avisoCpf', ['obrigatorio', 'cpf']);
+        const vData = this.validator.validarCampo('dataAdmin', 'avisoData', ['obrigatorio', 'data']);
+        const vSenha = this.validator.validarCampo('senhaAdmin', 'avisoSenha', ['obrigatorio', 'min:6']);
+        const vSenha2 = this.validator.validarConfirmacaoSenha('senhaAdmin', 'senhaAdminDois', 'avisoSenhaDois');
 
-        // Validação específica do select (que não tem arquivo próprio)
-        let tipoValido = true;
-        if (!this.selectTipo.value) {
-            avisoFalas("Selecione o tipo de conta.", "avisoTipo");
-            tipoValido = false;
-        }
+        let vTipo = true;
+        if (!this.selectTipo.value) { avisoFalas("Selecione o tipo.", "avisoTipo"); vTipo = false; }
 
-        // Se algum for false, para aqui.
-        if (validacoes.includes(false) || !tipoValido) return;
+        if (!vNome || !vEmail || !vCpf || !vData || !vSenha || !vSenha2 || !vTipo) return;
 
         const dados = new FormData(this.formCadastro);
-
-        fetch(this.apiUrl, {
-            method: 'POST',
-            body: dados
-        })
-        .then(res => res.json())
+        fetch(this.apiUrl, { method: 'POST', body: dados })
+        .then(r => r.json())
         .then(data => {
             if (data.success) {
                 alert(data.message);
                 this.formCadastro.reset();
-                this.carregarUsuarios(); // Recarrega a tabela
+                this.carregarUsuarios();
             } else {
                 avisoFalas(data.message, "aviso");
             }
         })
-        .catch(err => {
-            console.error(err);
-            avisoFalas("Erro de conexão.", "aviso");
-        });
+        .catch(() => avisoFalas("Erro de conexão.", "aviso"));
     }
 
     alterarStatus(id, action) {
-        const msg = action === 'delete_permanent' 
-            ? "Tem certeza que deseja EXCLUIR PERMANENTEMENTE?" 
-            : "Confirmar ação?";
-        
+        const msg = action === 'delete_permanent' ? "EXCLUIR PERMANENTEMENTE?" : "Confirmar ação?";
         if (!confirm(msg)) return;
 
-        const formData = new FormData();
-        formData.append('action', action);
-        formData.append('id_user', id);
+        const fd = new FormData();
+        fd.append('action', action);
+        fd.append('id_user', id);
 
-        fetch(this.apiUrl, {
-            method: 'POST',
-            body: formData
-        })
-        .then(res => res.json())
+        fetch(this.apiUrl, { method: 'POST', body: fd })
+        .then(r => r.json())
         .then(data => {
             alert(data.message);
-            this.carregarUsuarios(); // Atualiza a visualização
-        })
-        .catch(err => console.error(err));
+            this.carregarUsuarios();
+        });
     }
 
-    /* --- MÉTODOS DE RENDERIZAÇÃO (PRIVADOS/AUXILIARES) --- */
-
-    /**
-     * Gera o HTML da tabela. Note que usamos data-attributes nos botões
-     * em vez de onclick="funcaoGlobal()".
-     */
-    _renderizarTabela(tbody, listaUsuarios, isAtivo) {
+    _renderizarTabela(tbody, lista, isAtivo) {
         tbody.innerHTML = '';
-
-        if (!listaUsuarios || listaUsuarios.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td></tr>';
+        if (!lista || lista.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" align="center">Nenhum usuário.</td></tr>';
             return;
         }
-
-        listaUsuarios.forEach(user => {
+        lista.forEach(u => {
             const tr = document.createElement('tr');
-            let botoes = '';
-
-            if (isAtivo) {
-                botoes = `<button type="button" class="btn-delete acao-btn" data-id="${user.id_user}" data-action="delete">Desativar</button>`;
-            } else {
-                botoes = `
-                    <button type="button" class="btn-small acao-btn" data-id="${user.id_user}" data-action="activate">Ativar</button> 
-                    <button type="button" class="btn-delete acao-btn" style="background:darkred;" data-id="${user.id_user}" data-action="delete_permanent">Excluir</button>
-                `;
-            }
-
-            tr.innerHTML = `
-                <td>${user.id_user}</td>
-                <td>${user.nome}</td>
-                <td>${user.email}</td>
-                <td>${user.tipo}</td>
-                <td>${botoes}</td>
-            `;
+            let btnHtml = isAtivo 
+                ? `<button class="btn-delete acao-btn" data-id="${u.id_user}" data-act="delete">Desativar</button>`
+                : `<button class="btn-small acao-btn" data-id="${u.id_user}" data-act="activate">Ativar</button> 
+                   <button class="btn-delete acao-btn" data-id="${u.id_user}" data-act="delete_permanent">Excluir</button>`;
+            
+            tr.innerHTML = `<td>${u.id_user}</td><td>${u.nome}</td><td>${u.email}</td><td>${u.tipo}</td><td>${btnHtml}</td>`;
             tbody.appendChild(tr);
         });
     }
 
-    /**
-     * Event Delegation: Identifica qual botão foi clicado dentro da tabela
-     */
-    gerenciarCliquesTabela(event) {
-        const elemento = event.target;
-        
-        // Verifica se o clique foi em um botão com a classe 'acao-btn'
-        if (elemento.classList.contains('acao-btn')) {
-            const id = elemento.dataset.id;
-            const action = elemento.dataset.action;
-            this.alterarStatus(id, action);
+    gerenciarCliquesTabela(e) {
+        if (e.target.classList.contains('acao-btn')) {
+            this.alterarStatus(e.target.dataset.id, e.target.dataset.act);
         }
     }
 }
