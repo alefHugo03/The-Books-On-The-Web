@@ -22,12 +22,17 @@ $total_paginas = ceil($total_livros / $itens_por_pagina);
 <html lang="pt-br">
 
 <head>
-    <base href="http://localhost/The-Books-On-The-Web/public/">
+    <base href="/The-Books-On-The-Web/public/">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Home | TBOTW </title>
+    
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/cards.css">
     <link rel="stylesheet" href="styles/livros.css">
+    
+    <link rel="stylesheet" href="styles/stylephone.css?v=<?php echo time(); ?>">
+    
     <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon" class="favicon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js"></script>
@@ -75,11 +80,8 @@ $total_paginas = ceil($total_livros / $itens_por_pagina);
                     while ($livro = mysqli_fetch_assoc($resultado)) {
                         $caminhoPdf = '../database/pdfs/' . $livro['pdf'];
 
-                        echo '<a href="templates\biblioteca\livros.php?id=' . $livro['id_livro'] . '" style="text-decoration:none; color:inherit;">';
-
+                        echo '<a href="templates/biblioteca/livros.php?id=' . $livro['id_livro'] . '" style="text-decoration:none; color:inherit;">';
                         echo '<div class="livro-card">';
-
-                        // CAPA
                         echo '<div class="capa-wrapper">';
                         if (!empty($livro['pdf'])) {
                             echo '<canvas class="pdf-thumb" data-url="' . $caminhoPdf . '"></canvas>';
@@ -87,16 +89,12 @@ $total_paginas = ceil($total_livros / $itens_por_pagina);
                             echo '<div class="sem-capa">Sem Capa</div>';
                         }
                         echo '</div>';
-
-                        // TEXTO
                         echo '<div class="info-livro">';
                         echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
                         echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
                         echo '<span class="categoria-tag">' . htmlspecialchars($livro['nome_categoria']) . '</span>';
                         echo '</div>';
-
-                        echo '</div>'; // Fim card
-
+                        echo '</div>'; 
                         echo '</a>';
                     }
                 } else {
@@ -109,24 +107,15 @@ $total_paginas = ceil($total_livros / $itens_por_pagina);
             <div class="paginacao-container">
                 <div class="paginacao">
                     <?php
-                    // Botão Anterior
                     if ($pagina_atual > 1) {
-                        echo '<a href="index.php?pagina=' . ($pagina_atual - 1) . '" class="btn-pag anterior">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                              </a>';
+                        echo '<a href="index.php?pagina=' . ($pagina_atual - 1) . '" class="btn-pag anterior"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></a>';
                     }
-
-                    // Botões Numéricos
                     for ($i = 1; $i <= $total_paginas; $i++) {
                         $classe_ativa = ($i == $pagina_atual) ? 'active' : '';
                         echo '<a href="index.php?pagina=' . $i . '" class="btn-pag ' . $classe_ativa . '">' . $i . '</a>';
                     }
-
-                    // Botão Próximo
                     if ($pagina_atual < $total_paginas) {
-                        echo '<a href="index.php?pagina=' . ($pagina_atual + 1) . '" class="btn-pag proximo">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                              </a>';
+                        echo '<a href="index.php?pagina=' . ($pagina_atual + 1) . '" class="btn-pag proximo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></a>';
                     }
                     ?>
                 </div>
@@ -141,5 +130,4 @@ $total_paginas = ceil($total_livros / $itens_por_pagina);
     <script src="scripts/script.js"></script>
     <script src="scripts/pdfRender.js"></script>
 </body>
-
 </html>

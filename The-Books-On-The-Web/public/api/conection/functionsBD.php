@@ -1,13 +1,17 @@
 <?php
-// Modifiquei para aceitar o início e a quantidade (Paginação)
+// ARQUIVO: public/api/conection/functionsBD.php
+
 function procurarLivros($inicio = 0, $quantidade = 6) {
     global $con;
     
-    // Alterado de RAND() para ORDER BY id_livro DESC para manter a ordem na paginação
-    $sql = "SELECT livro.*, categoria.nome_categoria 
-            FROM livro 
-            INNER JOIN categoria ON livro.categoria = categoria.id_categoria
-            ORDER BY livro.id_livro DESC 
+    // SQL CORRIGIDA (tabela temas com id_livro e id_categoria)
+    $sql = "SELECT l.*, 
+                   GROUP_CONCAT(DISTINCT c.nome_categoria SEPARATOR ', ') as nome_categoria 
+            FROM livro l 
+            LEFT JOIN temas t ON l.id_livro = t.id_livro
+            LEFT JOIN categoria c ON t.id_categoria = c.id_categoria
+            GROUP BY l.id_livro
+            ORDER BY l.id_livro DESC 
             LIMIT $inicio, $quantidade";
             
     $resultado = mysqli_query($con, $sql);
@@ -19,7 +23,6 @@ function procurarLivros($inicio = 0, $quantidade = 6) {
     return $resultado;
 }
 
-// Nova função para saber quantos botões de página criar
 function contarTotalLivros() {
     global $con;
     $sql = "SELECT COUNT(*) as total FROM livro";
@@ -28,8 +31,7 @@ function contarTotalLivros() {
     return $dados['total'];
 }
 
-// --- Funções originais mantidas abaixo ---
-
+// ... (Mantenha as funções de exibirMenuAutenticacao, exibirBotoesCliente, etc. iguais) ...
 function exibirMenuAutenticacao() {
     if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
         echo '<div class="perfil-header">
@@ -37,7 +39,6 @@ function exibirMenuAutenticacao() {
                 <a href="templates/login/painel_logado.php" class="btn-header">Perfil</a>
                 <a href="api/login/logout.php" class="btn-header">Sair</a>
             </div>';
-
     } else {
         echo "<div class='perfil-header'>";
         echo '<a href="templates/login/entrada.html" class="btn-cadastro">Entrar</a>';

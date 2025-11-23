@@ -2,7 +2,7 @@
 // ARQUIVO: public/api/classes/Admin.php
 
 class Admin {
-    private $db; // Variável para guardar a conexão com o banco
+    private $db;
 
     // O Construtor recebe a conexão do banco ao iniciar a classe
     public function __construct($conexao) {
@@ -11,7 +11,6 @@ class Admin {
 
     // 1. Método para Listar Usuários (Ativos ou Inativos)
     public function listarUsuarios($idLogado, $ativo = 1) {
-        // Seleciona usuários que NÃO sejam o próprio admin logado
         $sql = "SELECT id_user, nome, email, tipo, cpf, data_nascimento FROM usuarios WHERE id_user != ? AND is_active = ?";
         $stmt = mysqli_prepare($this->db, $sql);
         mysqli_stmt_bind_param($stmt, "ii", $idLogado, $ativo);
@@ -23,12 +22,9 @@ class Admin {
 
     // 2. Método para Criar Novo Usuário
     public function criarUsuario($dados) {
-        // Verifica duplicidade antes de tentar inserir
         if ($this->verificarDuplicidade($dados['email'], $dados['cpf'])) {
             return ['success' => false, 'message' => 'Erro: E-mail ou CPF já cadastrados.'];
         }
-
-        // Criptografa a senha aqui dentro
         $hash = password_hash($dados['senha'], PASSWORD_DEFAULT);
         
         // is_active = 1 por padrão
@@ -59,7 +55,6 @@ class Admin {
         mysqli_stmt_execute($stmt);
         mysqli_stmt_store_result($stmt);
         
-        // Se retornou alguma linha, é porque já existe
         return mysqli_stmt_num_rows($stmt) > 0;
     }
 

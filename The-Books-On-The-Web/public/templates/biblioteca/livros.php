@@ -1,6 +1,5 @@
 <?php 
 session_start();
-// Ajuste o caminho conforme sua estrutura de pastas
 require_once '../../api/conection/conectionBD.php';
 
 // Verifica Login
@@ -13,13 +12,12 @@ $id_user = (int)$_SESSION['id_user'];
 $id_livro = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $tipo_user = isset($_SESSION['tipo']) ? $_SESSION['tipo'] : 'cliente';
 
-// Lógica de Favoritar (Admin não pode favoritar)
+// Ação de Favoritar
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'toggle_favorito') {
     if ($id_livro === 0 || $id_user === 0 || $tipo_user === 'admin') {
         header("Location: livros.php?id=$id_livro");
         exit;
     }
-
     $check = mysqli_query($con, "SELECT id_favorito FROM favoritos WHERE id_user = $id_user AND id_livro = $id_livro");
     if ($check && mysqli_num_rows($check) > 0) {
         mysqli_query($con, "DELETE FROM favoritos WHERE id_user = $id_user AND id_livro = $id_livro");
@@ -30,36 +28,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
-// Buscar Detalhes (Incluindo Autor e Categoria)
+// --- CONSULTA CORRIGIDA BASEADA NO SEU BANCO DE DADOS ---
+// Faz o JOIN passando pela tabela 'temas' e 'escritor'
+// ...
 $sql = "SELECT l.*, c.nome_categoria, a.nome_autor 
         FROM livro l 
-        LEFT JOIN categoria c ON l.categoria = c.id_categoria 
-        LEFT JOIN escritor e ON l.id_livro = e.livro
-        LEFT JOIN autor a ON e.autor = a.id_autor
+        LEFT JOIN editora ed ON l.id_editora = ed.id_editora
+        -- Correção aqui
+        LEFT JOIN temas t ON l.id_livro = t.id_livro
+        LEFT JOIN categoria c ON t.id_categoria = c.id_categoria
+        LEFT JOIN escritor e ON l.id_livro = e.id_livro
+        LEFT JOIN autor a ON e.id_autor = a.id_autor
         WHERE l.id_livro = $id_livro";
+// ...
 
 $res = mysqli_query($con, $sql);
+
+if (!$res || mysqli_num_rows($res) === 0) { 
+    // Se não achar, volta para o inicio
+    header("Location: ../../index.php"); 
+    exit; 
+}
+
 $livro = mysqli_fetch_assoc($res);
 
-if (!$livro) { header("Location: ../../index.php"); exit; }
-
-// Checar se já é favorito
+// Checa favorito
 $favCheck = mysqli_query($con, "SELECT id_favorito FROM favoritos WHERE id_user = $id_user AND id_livro = $id_livro");
 $isFavorito = ($favCheck && mysqli_num_rows($favCheck) > 0);
 
-// Caminho Absoluto para o PDF
 $caminhoPdf = '/The-Books-On-The-Web/database/pdfs/' . $livro['pdf'];
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <base href="http://localhost/The-Books-On-The-Web/public/">
+    <base href="/The-Books-On-The-Web/public/">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <title><?php echo htmlspecialchars($livro['titulo']); ?> | Detalhes</title>
+    
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/cards.css">
     <link rel="stylesheet" href="styles/livros.css">
+    
+    <link rel="stylesheet" href="styles/stylephone.css?v=<?php echo time(); ?>">
+    
     <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
 </head>
@@ -78,7 +91,10 @@ $caminhoPdf = '/The-Books-On-The-Web/database/pdfs/' . $livro['pdf'];
                 <?php else: ?>
                     <div class="sem-capa">Sem Capa Disponível</div>
                 <?php endif; ?>
-                <span class="categoria-badge"><?php echo htmlspecialchars($livro['nome_categoria']); ?></span>
+                
+                <?php if(!empty($livro['nome_categoria'])): ?>
+                    <span class="categoria-badge"><?php echo htmlspecialchars($livro['nome_categoria']); ?></span>
+                <?php endif; ?>
             </div>
 
             <div class="detalhes-info">

@@ -3,13 +3,13 @@ session_start();
 
 // Verifica se está logado
 if ( !isset($_SESSION['logado']) || $_SESSION['logado'] !== true ) {
-    header("Location: /The-Books-On-The-Web/public/templates/login/entrada.html");
+    header("Location: http://192.168.0.136:80/The-Books-On-The-Web/public/templates/login/entrada.html");
     exit; 
 }
 
 $id_do_usuario_logado = $_SESSION['id_user'];
 
-require_once '../../../../The-Books-On-The-Web/public/api/conection/conectionBD.php';
+require_once(__DIR__ . '/../../api/conection/conectionBD.php');
 
 // Busca dados do usuário
 $sql = "SELECT nome, email, data_nascimento, cpf FROM usuarios WHERE id_user = ?";
@@ -27,10 +27,14 @@ if (!$usuario) {
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <base href="http://localhost/The-Books-On-The-Web/public/">
+        <base href="/The-Books-On-The-Web/public/">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles/style.css">
+        <link rel="stylesheet" href="styles/cards.css">
+        <link rel="stylesheet" href="styles/livros.css">
+        
+        <link rel="stylesheet" href="styles/stylephone.css?v=<?php echo time(); ?>">
         <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon">
         <title>Painel | TBOTW</title>
     </head>
