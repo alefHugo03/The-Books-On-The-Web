@@ -30,15 +30,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 // --- CONSULTA CORRIGIDA BASEADA NO SEU BANCO DE DADOS ---
 // Faz o JOIN passando pela tabela 'temas' e 'escritor'
+// ...
 $sql = "SELECT l.*, c.nome_categoria, a.nome_autor 
         FROM livro l 
-        -- Liga Livro -> Temas -> Categoria
-        LEFT JOIN temas t ON l.id_livro = t.fk_LIVRO_id_livro
-        LEFT JOIN categoria c ON t.fk_CATEGORIA_id_categoria = c.id_categoria
-        -- Liga Livro -> Escritor -> Autor
-        LEFT JOIN escritor e ON l.id_livro = e.FK_LIVRO_id_livro
-        LEFT JOIN autor a ON e.FK_AUTOR_id_autor = a.id_autor
+        LEFT JOIN editora ed ON l.id_editora = ed.id_editora
+        -- Correção aqui
+        LEFT JOIN temas t ON l.id_livro = t.id_livro
+        LEFT JOIN categoria c ON t.id_categoria = c.id_categoria
+        LEFT JOIN escritor e ON l.id_livro = e.id_livro
+        LEFT JOIN autor a ON e.id_autor = a.id_autor
         WHERE l.id_livro = $id_livro";
+// ...
 
 $res = mysqli_query($con, $sql);
 

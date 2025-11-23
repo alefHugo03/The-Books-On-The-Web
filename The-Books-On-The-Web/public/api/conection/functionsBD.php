@@ -1,16 +1,15 @@
 <?php
 // ARQUIVO: public/api/conection/functionsBD.php
 
-// Função ajustada para a nova estrutura N:N
 function procurarLivros($inicio = 0, $quantidade = 6) {
     global $con;
     
-    // SQL atualizado: Faz JOIN com Temas e CATEGORIA, e agrupa os nomes
+    // SQL CORRIGIDA (tabela temas com id_livro e id_categoria)
     $sql = "SELECT l.*, 
                    GROUP_CONCAT(DISTINCT c.nome_categoria SEPARATOR ', ') as nome_categoria 
             FROM livro l 
-            LEFT JOIN Temas t ON l.id_livro = t.fk_LIVRO_id_livro
-            LEFT JOIN categoria c ON t.fk_CATEGORIA_id_categoria = c.id_categoria
+            LEFT JOIN temas t ON l.id_livro = t.id_livro
+            LEFT JOIN categoria c ON t.id_categoria = c.id_categoria
             GROUP BY l.id_livro
             ORDER BY l.id_livro DESC 
             LIMIT $inicio, $quantidade";
@@ -24,7 +23,6 @@ function procurarLivros($inicio = 0, $quantidade = 6) {
     return $resultado;
 }
 
-// Função para contar total (Não mudou, mas mantemos aqui)
 function contarTotalLivros() {
     global $con;
     $sql = "SELECT COUNT(*) as total FROM livro";
@@ -33,8 +31,7 @@ function contarTotalLivros() {
     return $dados['total'];
 }
 
-// --- Funções de menu (Mantidas) ---
-
+// ... (Mantenha as funções de exibirMenuAutenticacao, exibirBotoesCliente, etc. iguais) ...
 function exibirMenuAutenticacao() {
     if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
         echo '<div class="perfil-header">

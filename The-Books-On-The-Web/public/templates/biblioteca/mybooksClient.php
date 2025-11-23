@@ -1,12 +1,26 @@
 <?php
 session_start();
 require_once (__DIR__ . '/../../api/conection/conectionBD.php'); 
+
 if (!isset($_SESSION['logado']) || $_SESSION['tipo'] !== 'cliente') {
-    header("Location: /The-Books-On-The-Web/public/templates/login/entrada.html");
+    header("Location: ../login/entrada.html");
     exit;
 }
+
 $id_user = $_SESSION['id_user'];
-$sql = "SELECT l.*, c.nome_categoria FROM livro l INNER JOIN favoritos f ON l.id_livro = f.id_livro LEFT JOIN categoria c ON l.categoria = c.id_categoria WHERE f.id_user = $id_user ORDER BY f.data_favoritado DESC";
+
+// SQL CORRIGIDA PARA O NOVO PADRÃO (id_livro, id_categoria na tabela temas)
+$sql = "SELECT l.*, 
+               GROUP_CONCAT(DISTINCT c.nome_categoria SEPARATOR ', ') as nome_categoria 
+        FROM livro l
+        INNER JOIN favoritos f ON l.id_livro = f.id_livro
+        -- Correção: nomes das colunas na tabela 'temas'
+        LEFT JOIN temas t ON l.id_livro = t.id_livro
+        LEFT JOIN categoria c ON t.id_categoria = c.id_categoria
+        WHERE f.id_user = $id_user
+        GROUP BY l.id_livro
+        ORDER BY f.data_favoritado DESC";
+
 $resultado = mysqli_query($con, $sql);
 ?>
 <!DOCTYPE html>
@@ -15,14 +29,13 @@ $resultado = mysqli_query($con, $sql);
     <base href="/The-Books-On-The-Web/public/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Meus Favoritos | TBOTW</title>
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/cards.css">
     <link rel="stylesheet" href="styles/livros.css">
     <link rel="stylesheet" href="styles/stylephone.css?v=<?php echo time(); ?>">
     <link rel="shortcut icon" href="styles/img/favicon.svg" type="image/x-icon" class="favicon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js"></script>
-    <title>Meus Favoritos | TBOTW</title>
 </head>
 <body>
     <header id="header-placeholder"></header>
@@ -34,7 +47,7 @@ $resultado = mysqli_query($con, $sql);
                 <?php
                 if ($resultado && mysqli_num_rows($resultado) > 0) {
                     while ($livro = mysqli_fetch_assoc($resultado)) {
-                        $caminhoPdf = '../../../database/pdfs/' . $livro['pdf'];
+                        $caminhoPdf = '/The-Books-On-The-Web/database/pdfs/' . $livro['pdf'];
                         echo '<a href="templates/biblioteca/livros.php?id=' . $livro['id_livro'] . '" style="text-decoration:none; color:inherit;">';
                         echo '<div class="livro-card">';
                         echo '<div class="capa-wrapper">';
@@ -43,7 +56,7 @@ $resultado = mysqli_query($con, $sql);
                         echo '<div class="info-livro">';
                         echo '<h3>' . htmlspecialchars($livro['titulo']) . '</h3>';
                         echo '<p>' . htmlspecialchars($livro['descricao']) . '</p>';
-                        echo '<span class="categoria-tag">' . htmlspecialchars($cats) . '</span>';
+                        echo '<span class="categoria-tag">' . htmlspecialchars($livro['nome_categoria'] ?? 'Geral') . '</span>';
                         echo '</div>';
                         echo '</div>';
                         echo '</a>';
