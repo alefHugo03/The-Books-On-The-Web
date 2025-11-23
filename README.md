@@ -63,5 +63,5 @@ Se possível, adicione uma captura de tela (screenshot) ou um GIF animado que mo
 
 * [Link para a aplicação em funcionamento ](https://github.com/alefHugo03/The-Books-On-The-Web/edit/main/README.md)
 * **Captura de Tela da Primeira Pagina:**
-    ![Captura de Tela do Projeto](./The-Books-On-The-Web/private/image.png) 
+    ![Captura de Tela do Projeto](./The-Books-On-The-Web/private/home.png) 
     *(Obs.: Você precisará adicionar o arquivo `screenshot-principal.png` na pasta `assets` do seu repositório.)*!
